@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Map · Khandokar Tanvir Rahman</title>
+<meta name="description" content="Khandokar Tanvir Rahman's work drawn as a metro map: safety, operations, planning and waterways, and teaching lines from Dhaka to Michigan.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Overpass+Mono:wght@400;600&family=Overpass:wght@400;600;800;900&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="mapbody">
+
+<header class="topbar">
+  <a class="brand" href="index.html" aria-label="Home: the intersection">
+    <svg viewBox="0 0 18 40" aria-hidden="true"><rect width="18" height="40" rx="5" fill="#1F2623"/><circle cx="9" cy="9" r="4.2" fill="#3A423E"/><circle cx="9" cy="20" r="4.2" fill="#3A423E"/><circle cx="9" cy="31" r="4.2" fill="#16A35B"/></svg>
+    <span class="brand-text"><b>K. T. RAHMAN</b><span>Transportation engineer · ITS · safety</span></span>
+  </a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html">Intersection</a>
+    <a href="tour.html">Tour</a>
+    <a href="map.html" aria-current="page">Map</a>
+    <a href="cv.html">Plain CV</a>
+    <button type="button" class="push" data-contact>Contact</button>
+  </nav>
+</header>
+
+<main class="mappage">
+  <section class="mapbox" aria-labelledby="map-h">
+    <div class="map-head">
+      <h1 id="map-h">The network</h1>
+      <p>Lines are themes, stations are work. Click a station.</p>
+      <p class="mobile-hint">Scroll sideways to reach Michigan →</p>
+    </div>
+    <div class="mapscroll">
+      <svg class="metro" id="metro" viewBox="0 0 1000 600" role="group" aria-label="Metro map of my work">
+        <!-- water -->
+        <path class="water" d="M0 470C90 446 170 494 262 474C334 458 392 482 458 466L458 506C392 520 334 498 262 514C170 534 90 488 0 512Z"/>
+        <text x="40" y="540" class="water-lbl">BURIGANGA RIVER</text>
+        <rect class="water" x="462" y="0" width="122" height="600"/>
+        <text x="523" y="84" class="water-lbl" text-anchor="middle">12,664 km</text>
+        <path class="water" d="M584 0H648C658 56 640 104 648 150C654 184 632 200 608 194C594 146 600 72 584 0Z"/>
+        <text x="600" y="24" class="water-lbl" transform="rotate(90 600 24)">LAKE MICHIGAN</text>
+        <text x="40" y="54" class="region">DHAKA</text>
+        <text x="680" y="54" class="region">MICHIGAN</text>
+
+        <!-- tracks used by the trains (hidden) -->
+        <g id="tracks" fill="none" stroke="none">
+          <path data-line="t" d="M150 320L230 400H940"/>
+          <path data-line="p" d="M150 320L230 240H680L760 320"/>
+          <path data-line="s" d="M150 320H940"/>
+          <path data-line="o" d="M680 150H860L940 230V320"/>
+        </g>
+
+        <!-- lines -->
+        <g id="lines">
+          <g data-line="t"><path class="ln" stroke="#17201C" d="M150 320L230 400H455M590 400H940"/><path class="ln" stroke="#17201C" stroke-dasharray="1 15" d="M470 400H575"/></g>
+          <g data-line="p"><path class="ln" stroke="#1baf7a" d="M150 320L230 240H455M590 240H680L760 320"/><path class="ln" stroke="#1baf7a" stroke-dasharray="1 15" d="M470 240H575"/></g>
+          <g data-line="s"><path class="ln" stroke="#eb6834" d="M150 320H455M590 320H940"/><path class="ln" stroke="#eb6834" stroke-dasharray="1 15" d="M470 320H575"/></g>
+          <g data-line="o"><path class="ln" stroke="#2a78d6" d="M680 150H860L940 230V320"/></g>
+        </g>
+
+        <!-- stations (built by map.js from the data, so names and positions live in one place) -->
+        <g id="stations"></g>
+
+        <g id="train" class="train" opacity="0" pointer-events="none"><rect x="-15" y="-8" width="30" height="16" rx="6" fill="#17201C" stroke="#fff" stroke-width="2.5"/><rect x="-9" y="-3.5" width="18" height="7" rx="2" fill="#fff" opacity=".85"/></g>
+      </svg>
+    </div>
+    <div class="legend" id="legend" aria-label="Lines">
+      <button type="button" data-line="s" aria-pressed="false"><i style="border-color:#eb6834">S</i>Safety</button>
+      <button type="button" data-line="o" aria-pressed="false"><i style="border-color:#2a78d6">O</i>Operations</button>
+      <button type="button" data-line="p" aria-pressed="false"><i style="border-color:#1baf7a">P</i>Planning &amp; Waterways</button>
+      <button type="button" data-line="t" aria-pressed="false"><i style="border-color:#17201C">T</i>Teaching &amp; Community</button>
+    </div>
+  </section>
+
+  <aside class="card" id="station-card" aria-live="polite">
+    <div class="card-head" id="st-head"><span class="ph">MAP</span><span class="street">Pick a station</span></div>
+    <div class="card-body" id="st-body">
+      <h2>Four lines, two cities</h2>
+      <p class="lead">Each line is a theme of my work. Stations are projects, papers, roles and places; the capsules are interchanges where several themes meet.</p>
+      <article class="item"><h3>How to ride</h3><p>Click any station to send a train there and read about it. Click a line in the legend to light it up.</p></article>
+    </div>
+  </aside>
+</main>
+
+<script src="js/content.js"></script>
+<script src="js/common.js"></script>
+<script src="js/map.js"></script>
+</body>
+</html>

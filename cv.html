@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CV · Khandokar Tanvir Rahman</title>
+<meta name="description" content="Curriculum vitae of Khandokar Tanvir Rahman, M.S. student in transportation engineering at Western Michigan University.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Overpass+Mono:wght@400;600&family=Overpass:wght@400;600;800;900&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="cvpage">
+
+<header class="topbar">
+  <a class="brand" href="index.html" aria-label="Home: the intersection">
+    <svg viewBox="0 0 18 40" aria-hidden="true"><rect width="18" height="40" rx="5" fill="#1F2623"/><circle cx="9" cy="9" r="4.2" fill="#3A423E"/><circle cx="9" cy="20" r="4.2" fill="#3A423E"/><circle cx="9" cy="31" r="4.2" fill="#16A35B"/></svg>
+    <span class="brand-text"><b>K. T. RAHMAN</b><span>Transportation engineer · ITS · safety</span></span>
+  </a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html">Intersection</a>
+    <a href="tour.html">Tour</a>
+    <a href="map.html">Map</a>
+    <a href="cv.html" aria-current="page">Plain CV</a>
+    <button type="button" class="push" data-contact>Contact</button>
+  </nav>
+</header>
+
+<main id="cv">
+  <noscript><p>This page builds the CV from js/content.js. Please enable JavaScript.</p></noscript>
+</main>
+
+<script src="js/content.js"></script>
+<script src="js/common.js"></script>
+<script>
+/* The plain CV, built from the same content file as the rest of the site. */
+(function () {
+  "use strict";
+  var D = window.SITE, S = D.sections, P = D.person;
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function split(meta) {                     // "Place · dates · extra" -> where / when
+    var parts = String(meta || "").split(" · ");
+    return parts;
+  }
+  function entry(title, where, when, body) {
+    return '<div class="cv-entry"><div class="top"><h3>' + esc(title) + '</h3>' + (when ? '<span class="when">' + esc(when) + '</span>' : "") + "</div>" +
+      (where ? '<p class="where">' + esc(where) + "</p>" : "") + (body || "") + "</div>";
+  }
+  function list(items) { return "<ul>" + items.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + "</ul>"; }
+  function sec(title, html) { return '<section class="cv-sec"><h2>' + esc(title) + "</h2><div>" + html + "</div></section>"; }
+
+  var h = '<div class="cv-head"><h1>' + esc(P.name) + '</h1><p class="role">M.S. student in Civil Engineering (Transportation), Western Michigan University</p>' +
+    '<p class="cv-contact"><span>' + esc(P.location) + '</span><span>' + esc(P.email) + '</span></p>' +
+    '<div class="links noprint" data-links></div>' +
+    '<div class="cv-tools noprint"><button type="button" class="btn small sign" id="print">Save as PDF / print</button><a class="btn small" href="index.html">Back to the intersection</a></div></div>';
+
+  h += sec("Research interests", "<p>" + esc(D.interests.join("; ")) + ".</p>");
+
+  var ms = S.about.items[0], bs = S.about.items[1];
+  h += sec("Education",
+    entry(ms.title, "Western Michigan University, Kalamazoo, Michigan · GPA 3.88 / 4.00", "Aug 2025 – present", "<p>" + esc(ms.text) + "</p>") +
+    entry(bs.title, "Bangladesh University of Engineering and Technology (BUET), Dhaka · GPA 3.49 / 4.00", "May 2023", "<p>" + esc(bs.text) + "</p>"));
+
+  var r0 = S.research.items[0], r1 = S.research.items[1];
+  h += sec("Research experience",
+    entry("Graduate Research Assistant", "Intelligent Transportation System Lab, Western Michigan University", "Aug 2025 – present",
+      "<p><b>Project:</b> " + esc(r0.title) + ". Sponsor: Michigan Department of Transportation.</p>" + list(r0.bullets)) +
+    entry("Undergraduate research", "BUET", "2022 – 2023", list(r1.bullets)));
+
+  h += sec("Publications", S.papers.items.map(function (p) {
+    var m = split(p.meta);
+    var link = p.links && p.links[0] ? ' <a href="' + esc(p.links[0].href) + '" target="_blank" rel="noopener">ResearchGate ↗</a>' : "";
+    return '<div class="cv-entry"><p>' + esc(m[0]) + " (" + esc(m[2] || "") + "). " + esc(p.title) + ". <i>" + esc(m[1]) + "</i>." + link + "</p></div>";
+  }).join(""));
+
+  var t0 = S.teaching.items[0], t1 = S.teaching.items[1];
+  h += sec("Teaching",
+    entry("Graduate Teaching Assistant", "Western Michigan University", "Aug 2025 – present", list(t0.bullets)) +
+    entry("Adjunct Lecturer", "Presidency University, Dhaka", "Spring and Summer 2025", list(t1.bullets)));
+
+  var c = S.projects.items[2];
+  h += sec("Professional experience",
+    entry("Assistant Engineer", "Indetechs Software Limited, Dhaka", "Apr 2024 – Aug 2025", "<p><b>Project:</b> " + esc(c.title) + ".</p>" + list(c.bullets)));
+
+  var pr0 = S.projects.items[0], pr1 = S.projects.items[1];
+  h += sec("Selected projects",
+    entry(pr0.title, "Winner, Design Competition, ITE Great Lakes District Student Leadership Summit, Detroit, MI", "2026", list(pr0.bullets)) +
+    entry(pr1.title, "Undergraduate capstone, BUET", "2023", list(pr1.bullets)));
+
+  h += sec("Technical skills", S.skills.items.map(function (s) {
+    return '<div class="cv-skill"><b>' + esc(s.title) + "</b><span>" + esc(s.tags.join(", ")) + "</span></div>";
+  }).join(""));
+
+  var lead = S.leadership.items.concat(S.awards.items);
+  h += sec("Leadership and awards", lead.map(function (it) {
+    var m = split(it.meta);
+    var when = m[m.length - 1], where = m.slice(0, -1).join(" · ");
+    return entry(it.title, where, when, "");
+  }).join(""));
+
+  h += '<p class="cv-foot noprint">This page is printable. Use "Save as PDF" for a copy.</p>';
+  document.getElementById("cv").innerHTML = h;
+  window.renderLinks(document.querySelector("#cv [data-links]"));
+  document.getElementById("print").addEventListener("click", function () { window.print(); });
+})();
+</script>
+</body>
+</html>

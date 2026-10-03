@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tour · Khandokar Tanvir Rahman</title>
+<meta name="description" content="A seven-stop guided tour of Khandokar Tanvir Rahman's work: waterbus research, crash forecasting, MDOT work zones and a turbo roundabout design.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Overpass+Mono:wght@400;600&family=Overpass:wght@400;600;800;900&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="tourpage">
+
+<header class="topbar">
+  <a class="brand" href="index.html" aria-label="Home: the intersection">
+    <svg viewBox="0 0 18 40" aria-hidden="true"><rect width="18" height="40" rx="5" fill="#1F2623"/><circle cx="9" cy="9" r="4.2" fill="#3A423E"/><circle cx="9" cy="20" r="4.2" fill="#3A423E"/><circle cx="9" cy="31" r="4.2" fill="#16A35B"/></svg>
+    <span class="brand-text"><b>K. T. RAHMAN</b><span>Transportation engineer · ITS · safety</span></span>
+  </a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html">Intersection</a>
+    <a href="tour.html" aria-current="page">Tour</a>
+    <a href="map.html">Map</a>
+    <a href="cv.html">Plain CV</a>
+    <button type="button" class="push" data-contact>Contact</button>
+  </nav>
+</header>
+
+<main class="tour" id="tour">
+  <ol class="lamps" id="lamps" aria-label="Tour progress">
+    <li><button type="button" data-i="0"><i></i><span>Hello</span></button></li>
+    <li><button type="button" data-i="1"><i></i><span>Dhaka → Kalamazoo</span></button></li>
+    <li><button type="button" data-i="2"><i></i><span>Waterbus</span></button></li>
+    <li><button type="button" data-i="3"><i></i><span>Crash forecasting</span></button></li>
+    <li><button type="button" data-i="4"><i></i><span>Work zones</span></button></li>
+    <li><button type="button" data-i="5"><i></i><span>Turbo roundabout</span></button></li>
+    <li><button type="button" data-i="6"><i></i><span>Walk: contact</span></button></li>
+  </ol>
+
+  <div class="stagebox" id="stagebox">
+
+    <!-- 1 · Hello -->
+    <section class="scene" data-name="Hello" aria-label="Scene 1 of 7: Hello">
+      <div class="txt">
+        <p class="eyebrow">Phase 1 · Hello</p>
+        <h1 class="big">Hi, I'm Tanvir.</h1>
+        <p class="lede">Transportation engineer: signals, safety and the data in between. I'm an M.S. student at Western Michigan University in Kalamazoo.</p>
+        <div class="row">
+          <button type="button" class="btn sign" data-next>Start the tour ▸</button>
+          <a class="btn" href="cv.html">Plain CV</a>
+        </div>
+        <p class="tiny">Use the mouse wheel, the Next button or the lamps on the left.</p>
+      </div>
+      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
+        <ellipse cx="280" cy="392" rx="190" ry="18" fill="#DCE5D6"/>
+        <rect x="268" y="300" width="24" height="92" rx="6" fill="#4A524E"/>
+        <rect x="214" y="22" width="132" height="290" rx="30" fill="#1F2623"/>
+        <g class="visors" fill="#141A18"><path d="M232 66a48 30 0 0 1 96 0z"/><path d="M232 152a48 30 0 0 1 96 0z"/><path d="M232 238a48 30 0 0 1 96 0z"/></g>
+        <circle class="boot r" cx="280" cy="88" r="36"/>
+        <circle class="boot y" cx="280" cy="174" r="36"/>
+        <circle class="boot g" cx="280" cy="260" r="36"/>
+        <text x="380" y="96" class="note">startup flash…</text>
+        <text x="380" y="268" class="note">…then green</text>
+      </svg>
+    </section>
+
+    <!-- 2 · Dhaka to Kalamazoo -->
+    <section class="scene" data-name="Dhaka to Kalamazoo" aria-label="Scene 2 of 7: Dhaka to Kalamazoo" hidden>
+      <div class="txt">
+        <p class="eyebrow">Phase 2 · Dhaka → Kalamazoo</p>
+        <p class="stat">12,664 km</p>
+        <p class="lede">From Dhaka's waterways to Michigan's work zones.</p>
+        <ul class="facts">
+          <li><b>B.Sc. Civil Engineering (Transportation)</b><span>BUET, Dhaka · 2023</span></li>
+          <li><b>M.S. Civil Engineering (Transportation)</b><span>Western Michigan University · 2025 – present · GPA 3.88</span></li>
+        </ul>
+      </div>
+      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
+        <defs><pattern id="dots2" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.6" fill="#C9D6C9"/></pattern></defs>
+        <rect x="20" y="40" width="520" height="320" rx="26" fill="#E3EEF2"/>
+        <rect x="20" y="40" width="520" height="320" rx="26" fill="url(#dots2)"/>
+        <path id="flight" d="M440 262Q300 30 130 190" fill="none" stroke="#17201C" stroke-width="3" stroke-dasharray="4 10" stroke-linecap="round" class="draw"/>
+        <circle cx="440" cy="262" r="9" fill="#17201C"/><circle cx="130" cy="190" r="9" fill="#17201C"/>
+        <text x="440" y="300" class="lbl" text-anchor="middle">DHAKA</text><text x="440" y="320" class="sub" text-anchor="middle">BUET</text>
+        <text x="130" y="228" class="lbl" text-anchor="middle">KALAMAZOO</text><text x="130" y="248" class="sub" text-anchor="middle">WMU</text>
+        <g id="plane"><path d="M-14 0L10 -3L16 0L10 3Z M-2 -1L-8 -12L-4 -12L6 -1Z M-2 1L-8 12L-4 12L6 1Z M-14 0L-18 -6L-15 -6L-10 -1Z" fill="#0B6A4C"/></g>
+      </svg>
+    </section>
+
+    <!-- 3 · Waterbus -->
+    <section class="scene" data-name="Waterbus" aria-label="Scene 3 of 7: Waterbus" hidden>
+      <div class="txt">
+        <p class="eyebrow">Phase 3 · Waterbus · thesis + ICCESD 2024</p>
+        <h2 class="h">Why Dhaka's first waterbus stopped after 18 months</h2>
+        <div class="seg" role="group" aria-label="Compare">
+          <button type="button" class="on" data-wb="old" aria-pressed="true">2010 service</button>
+          <button type="button" data-wb="new" aria-pressed="false">Proposed</button>
+        </div>
+        <div class="wb" data-wbpanel="old">
+          <p class="stat sm">16 km in ~90 min</p>
+          <ul class="facts">
+            <li><b>35 seats per boat</b><span>Two boats could not meet demand</span></li>
+            <li><b>Unreliable and infrequent</b><span>Breakdowns, scattered schedules, little awareness</span></li>
+            <li><b>Shut down within 18 months</b><span>Launched 28 August 2010 by BIWTC</span></li>
+          </ul>
+        </div>
+        <div class="wb" data-wbpanel="new" hidden>
+          <p class="stat sm">16 km in ~24 min</p>
+          <ul class="facts">
+            <li><b>Hybrid electric water taxi, 50 seats</b><span>Faster and lighter on fuel</span></li>
+            <li><b>20 vessels on the 110 km circular route</b><span>Every 20 min at the peak, 40 min off-peak</span></li>
+            <li><b>Built on a survey of 310 respondents</b><span>Plus BIWTA and BIWTC operating data</span></li>
+          </ul>
+        </div>
+        <a class="btn small" href="https://www.researchgate.net/publication/379118004" target="_blank" rel="noopener">Read the paper ↗</a>
+      </div>
+      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
+        <ellipse cx="280" cy="210" rx="215" ry="160" fill="#CFE4EE"/>
+        <ellipse cx="280" cy="210" rx="187" ry="132" fill="#E6EFDF"/>
+        <ellipse id="wb-ring" cx="280" cy="210" rx="201" ry="146" fill="none" stroke="#8EC1D6" stroke-width="2" stroke-dasharray="6 8"/>
+        <path id="wb-old" d="M280 356A201 146 0 0 1 79 210" fill="none" stroke="#0B6A4C" stroke-width="7" stroke-linecap="round"/>
+        <text x="280" y="204" class="lbl" text-anchor="middle" fill="#6B7A72">DHAKA</text>
+        <g class="ghats">
+          <circle cx="280" cy="356" r="8"/><text x="280" y="392" text-anchor="middle">SADARGHAT</text>
+          <circle cx="79" cy="210" r="8"/><text x="64" y="214" text-anchor="end">GABTOLI</text>
+          <circle cx="280" cy="64" r="8"/><text x="280" y="44" text-anchor="middle">TONGI</text>
+          <circle cx="481" cy="210" r="8"/><text x="496" y="214">KACHPUR</text>
+          <circle cx="422" cy="313" r="8"/><text x="436" y="342">NARAYANGANJ</text>
+        </g>
+        <g id="boat"><path d="M-18 0H18L12 9H-12Z" fill="#17201C"/><rect x="-9" y="-9" width="16" height="9" rx="2" fill="#F2B134"/></g>
+      </svg>
+    </section>
+
+    <!-- 4 · Crash forecasting -->
+    <section class="scene" data-name="Crash forecasting" aria-label="Scene 4 of 7: Crash forecasting" hidden>
+      <div class="txt">
+        <p class="eyebrow">Phase 4 · Safety · ICACE 2022</p>
+        <h2 class="h">Forecasting crashes with unauthorized vehicles</h2>
+        <p class="lede">Police-recorded crashes in Bangladesh involving unregistered local vehicles such as easy-bikes and nosimons, 2009–2015, modeled with ARIMA(6,1,7) to forecast 2016–2020.</p>
+        <div class="row">
+          <button type="button" class="btn sign" id="run-arima">Run ARIMA(6,1,7) ▸</button>
+          <a class="btn small" href="https://www.researchgate.net/publication/368713906" target="_blank" rel="noopener">Read the paper ↗</a>
+        </div>
+      </div>
+      <svg class="art chart" viewBox="0 0 560 420" role="img" aria-label="Crashes per year: 345 in 2009, 322 in 2010, 287 in 2011, 211 in 2012, 324 in 2013, 314 in 2014, 327 in 2015, then a forecast band to 2020.">
+        <text x="70" y="22" class="sub">CRASHES PER YEAR</text>
+        <g class="grid"><path d="M70 296H530M70 168H530M70 40H530"/></g>
+        <g class="ylab"><text x="60" y="300">200</text><text x="60" y="172">300</text><text x="60" y="44">400</text></g>
+        <path d="M70 360H530" class="axis"/>
+        <g class="xlab"><text x="70" y="384">2009</text><text x="195.5" y="384">2012</text><text x="320.9" y="384">2015</text><text x="530" y="384">2020</text></g>
+        <g class="fc" id="forecast">
+          <path d="M320.9 133.4L362.7 112L404.5 101L446.4 91L488.2 80L530 70L530 190L488.2 177L446.4 163L404.5 151L362.7 143Z" class="band"/>
+          <polyline points="320.9,133.4 362.7,130 404.5,129.8 446.4,129.7 488.2,129.6 530,129.6" class="fline"/>
+          <text x="530" y="56" class="sub" text-anchor="end">FORECAST BAND, 2016–2020</text>
+        </g>
+        <polyline points="70,110.4 111.8,139.8 153.6,184.6 195.5,281.9 237.3,137.3 279.1,150.1 320.9,133.4" class="obs draw"/>
+        <g class="pts"><circle cx="70" cy="110.4" r="5"/><circle cx="195.5" cy="281.9" r="5"/><circle cx="320.9" cy="133.4" r="5"/></g>
+        <g class="vlab"><text x="70" y="96">345</text><text x="195.5" y="306">211</text><text x="320.9" y="119">327</text></g>
+      </svg>
+    </section>
+
+    <!-- 5 · Work zones -->
+    <section class="scene" data-name="Work zones" aria-label="Scene 5 of 7: Work zones" hidden>
+      <div class="txt">
+        <p class="eyebrow">Phase 5 · Research · MDOT · ITS Lab, WMU</p>
+        <h2 class="h">What does a lane closure cost road users?</h2>
+        <p class="lede">Research for the Michigan Department of Transportation: testing five traffic data sources to evaluate how MDOT estimates work-zone user delay and cost.</p>
+        <div class="tags"><span>RITIS</span><span>Bluetooth</span><span>API feeds</span><span>MVDS</span><span>Video</span></div>
+        <div class="row"><button type="button" class="btn sign" id="close-lane" aria-pressed="false">Close a lane ▸</button></div>
+        <p class="tiny">Animation for illustration only, not study results.</p>
+      </div>
+      <svg class="art wz" id="wz" viewBox="0 0 560 420" aria-hidden="true">
+        <g class="chips">
+          <rect x="24" y="40" width="88" height="28" rx="6"/><text x="68" y="59">RITIS</text>
+          <rect x="124" y="40" width="112" height="28" rx="6"/><text x="180" y="59">BLUETOOTH</text>
+          <rect x="248" y="40" width="64" height="28" rx="6"/><text x="280" y="59">API</text>
+          <rect x="324" y="40" width="76" height="28" rx="6"/><text x="362" y="59">MVDS</text>
+          <rect x="412" y="40" width="84" height="28" rx="6"/><text x="454" y="59">VIDEO</text>
+        </g>
+        <path d="M68 68V150M180 68V150M280 68V150M362 68V150M454 68V150" class="feed"/>
+        <rect x="0" y="150" width="560" height="120" fill="#CFCCC4"/>
+        <path d="M0 150H560M0 270H560" stroke="#9AA39D" stroke-width="2"/>
+        <path d="M0 210H560" stroke="#fff" stroke-width="3" stroke-dasharray="18 16"/>
+        <g class="lane-top"><g class="flow"><rect class="c c1" x="-60" y="167" width="44" height="26" rx="8"/><rect class="c c2" x="-60" y="167" width="44" height="26" rx="8"/><rect class="c c3" x="-60" y="167" width="44" height="26" rx="8"/></g></g>
+        <g class="lane-bot"><g class="flow"><rect class="c c4" x="-60" y="227" width="44" height="26" rx="8"/><rect class="c c5" x="-60" y="227" width="44" height="26" rx="8"/><rect class="c c6" x="-60" y="227" width="44" height="26" rx="8"/></g></g>
+        <g class="closure">
+          <g class="cones"><path d="M262 264l8-18 8 18z"/><path d="M290 252l8-18 8 18z"/><path d="M318 240l8-18 8 18z"/><path d="M346 228l8-18 8 18z"/><path d="M394 228l8-18 8 18z"/><path d="M442 228l8-18 8 18z"/><path d="M490 228l8-18 8 18z"/><path d="M538 228l8-18 8 18z"/></g>
+          <rect x="380" y="232" width="70" height="30" rx="4" fill="#1F2623"/><text x="415" y="252" class="ab">◀◀◀</text>
+          <g class="queue">
+            <rect x="196" y="227" width="44" height="26" rx="8"/><rect x="146" y="227" width="44" height="26" rx="8"/><rect x="96" y="227" width="44" height="26" rx="8"/><rect x="46" y="227" width="44" height="26" rx="8"/>
+          </g>
+        </g>
+        <text x="280" y="320" class="sub" text-anchor="middle" id="wz-note">TWO LANES OPEN · FREE FLOW</text>
+      </svg>
+    </section>
+
+    <!-- 6 · Turbo roundabout -->
+    <section class="scene" data-name="Turbo roundabout" aria-label="Scene 6 of 7: Turbo roundabout" hidden>
+      <div class="txt">
+        <p class="eyebrow">Phase 6 · Design competition · ITE Great Lakes District 2026</p>
+        <h2 class="h">Winner: a turbo roundabout for a high-crash two-lane roundabout</h2>
+        <p class="stat"><span id="bc">B/C 1.12</span></p>
+        <p class="lede">Spiral lane dividers stop lane changes inside the circle. The design covered crash history, demand, pedestrians, signing and marking, and a 20-year benefit–cost analysis.</p>
+      </div>
+      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
+        <rect x="0" y="182" width="560" height="56" fill="#CFCCC4"/><rect x="252" y="0" width="56" height="420" fill="#CFCCC4"/>
+        <circle cx="280" cy="210" r="150" fill="#CFCCC4"/>
+        <circle cx="280" cy="210" r="150" fill="none" stroke="#9AA39D" stroke-width="2"/>
+        <circle cx="280" cy="210" r="56" fill="#BFDCA6" stroke="#17201C" stroke-width="2"/>
+        <path class="spiral draw" d="M364 210L364.9 201.1L364.8 192L363.7 182.8L361.6 173.7L358.5 164.7L354.4 155.9L349.4 147.5L343.3 139.6L336.4 132.3L328.7 125.7L320.1 119.9L310.9 114.9L301.1 110.9L290.7 107.9L280 106L269 105.2L257.8 105.7L246.6 107.3L235.5 110.1L224.7 114.2L214.2 119.4L204.2 125.8L194.8 133.3L186.2 141.8L178.4 151.3L171.6 161.7L165.9 172.9L161.3 184.8L158 197.2L156 210"/>
+        <path class="spiral draw" d="M196 210L195.1 218.9L195.2 228L196.3 237.2L198.4 246.3L201.5 255.3L205.6 264.1L210.6 272.5L216.7 280.4L223.6 287.7L231.3 294.3L239.9 300.1L249.1 305.1L258.9 309.1L269.3 312.1L280 314L291 314.8L302.2 314.3L313.4 312.7L324.5 309.9L335.3 305.8L345.8 300.6L355.8 294.2L365.2 286.7L373.8 278.2L381.6 268.7L388.4 258.3L394.1 247.1L398.7 235.2L402 222.8L404 210"/>
+        <g id="rcar"><rect x="-14" y="-8" width="28" height="16" rx="5" fill="#E5533D"/><rect x="-5" y="-6" width="11" height="12" rx="3" fill="#F5B3A8"/></g>
+      </svg>
+    </section>
+
+    <!-- 7 · Walk: contact -->
+    <section class="scene" data-name="Walk" aria-label="Scene 7 of 7: Walk, contact" hidden>
+      <div class="txt">
+        <p class="eyebrow">Phase 7 · Walk</p>
+        <h2 class="big">Let's talk.</h2>
+        <p class="lede">Research, teaching or a role in transportation engineering: email is the fastest way to reach me.</p>
+        <div class="email-row"><code data-email></code><button type="button" class="btn small sign" id="copy-email2">Copy email</button></div>
+        <div class="links" data-links></div>
+        <div class="row"><a class="btn" href="index.html">Back to the intersection</a><a class="btn" href="cv.html">Plain CV</a></div>
+      </div>
+      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
+        <rect x="150" y="40" width="260" height="320" rx="26" fill="#1F2623"/>
+        <g id="ped-hand" fill="#FF8A3D"><rect x="222" y="160" width="74" height="70" rx="16"/><rect x="222" y="108" width="16" height="64" rx="8"/><rect x="241" y="98" width="16" height="72" rx="8"/><rect x="260" y="100" width="16" height="70" rx="8"/><rect x="279" y="112" width="16" height="60" rx="8"/><rect x="198" y="172" width="24" height="48" rx="10" transform="rotate(-32 210 196)"/></g>
+        <g id="ped-man" fill="none" stroke="#F3F5F0" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="262" cy="104" r="16" fill="#F3F5F0" stroke="none"/><path d="M258 130L250 196M256 146L226 180M256 146L288 170M250 196L226 252M250 196L284 248"/></g>
+        <text x="352" y="300" id="ped-count" class="count" text-anchor="middle"></text>
+        <text x="280" y="336" id="ped-word" class="word" text-anchor="middle">WAIT</text>
+      </svg>
+    </section>
+
+    <div class="tournav">
+      <button type="button" class="btn" id="prev">◂ Back</button>
+      <span class="count mono" id="count">PHASE 1 OF 7</span>
+      <button type="button" class="btn sign" id="next">Next phase ▸</button>
+    </div>
+  </div>
+
+  <div class="route" id="route" aria-label="Tour stops">
+    <div class="road" aria-hidden="true"></div>
+    <div class="stops" id="stops"></div>
+    <div class="bus" id="bus" aria-hidden="true">
+      <svg viewBox="0 0 64 34"><rect x="2" y="4" width="60" height="22" rx="7" fill="#F2B134"/><rect x="8" y="8" width="40" height="8" rx="2" fill="#2E3B42"/><rect x="52" y="8" width="7" height="10" rx="2" fill="#2E3B42"/><circle cx="16" cy="27" r="5" fill="#17201C"/><circle cx="48" cy="27" r="5" fill="#17201C"/></svg>
+    </div>
+  </div>
+  <p class="sr-only" id="tour-status" aria-live="polite"></p>
+</main>
+
+<script src="js/content.js"></script>
+<script src="js/common.js"></script>
+<script src="js/tour.js"></script>
+</body>
+</html>

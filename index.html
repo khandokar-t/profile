@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Khandokar Tanvir Rahman · Transportation Engineer</title>
+<meta name="description" content="Portfolio of Khandokar Tanvir Rahman, transportation engineering graduate student at Western Michigan University: work-zone research, traffic safety, signals and transit.">
+<meta property="og:title" content="Khandokar Tanvir Rahman · Transportation Engineer">
+<meta property="og:description" content="Click a signal to explore research, projects, teaching and papers.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Overpass+Mono:wght@400;600&family=Overpass:wght@400;600;800;900&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="home">
+
+<header class="topbar">
+  <a class="brand" href="index.html" aria-label="Home: the intersection">
+    <svg viewBox="0 0 18 40" aria-hidden="true"><rect width="18" height="40" rx="5" fill="#1F2623"/><circle cx="9" cy="9" r="4.2" fill="#3A423E"/><circle cx="9" cy="20" r="4.2" fill="#3A423E"/><circle cx="9" cy="31" r="4.2" fill="#16A35B"/></svg>
+    <span class="brand-text"><b>K. T. RAHMAN</b><span>Transportation engineer · ITS · safety</span></span>
+  </a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html" aria-current="page">Intersection</a>
+    <a href="tour.html">Tour</a>
+    <a href="map.html">Map</a>
+    <a href="cv.html">Plain CV</a>
+    <button type="button" class="push" data-contact>Contact</button>
+  </nav>
+</header>
+
+<main>
+  <section class="stage" id="stage" aria-label="Interactive 3D intersection. Each road is a section of the CV.">
+    <div class="scene" id="scene"></div>
+    <div class="labels" id="labels"></div>
+    <div class="scene-fallback" id="scene-fallback" hidden>
+      <p><b>The 3D intersection could not start</b> (it needs WebGL and an internet connection). Everything is still here: use the phase menu and the card.</p>
+    </div>
+  </section>
+
+  <aside class="card" id="card" aria-live="polite">
+    <div class="card-head" id="card-head"><span class="ph">Φ8</span><span class="street">About Blvd</span><span class="turn">through</span></div>
+    <div class="card-body card-fade" id="card-body">
+      <h2>From Dhaka's rivers to Michigan's roads</h2>
+      <p class="lead">Loading…</p>
+    </div>
+  </aside>
+
+  <div class="dock">
+    <div class="dock-inner">
+      <nav class="rb" id="rb" aria-label="Sections, arranged as a ring-barrier phase diagram">
+        <span class="ring">RING 1</span>
+        <button type="button" data-ph="1" class="left"><b>Φ1</b>Skills</button>
+        <button type="button" data-ph="2"><b>Φ2</b>Research</button>
+        <span class="bar" aria-hidden="true"></span>
+        <button type="button" data-ph="3" class="left"><b>Φ3</b>Awards</button>
+        <button type="button" data-ph="4"><b>Φ4</b>Teaching</button>
+        <span class="ring">RING 2</span>
+        <button type="button" data-ph="5" class="left"><b>Φ5</b>Papers</button>
+        <button type="button" data-ph="6"><b>Φ6</b>Projects</button>
+        <button type="button" data-ph="7" class="left"><b>Φ7</b>Leadership</button>
+        <button type="button" data-ph="8" class="on"><b>Φ8</b>About</button>
+      </nav>
+      <div class="dock-row">
+        <button type="button" class="btn small" id="auto" aria-pressed="false">Run pre-timed tour</button>
+        <p class="sig-status" id="sig-status" aria-live="polite">Serving <b>Φ8 · About Blvd</b>. Click any signal or phase.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="js/content.js"></script>
+<script src="js/common.js"></script>
+<script src="js/home.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/world.js"></script>
+<script src="js/traffic.js"></script>
+<script src="js/intersection.js"></script>
+</body>
+</html>

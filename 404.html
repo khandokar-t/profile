@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Road closed · Khandokar Tanvir Rahman</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Overpass+Mono:wght@400;600&family=Overpass:wght@800;900&display=swap">
+<style>
+  :root{--bg:#EEF2EC;--ink:#17201C;--ink-2:#44514B;--sign:#0B6A4C}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif}
+  .detour{min-height:100vh;display:grid;place-items:center;padding:24px;text-align:center}
+  .inner{display:grid;gap:18px;justify-items:center;max-width:520px}
+  svg{width:min(360px,84vw);height:auto}
+  h1{font-family:"Overpass","Arial Narrow",sans-serif;font-weight:900;font-size:clamp(1.8rem,5vw,2.6rem);margin:0}
+  p{color:var(--ink-2);margin:0}
+  a.btn{display:inline-block;font-family:"Overpass",sans-serif;font-weight:800;letter-spacing:.05em;text-transform:uppercase;font-size:.9rem;
+    padding:12px 20px;border-radius:999px;background:var(--sign);color:#fff;text-decoration:none}
+  a.btn:hover{background:#0E7D5A}
+</style>
+</head>
+<body>
+<main class="detour">
+  <div class="inner">
+    <svg viewBox="0 0 360 230" role="img" aria-label="A road closed barricade with an orange detour sign pointing right">
+      <rect x="40" y="70" width="280" height="44" rx="6" fill="#fff" stroke="#17201C" stroke-width="3"/>
+      <g><path d="M58 70l-18 44h22l18-44zM104 70l-18 44h22l18-44zM150 70l-18 44h22l18-44zM196 70l-18 44h22l18-44zM242 70l-18 44h22l18-44zM288 70l-18 44h22l18-44z" fill="#EE6A1F"/></g>
+      <text x="180" y="100" text-anchor="middle" font-family="Overpass, Arial Narrow, sans-serif" font-weight="900" font-size="22" fill="#17201C" paint-order="stroke" stroke="#fff" stroke-width="6">ROAD CLOSED</text>
+      <rect x="70" y="114" width="10" height="90" fill="#4A524E"/><rect x="280" y="114" width="10" height="90" fill="#4A524E"/>
+      <rect x="120" y="140" width="150" height="56" rx="6" fill="#EE6A1F" stroke="#17201C" stroke-width="3"/>
+      <text x="180" y="176" text-anchor="middle" font-family="Overpass, Arial Narrow, sans-serif" font-weight="900" font-size="22" fill="#17201C">DETOUR</text>
+      <path d="M232 160h18v-8l14 16-14 16v-8h-18z" fill="#17201C"/>
+      <circle cx="56" cy="58" r="9" fill="#F2A900"/><circle cx="304" cy="58" r="9" fill="#F2A900"/>
+    </svg>
+    <h1>This road is closed.</h1>
+    <p>The page you were looking for isn't here. Follow the detour back to the intersection.</p>
+    <a class="btn" id="home" href="index.html">Detour to the intersection ▸</a>
+  </div>
+</main>
+<script>
+  // On GitHub Pages this page can be served from any missing path, so point the link at the site root.
+  (function () {
+    var a = document.getElementById("home");
+    if (/\.github\.io$/.test(location.hostname)) {
+      var first = location.pathname.split("/")[1];
+      a.href = "/" + (first ? first + "/" : "");
+    }
+  })();
+</script>
+</body>
+</html>
