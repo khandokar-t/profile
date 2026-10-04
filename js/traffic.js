@@ -114,14 +114,30 @@ window.Traffic = (function () {
       self.lanes.push({ a: a, kind: "thru", cars: [], next: Math.random() * 2, mean: 2.6, maxQ: 6 });
       self.lanes.push({ a: a, kind: "left", cars: [], next: 1 + Math.random() * 4, mean: 6.0, maxQ: 3 });
     });
-    // start with short queues so the scene is alive at once
+    this.enabled = false;
+  }
+
+  // Cars drive in from the edges and line up at the (red) stop bars.
+  Sim.prototype.enable = function (instant) {
+    if (this.enabled) return;
+    this.enabled = true;
+    var self = this;
     this.lanes.forEach(function (ln) {
       var n = ln.kind === "thru" ? 3 : 1;
-      for (var k = 0; k < n; k++) self.spawn(ln, STOP_D - 0.3 - k * (CAR_LEN + 1.9), 0);
-      if (ln.kind === "thru") self.spawn(ln, 18 + Math.random() * 20, V0 * 0.8);
+      for (var k = 0; k < n; k++) {
+        if (instant) self.spawn(ln, STOP_D - 0.3 - k * (CAR_LEN + 1.9), 0);
+        else self.spawn(ln, 36 - k * 13, V0 * 0.95);
+      }
+      ln.cars.sort(function (x, y) { return y.d - x.d; });
+      ln.next = self.time + 2 + Math.random() * 3;
     });
-    this.lanes.forEach(function (ln) { ln.cars.sort(function (x, y) { return y.d - x.d; }); });
-  }
+  };
+  Sim.prototype.disable = function () {
+    if (!this.enabled) return;
+    this.enabled = false;
+    var self = this;
+    this.lanes.forEach(function (ln) { ln.cars.forEach(function (c) { self.scene.remove(c.mesh); }); ln.cars = []; });
+  };
 
   Sim.prototype.spawn = function (lane, d, v) {
     var move = lane.kind === "left" ? "left" : (Math.random() < 0.25 ? "right" : "thru");
@@ -162,6 +178,7 @@ window.Traffic = (function () {
 
   Sim.prototype.step = function (dt) {
     this.time += dt;
+    if (!this.enabled) return;
     var self = this;
     this.lanes.forEach(function (ln) {
       var cars = ln.cars;
@@ -225,6 +242,8 @@ window.Traffic = (function () {
     var routes = [[-40, -7.2, -11, -7.2], [11, -7.2, 44, -7.2], [-44, 7.2, -11, 7.2], [26, 7.2, 46, 7.2],
       [-7.2, -42, -7.2, -11], [7.2, -40, 7.2, -11], [-7.2, 11, -7.2, 38], [7.2, 12, 7.2, 40], [14, 9.6, 24, 9.6]];
     this.list = [];
+    this.people = [];
+    this.active = false;
     var self = this;
     function person(x, z, k) {
       var g = new T.Group();
@@ -232,7 +251,8 @@ window.Traffic = (function () {
       b.position.y = 0.45; b.castShadow = true; g.add(b);
       var h = new T.Mesh(headGeo, new T.MeshStandardMaterial({ color: skin[k % skin.length], roughness: 0.7 }));
       h.position.y = 1.12; h.castShadow = true; g.add(h);
-      g.position.set(x, 0.16, z); scene.add(g);
+      g.position.set(x, 0.16, z); g.visible = false; scene.add(g);
+      self.people.push(g);
       return g;
     }
     routes.forEach(function (r, k) {
@@ -242,7 +262,17 @@ window.Traffic = (function () {
     // two people waiting at the bus stop, one by the metro
     person(18.2, 12.1, 3); person(20.1, 12.3, 6); person(-15.2, 11.4, 1);
   }
+  // p = 0..1: people pop into view one after another
+  Peds.prototype.reveal = function (p) {
+    var n = this.people.length;
+    this.people.forEach(function (g, i) {
+      var f = Math.max(0, Math.min(1, p * 1.5 - i / n * 0.5));
+      g.visible = f > 0.01; g.scale.setScalar(Math.max(0.001, f));
+    });
+    this.active = p > 0.99;
+  };
   Peds.prototype.step = function (dt) {
+    if (!this.active) return;
     this.list.forEach(function (p) {
       p.u += p.dir * p.v * dt;
       if (p.u > p.len) { p.u = p.len; p.dir = -1; } else if (p.u < 0) { p.u = 0; p.dir = 1; }

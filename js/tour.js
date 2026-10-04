@@ -27,8 +27,9 @@
     bus.style.left = pos(cur) + "%";
     countEl.textContent = "PHASE " + (cur + 1) + " OF " + N;
     status.textContent = "Scene " + (cur + 1) + " of " + N + ": " + scenes[cur].dataset.name;
-    prevBtn.disabled = cur === 0;
-    nextBtn.textContent = cur === N - 1 ? "Back to the intersection ▸" : "Next phase ▸";
+    prevBtn.style.visibility = cur === 0 ? "hidden" : "";
+    nextBtn.disabled = cur === N - 1;
+    nextBtn.textContent = cur === N - 1 ? "End of tour" : "Next phase ▸";
   }
 
   function enter(i) {
@@ -65,7 +66,7 @@
       if (window.innerWidth <= 900) window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
     }, reduce ? 0 : 320);
   }
-  function next() { if (cur === N - 1) { window.location.href = "index.html"; return; } go(cur + 1); }
+  function next() { if (cur < N - 1) go(cur + 1); }
   function prev() { go(cur - 1); }
 
   nextBtn.addEventListener("click", next);

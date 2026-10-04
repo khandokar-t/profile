@@ -12,6 +12,7 @@ window.SITE = {
     short: "K. T. Rahman",
     first: "Tanvir",
     title: "Transportation Engineer",
+    role: "Graduate Assistant, Intelligent Transportation Systems Lab, Western Michigan University",
     tagline: "Signals, safety and the data in between.",
     location: "Kalamazoo, Michigan",
     email: "khandokartanvir.rahman@wmich.edu"
@@ -63,7 +64,7 @@ window.SITE = {
       items: [
         {
           title: "M.S. Civil Engineering (Transportation)",
-          meta: "Western Michigan University · Aug 2025 – present · GPA 3.88 / 4.00",
+          meta: "Western Michigan University · Aug 2025 – Present · GPA 3.88 / 4.00",
           text: "Coursework: Transportation Planning, Travel Demand Analysis, Traffic Safety Engineering, Construction Project Delivery Systems, Civil Systems Analysis, Modeling and Analysis of Civil Engineering Applications."
         },
         {
@@ -85,7 +86,7 @@ window.SITE = {
       items: [
         {
           title: "Evaluation of MDOT's methodology for estimating work-zone user delay times and costs",
-          meta: "Aug 2025 – present · Sponsor: Michigan Department of Transportation",
+          meta: "Aug 2025 – Present · Sponsor: Michigan Department of Transportation",
           bullets: [
             "Analyzed multi-source work-zone traffic data from RITIS, Bluetooth, API feeds, Microwave Vehicle Detection Systems (MVDS) and camera video: speed, volume, travel time, lane closures and work-zone layouts.",
             "Cleaned, processed, visualized and compared the sources to judge how well each suits work-zone delay and queue evaluation.",
@@ -165,7 +166,7 @@ window.SITE = {
       items: [
         {
           title: "Graduate Teaching Assistant",
-          meta: "Western Michigan University · Aug 2025 – present",
+          meta: "Western Michigan University · Aug 2025 – Present",
           bullets: ["CCE 4300 – Traffic Design", "CCE 3300 – Transportation Engineering"]
         },
         {
@@ -208,12 +209,76 @@ window.SITE = {
       title: "Chapters, competitions and training",
       lead: "Professional activities in Bangladesh and Michigan.",
       items: [
-        { title: "Vice Secretary, ITE Student Chapter", meta: "Western Michigan University · Sep 2025 – present" },
+        { title: "Vice Secretary, ITE Student Chapter", meta: "Western Michigan University · Sep 2025 – Present" },
         { title: "Deputy Secretary, Internal Affairs, ASCE Student Chapter", meta: "BUET · 2022 – 2023" },
         { title: "Participant, ITE Safe System Approach Student Competition", meta: "2025" },
         { title: "Attendee, Joint ITE International and Great Lakes District Annual Meeting and Exhibition", meta: "2026" },
         { title: "CITI Program: Graduate College Responsible Conduct of Research", meta: "2025" }
       ]
     }
+  }
+};
+
+/* Short versions for the intersection card, which must fit one fixed-size box
+   without scrolling. The full text above is used by the map and the plain CV. */
+window.SITE.cards = {
+  welcome: {
+    title: "Khandokar Tanvir Rahman",
+    lead: "Transportation engineering graduate student working on traffic operations, safety and the data behind them.",
+    items: [
+      { title: "M.S. Civil Engineering (Transportation)", meta: "Western Michigan University · 2025 – Present · GPA 3.88" },
+      { title: "Winner, ITE Great Lakes District design competition", meta: "Turbo roundabout redesign · 2026" },
+      { title: "2 conference papers · 7 courses taught", meta: "Waterbus services · crash forecasting" }
+    ]
+  },
+  about: {
+    title: "From Dhaka's rivers to Michigan's roads",
+    lead: "I work on traffic operations, safety and the data behind them: work zones, crash trends, signals and transit.",
+    items: [
+      { title: "M.S. Civil Engineering (Transportation)", meta: "Western Michigan University · 2025 – Present · GPA 3.88 / 4.00" },
+      { title: "B.Sc. Civil Engineering (Transportation)", meta: "BUET, Dhaka · 2023 · GPA 3.49 / 4.00", text: "Thesis on Dhaka's waterbus service and its passengers." },
+      { title: "Interests", tags: ["ITS", "Safety", "Connected and automated vehicles", "Traffic operations", "Work zones", "Planning", "Simulation"] }
+    ],
+    cta: { label: "Take the guided tour", href: "tour.html" }
+  },
+  research: {
+    title: "Work-zone user delay and cost",
+    lead: "Evaluating how the Michigan DOT estimates the delay and cost that work zones impose on road users.",
+    items: [
+      { title: "Graduate Research Assistant, ITS Lab, WMU", meta: "Aug 2025 – Present · Sponsor: Michigan Department of Transportation",
+        bullets: ["Five data sources: RITIS, Bluetooth, API feeds, MVDS and video", "Cleaned and compared them for delay and queue evaluation", "Reviewed vehicle operating cost methods"] },
+      { title: "Undergraduate research, BUET", meta: "2022 – 2023", text: "Waterbus passenger survey and ARIMA crash forecasting." }
+    ]
+  },
+  papers: {
+    title: "Two peer-reviewed conference papers",
+    items: [
+      { title: "Waterbus services and passenger preferences", meta: "ICCESD 2024 · Rahman, Shristi, Shahriar & Rahman",
+        text: "Why Dhaka's first waterbus failed, and what would make the next one work.",
+        links: [{ label: "Read on ResearchGate", href: "https://www.researchgate.net/publication/379118004" }] },
+      { title: "Forecasting unauthorized-vehicle crashes in Bangladesh", meta: "ICACE 2022 · Huq, Rahman & Shristi",
+        text: "ARIMA(6,1,7) on police crash records, 2009–2015, forecast to 2020.",
+        links: [{ label: "Read on ResearchGate", href: "https://www.researchgate.net/publication/368713906" }] }
+    ]
+  },
+  projects: {
+    title: "Design, capstone and industry projects",
+    items: [
+      { title: "Turbo roundabout redesign", meta: "Winner, ITE Great Lakes District design competition · 2026",
+        text: "Spiral lanes for a high-crash two-lane roundabout. 20-year B/C = 1.12." },
+      { title: "Buriganga River channel restoration", meta: "BUET capstone · 2023",
+        text: "Integrated roadway and waterway plan for Kamrangirchar." },
+      { title: "CLIMAS knowledge tool", meta: "Indetechs Software, Dhaka · 2024 – 2025",
+        text: "Python, NLP and ontologies for climate-assembly agendas." }
+    ]
+  },
+  teaching: {
+    title: "Seven courses at two universities",
+    items: [
+      { title: "Graduate Teaching Assistant", meta: "Western Michigan University · 2025 – Present",
+        bullets: ["CCE 4300 – Traffic Design", "CCE 3300 – Transportation Engineering"] },
+      { title: "Adjunct Lecturer", meta: "Presidency University, Dhaka · Spring and Summer 2025",
+        tags: ["Transportation Engineering Sessional I", "Computer Programming Sessional", "Environmental Engineering Sessional I", "Environmental Engineering II", "Hydrology and Irrigation Engineering"] }
+    ]
   }
 };

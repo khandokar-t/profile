@@ -1,14 +1,17 @@
-/* The metro map: stations are built from the data below (text comes from content.js),
-   a click sends a train along the line and fills the card. */
+/* The metro map: stations are built from the data below (text comes from content.js).
+   The mouse wheel rides the lines one by one; a click on a station sends the train there.
+   The card on the right keeps one size and scales its text to fit. */
 (function () {
   "use strict";
   var SITE = window.SITE, S = SITE.sections, NS = "http://www.w3.org/2000/svg";
   var LINES = {
-    s: { name: "Safety", color: "#eb6834", letter: "S" },
-    o: { name: "Operations", color: "#2a78d6", letter: "O" },
-    p: { name: "Planning & Waterways", color: "#1baf7a", letter: "P" },
-    t: { name: "Teaching & Community", color: "#17201C", letter: "T" }
+    s: { name: "Safety line", color: "#eb6834", letter: "S", about: "Crash data, safer designs and the Safe System approach.", route: ["buet", "crash", "wmu", "safesystem", "detroit"] },
+    o: { name: "Operations line", color: "#2a78d6", letter: "O", about: "Work zones, traffic design and signal operations.", route: ["mdot", "ta", "detroit"] },
+    p: { name: "Planning & Waterways line", color: "#1baf7a", letter: "P", about: "Transit, rivers and decision support, from Dhaka to Michigan.", route: ["buet", "waterbus", "buriganga", "climas", "planning", "wmu"] },
+    t: { name: "Teaching & Community line", color: "#17201C", letter: "T", about: "Classrooms and professional chapters in both countries.", route: ["buet", "asce", "presidency", "wmu", "itechapter", "detroit"] }
   };
+  var ORDER = [null, "s", "o", "p", "t"];                 // the wheel steps: overview, then each line
+
   // lab: "above" | "below" | [x, y, anchor]   y2 makes a capsule interchange
   var STATIONS = [
     { id: "buet", name: "BUET", sub: "B.Sc. 2023", x: 150, y: 320, big: true, lines: ["p", "s", "t"], lab: [128, 316, "end"], ph: 8,
@@ -20,21 +23,21 @@
     { id: "crash", name: "Crash forecasting", sub: "ICACE 2022", x: 290, y: 320, lines: ["s"], lab: "below", ph: 5, from: S.papers.items[1] },
     { id: "asce", name: "ASCE chapter", sub: "BUET · 2022–23", x: 250, y: 400, lines: ["t"], lab: "below", ph: 7, from: S.leadership.items[1] },
     { id: "presidency", name: "Presidency University", sub: "Lecturer · 2025", x: 380, y: 400, lines: ["t"], lab: "below", ph: 4, from: S.teaching.items[1] },
-    { id: "mdot", name: "MDOT work zones", sub: "Research · 2025–", x: 680, y: 150, lines: ["o"], lab: "above", ph: 2, from: S.research.items[0] },
+    { id: "mdot", name: "MDOT work zones", sub: "Research · 2025 – Present", x: 680, y: 150, lines: ["o"], lab: "above", ph: 2, from: S.research.items[0] },
     { id: "ta", name: "Traffic Design TA", sub: "CCE 4300 · CCE 3300", x: 840, y: 150, lines: ["o"], lab: "above", ph: 4, from: S.teaching.items[0] },
     { id: "planning", name: "Planning courses", sub: "WMU coursework", x: 680, y: 240, lines: ["p"], lab: "above", ph: 8,
-      from: { title: "Graduate coursework", meta: "Western Michigan University · 2025 – present", text: S.about.items[0].text } },
-    { id: "wmu", name: "WMU", sub: "M.S. 2025–", x: 760, y: 320, y2: 400, lines: ["p", "s", "t"], lab: [784, 356, "start"], ph: 8, from: S.about.items[0] },
+      from: { title: "Graduate coursework", meta: "Western Michigan University · 2025 – Present", text: S.about.items[0].text } },
+    { id: "wmu", name: "WMU", sub: "M.S. 2025 – Present", x: 760, y: 320, y2: 400, lines: ["p", "s", "t"], lab: [784, 356, "start"], ph: 8, from: S.about.items[0] },
     { id: "safesystem", name: "Safe System comp.", sub: "ITE · 2025", x: 850, y: 320, lines: ["s"], lab: "above", ph: 7, from: S.leadership.items[2] },
     { id: "itechapter", name: "ITE chapter", sub: "Vice Secretary", x: 850, y: 400, lines: ["t"], lab: "below", ph: 7, from: S.leadership.items[0] },
     { id: "detroit", name: "Detroit 2026", sub: "Design win · Traffic Bowl", x: 940, y: 320, y2: 400, lines: ["s", "o", "t"], lab: [990, 436, "end"], subY: 466, ph: 6,
       from: S.projects.items[0], also: [S.awards.items[0], S.awards.items[1]] }
   ];
+  var BY = {}; STATIONS.forEach(function (st) { BY[st.id] = st; });
 
-  var svg = document.getElementById("metro"), layer = document.getElementById("stations");
+  var layer = document.getElementById("stations");
   var tracks = {};
   Array.prototype.forEach.call(document.querySelectorAll("#tracks path"), function (p) { tracks[p.dataset.line] = p; });
-
   function el(tag, attrs, text) {
     var e = document.createElementNS(NS, tag);
     for (var k in attrs) e.setAttribute(k, attrs[k]);
@@ -45,7 +48,6 @@
   /* ---------- build stations ---------- */
   STATIONS.forEach(function (st) {
     var g = el("g", { "class": "hit", tabindex: "0", role: "button", "aria-label": st.name + ", " + st.sub });
-    // a generous, invisible click target around the marker
     if (st.y2) g.appendChild(el("rect", { x: st.x - 24, y: st.y - 24, width: 48, height: st.y2 - st.y + 48, rx: 24, fill: "transparent" }));
     else g.appendChild(el("circle", { cx: st.x, cy: st.y, r: 24, fill: "transparent" }));
     if (st.y2) g.appendChild(el("rect", { "class": "xchg", x: st.x - 13, y: st.y - 13, width: 26, height: st.y2 - st.y + 26, rx: 13 }));
@@ -56,11 +58,10 @@
     else { nx = st.lab[0]; ny = st.lab[1]; sy = st.subY || ny + 17; anchor = st.lab[2]; }
     g.appendChild(el("text", { "class": "name", x: nx, y: ny, "text-anchor": anchor }, st.name));
     g.appendChild(el("text", { "class": "sub", x: nx, y: sy, "text-anchor": anchor }, st.sub));
-    g.addEventListener("click", function () { select(st); });
-    g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(st); } });
+    g.addEventListener("click", function () { selectStation(st); });
+    g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectStation(st); } });
     layer.appendChild(g);
     st.g = g;
-    // where this station sits along each of its lines
     st.at = {};
     st.lines.forEach(function (ln) {
       var p = tracks[ln], L = p.getTotalLength(), best = 0, bd = Infinity;
@@ -84,68 +85,123 @@
     if (it.links) it.links.forEach(function (l) { h += '<a class="btn small" href="' + esc(l.href) + '" target="_blank" rel="noopener">' + esc(l.label) + " ↗</a>"; });
     return h + "</article>";
   }
-  function renderCard(st) {
-    var first = st.lines[0];
-    head.className = "card-head line-" + first;
-    head.innerHTML = '<span class="ph">' + st.lines.map(function (l) { return LINES[l].letter; }).join(" · ") + '</span><span class="street">' + esc(st.name) + "</span>";
+  function setCard(cls, ph, title, html) {
+    head.className = "card-head" + (cls ? " " + cls : "");
+    head.innerHTML = '<span class="ph">' + ph + '</span><span class="street">' + esc(title) + "</span>";
+    body.innerHTML = html;
+    window.fitBox(body);
+  }
+  function overviewCard() {
+    setCard("", "MAP", "The network",
+      "<h2>Four lines, two cities</h2>" +
+      '<p class="lead">Each line is a theme of my work. Stations are projects, papers, roles and places; the capsules are interchanges where themes meet.</p>' +
+      '<article class="item"><h3>Lines</h3><ul>' + ORDER.slice(1).map(function (k) {
+        return "<li><b>" + LINES[k].letter + "</b> · " + esc(LINES[k].name) + "</li>";
+      }).join("") + "</ul></article>" +
+      '<p class="meta">Scroll to ride each line · click a station</p>');
+  }
+  function lineCard(k) {
+    var L = LINES[k];
+    setCard("line-" + k, L.letter, L.name,
+      "<h2>" + esc(L.name) + "</h2>" + '<p class="lead">' + esc(L.about) + "</p>" +
+      '<article class="item"><h3>Stations</h3><ol>' + L.route.map(function (id) {
+        var st = BY[id]; return "<li><b>" + esc(st.name) + "</b> · " + esc(st.sub) + "</li>";
+      }).join("") + "</ol></article>");
+  }
+  function stationCard(st) {
     var h = "<h2>" + esc(st.name) + "</h2>";
-    h += '<p class="lead">' + st.lines.map(function (l) { return esc(LINES[l].name); }).join(", ") + (st.lines.length > 1 ? " lines" : " line") +
-      (st.extra ? ". " + esc(st.extra) : ".") + "</p>";
+    h += '<p class="lead">' + st.lines.map(function (l) { return esc(LINES[l].name); }).join(", ") + (st.extra ? ". " + esc(st.extra) : ".") + "</p>";
     var main = st.from;
     if (st.bullets) main = { title: main.title, meta: main.meta, text: main.text, links: main.links, bullets: st.bullets };
     h += itemHTML(main);
     (st.also || []).forEach(function (it) { h += itemHTML(it); });
-    var phase = SITE.phases[st.ph];
-    h += '<a class="btn sign" href="index.html#p' + st.ph + '">See it at the intersection: Φ' + st.ph + " " + esc(phase.label) + " ▸</a>";
-    body.innerHTML = h;
-    body.scrollTop = 0;
+    h += '<a class="btn sign small" href="index.html#p' + st.ph + '">At the intersection: Φ' + st.ph + " " + esc(SITE.phases[st.ph].label) + " ▸</a>";
+    setCard("line-" + st.lines[0], st.lines.map(function (l) { return LINES[l].letter; }).join(" · "), st.name, h);
   }
+  window.addEventListener("resize", function () { window.fitBox(body); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { window.fitBox(body); });
 
-  /* ---------- trains ---------- */
+  /* ---------- the train ---------- */
   var train = document.getElementById("train"), trainBody = train.querySelector("rect");
-  var tState = { line: null, d: 0 }, anim = null;
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var tState = { line: null, d: 0 }, anim = null;
   function placeTrain(line, d) {
     var p = tracks[line], L = p.getTotalLength();
-    var a = p.getPointAtLength(Math.max(0, Math.min(L, d))), b = p.getPointAtLength(Math.max(0, Math.min(L, d + 1)));
-    var c = p.getPointAtLength(Math.max(0, Math.min(L, d - 1)));
-    var ang = Math.atan2(b.y - c.y, b.x - c.x) * 180 / Math.PI;
-    train.setAttribute("transform", "translate(" + a.x + " " + a.y + ") rotate(" + ang + ")");
+    var a = p.getPointAtLength(Math.max(0, Math.min(L, d)));
+    var b = p.getPointAtLength(Math.max(0, Math.min(L, d + 1))), c = p.getPointAtLength(Math.max(0, Math.min(L, d - 1)));
+    train.setAttribute("transform", "translate(" + a.x + " " + a.y + ") rotate(" + (Math.atan2(b.y - c.y, b.x - c.x) * 180 / Math.PI) + ")");
   }
-  function sendTrain(st) {
-    var line = (selLine && st.lines.indexOf(selLine) >= 0) ? selLine : (tState.line && st.lines.indexOf(tState.line) >= 0 ? tState.line : st.lines[0]);
-    var from = tState.line === line ? tState.d : 0, to = st.at[line];
+  function runTrain(line, from, to) {
     trainBody.setAttribute("fill", LINES[line].color);
     train.setAttribute("opacity", "1");
     if (anim) cancelAnimationFrame(anim);
     if (reduce) { tState = { line: line, d: to }; placeTrain(line, to); return; }
-    var dur = Math.max(450, Math.abs(to - from) / 0.55), t0 = null;
+    var dur = Math.max(450, Math.abs(to - from) / 0.5), t0 = null;
     function step(t) {
       if (t0 === null) t0 = t;
       var f = Math.min(1, (t - t0) / dur), e = f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
       var d = from + (to - from) * e;
       placeTrain(line, d); tState = { line: line, d: d };
-      if (f < 1) anim = requestAnimationFrame(step); else anim = null;
+      anim = f < 1 ? requestAnimationFrame(step) : null;
     }
     anim = requestAnimationFrame(step);
   }
 
-  /* ---------- selection + legend ---------- */
-  var selected = null, selLine = null;
-  function select(st) {
-    if (selected) selected.g.classList.remove("sel");
-    selected = st; st.g.classList.add("sel");
-    renderCard(st); sendTrain(st);
-    if (window.innerWidth <= 900) document.getElementById("station-card").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-  }
+  /* ---------- states: overview, a line, or a station ---------- */
+  var idx = 0, selected = null;
   var legendBtns = Array.prototype.slice.call(document.querySelectorAll("#legend button"));
   var lineGroups = Array.prototype.slice.call(document.querySelectorAll("#lines > g"));
+  function highlight(k) {
+    legendBtns.forEach(function (x) { x.setAttribute("aria-pressed", String(x.dataset.line === k)); });
+    lineGroups.forEach(function (g) { g.classList.toggle("dim", !!k && g.dataset.line !== k); });
+    STATIONS.forEach(function (st) { st.g.style.opacity = k && st.lines.indexOf(k) < 0 ? "0.3" : ""; });
+  }
+  function clearStation() { if (selected) selected.g.classList.remove("sel"); selected = null; }
+  function showStep(i) {
+    idx = Math.max(0, Math.min(ORDER.length - 1, i));
+    clearStation();
+    var k = ORDER[idx];
+    highlight(k);
+    if (!k) { overviewCard(); train.setAttribute("opacity", "0"); return; }
+    lineCard(k);
+    runTrain(k, 0, tracks[k].getTotalLength());
+  }
+  function selectStation(st) {
+    clearStation();
+    selected = st; st.g.classList.add("sel");
+    stationCard(st);
+    var k = ORDER[idx];
+    var line = k && st.lines.indexOf(k) >= 0 ? k : (tState.line && st.lines.indexOf(tState.line) >= 0 ? tState.line : st.lines[0]);
+    runTrain(line, tState.line === line ? tState.d : 0, st.at[line]);
+    if (window.innerWidth <= 900) document.getElementById("station-card").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }
   legendBtns.forEach(function (b) {
     b.addEventListener("click", function () {
-      selLine = selLine === b.dataset.line ? null : b.dataset.line;
-      legendBtns.forEach(function (x) { x.setAttribute("aria-pressed", String(x.dataset.line === selLine)); });
-      lineGroups.forEach(function (g) { g.classList.toggle("dim", !!selLine && g.dataset.line !== selLine); });
-      STATIONS.forEach(function (st) { st.g.style.opacity = selLine && st.lines.indexOf(selLine) < 0 ? "0.3" : ""; });
+      var i = ORDER.indexOf(b.dataset.line);
+      showStep(idx === i && !selected ? 0 : i);
     });
   });
+
+  /* mouse wheel (desktop): overview → S → O → P → T and back */
+  var locked = false, lockStart = 0, lastWheel = 0, acc = 0;
+  window.addEventListener("wheel", function (e) {
+    if (window.innerWidth <= 900) return;
+    if (e.target.closest && e.target.closest("dialog")) return;
+    e.preventDefault();
+    var now = performance.now();
+    if (locked) {
+      if (now - lockStart > 650 && now - lastWheel > 180) locked = false;
+      lastWheel = now;
+      if (locked) return;
+    }
+    if (now - lastWheel > 300) acc = 0;
+    lastWheel = now; acc += e.deltaY;
+    if (Math.abs(acc) < 30) return;
+    var dir = acc > 0 ? 1 : -1;
+    acc = 0; locked = true; lockStart = now;
+    var target = idx + dir;
+    if (target >= 0 && target < ORDER.length) showStep(target);
+  }, { passive: false });
+
+  showStep(0);
 })();

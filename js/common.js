@@ -21,6 +21,17 @@
   }
   window.toast = toast;
 
+  /* ---------- fixed-size cards: shrink the text until everything fits (desktop) ---------- */
+  window.fitBox = function (body) {
+    if (!body) return;
+    body.style.setProperty("--fs", "1");
+    if (window.innerWidth <= 900) return;                 // phones: the card simply grows
+    var fs = 1;
+    for (var i = 0; i < 40 && body.scrollHeight > body.clientHeight + 1 && fs > 0.66; i++) {
+      fs -= 0.02; body.style.setProperty("--fs", fs.toFixed(2));
+    }
+  };
+
   /* ---------- profile links (empty URL = "coming soon") ---------- */
   function renderLinks(box) {
     box.textContent = "";
