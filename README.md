@@ -1,4 +1,4 @@
-# Khandokar Tanvir Rahman · portfolio (version 1)
+# Khandokar Tanvir Rahman · portfolio (version 2)
 
 A static website, ready for GitHub Pages. No build step.
 

@@ -34,7 +34,7 @@ svg{shape-rendering:geometricPrecision;text-rendering:geometricPrecision}
   padding:10px clamp(12px,2.5vw,26px);padding-top:calc(10px + env(safe-area-inset-top,0px));
   background:rgba(251,252,250,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);min-width:0}
-.brand svg{flex:none;width:18px;height:40px}
+.brand svg{flex:none;width:48px;height:40px}
 .brand-text{display:flex;flex-direction:column;min-width:0;line-height:1.15}
 .brand-text b{font-family:var(--f-display);font-weight:900;font-size:1.12rem;letter-spacing:.005em;white-space:nowrap}
 .brand-text span{font-size:.78rem;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -155,7 +155,6 @@ body.home{overflow:hidden}
 .btn.run[aria-pressed="true"]{background:var(--ink);border-color:var(--ink)}
 .sig-status{font-size:.9rem;color:var(--ink-2);min-height:1.4em}
 .sig-status b{color:var(--ink)}
-.mini{font-family:var(--f-mono);font-size:.7rem;color:var(--ink-3);letter-spacing:.02em}
 
 .home .card{position:fixed;z-index:20;top:calc(var(--top) + 14px + env(safe-area-inset-top,0px));right:18px;bottom:18px;width:min(420px,33vw)}
 .dock{position:fixed;z-index:20;left:18px;right:calc(min(420px,33vw) + 36px);bottom:18px;display:flex;justify-content:center;pointer-events:none}
@@ -170,23 +169,19 @@ body.home{overflow:hidden}
 .home:not(.ui-on) .ctrl,.home:not(.ui-on) .ctrl *,.home:not(.ui-on) .card,.home:not(.ui-on) .card *,
 .home:not(.ui-on) .dock-inner,.home:not(.ui-on) .dock-inner *,.home:not(.ui-on) .tag3d{pointer-events:none}
 
-/* ---------- intro: greeting, the name flight, the click gate ---------- */
+/* ---------- intro: the greeting, then the click gate ---------- */
 .intro{position:fixed;inset:0;z-index:60;pointer-events:none}
 .intro::before{content:"";position:absolute;inset:0;background:var(--bg);transition:opacity .5s}
 .intro.clear::before{opacity:0}
 .skip-intro .intro{display:none}
 .hi{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);margin:0;text-align:center;font-family:var(--f-display);font-weight:900;
-  font-size:clamp(1.8rem,4.6vw,3.6rem);line-height:1.1;color:var(--ink);white-space:nowrap}
-.hi-a{display:inline-block;animation:hiPop .7s ease-out backwards;transition:opacity .4s}
-.hi-n{display:inline-block;animation:hiPop .7s .18s ease-out backwards;transition:transform .9s cubic-bezier(.65,0,.25,1)}
-.intro.flying .hi-a{opacity:0}
-.named .intro .hi{opacity:0;transition:opacity .15s}
-@keyframes hiPop{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+  font-size:clamp(1.8rem,4.6vw,3.6rem);line-height:1.1;color:var(--ink);white-space:nowrap;animation:hiPop .8s ease-out backwards;transition:opacity .45s}
+.intro.clear .hi{opacity:0}
+@keyframes hiPop{from{opacity:0;transform:translate(-50%,-50%) translateY(16px) scale(.96)}to{opacity:1;transform:translate(-50%,-50%)}}
 @media (max-width:640px){.hi{white-space:normal;width:90vw}}
-body.name-on:not(.named) #brand-name{opacity:0}
-body.name-on .nav,body.name-on .brand svg,body.name-on .brand-text span{opacity:0}
-.nav,.brand svg,.brand-text span,#brand-name{transition:opacity .5s}
-.gate{position:fixed;z-index:61;display:flex;align-items:center;gap:14px;padding:8px 10px;border:0;background:transparent;color:var(--ink);font:inherit;text-align:left;cursor:pointer;
+.topbar{transition:opacity .5s,transform .5s}
+body.name-on .topbar{opacity:0;transform:translateY(-10px)}
+.gate{position:absolute;z-index:5;display:flex;align-items:center;gap:14px;padding:8px 10px;border:0;background:transparent;color:var(--ink);font:inherit;text-align:left;cursor:pointer;
   opacity:0;transform:translate(0,-50%) translateX(-8px);transition:opacity .35s,transform .35s}
 .gate.show{opacity:1;transform:translate(0,-50%)}
 .gate.below{transform:translate(-50%,0) translateY(-8px)}
@@ -197,18 +192,21 @@ body.name-on .nav,body.name-on .brand svg,body.name-on .brand-text span{opacity:
 .gate.go .l-g{fill:#2FD27A}
 @keyframes blinkR{0%{fill:#FF4A3D}50%{fill:#3A423E}}
 .gate-t{display:block;font-family:var(--f-display);font-weight:900;font-size:1.3rem;line-height:1.15}
-.gate-s{display:block;font-family:var(--f-mono);font-size:.74rem;color:var(--ink-3);margin-top:2px}
 
 @media (max-width:900px){
   body.home{overflow:auto}
-  .home main{display:flex;flex-direction:column}
-  .home .stage{order:1}.home .ctrl{order:2}.home .dock{order:3}.home .card{order:4}
-  .stage{position:relative;height:62vh;min-height:360px;margin-top:calc(var(--top) + env(safe-area-inset-top,0px))}
-  .ctrl{position:relative;left:auto;top:auto;width:auto;margin:12px 12px 0}
+  body.home:not(.ui-on){overflow:hidden;overscroll-behavior:none}
+  html:has(body.home:not(.ui-on)){overflow:hidden}
+  .home:not(.ui-on) .stage{touch-action:none}
+  .stage{position:relative;height:calc(100vh - var(--top));height:calc(100svh - var(--top));min-height:440px;margin-top:calc(var(--top) + env(safe-area-inset-top,0px))}
+  .ctrl{position:absolute;left:10px;top:10px;width:auto;max-width:calc(100% - 20px);padding:8px 10px;gap:5px}
+  .btn.run{font-size:.76rem;padding:8px 12px}
+  .sig-status{font-size:.8rem;min-height:0}
+  .dock{position:absolute;left:8px;right:8px;bottom:8px}
+  .dock-inner{width:100%;padding:6px}
   .home .card{position:relative;top:auto;right:auto;bottom:auto;width:auto;margin:12px}
+  .home:not(.ui-on) .card{display:none}
   .home .card .card-body{overflow:visible}
-  .dock{position:relative;left:auto;right:auto;bottom:auto;margin:12px 12px 0}
-  .dock-inner{width:100%}
   .rb{grid-template-columns:auto minmax(0,1fr) minmax(0,1.3fr) 5px minmax(0,1fr) minmax(0,1.3fr)}
   .rb button{font-size:.72rem;padding:8px 6px}
   .rb button b{margin-right:3px}

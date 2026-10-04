@@ -233,53 +233,85 @@ window.Traffic = (function () {
     });
   };
 
-  /* ---------- pedestrians strolling on the sidewalks (decoration) ---------- */
+  /* ---------- people: they walk in from outside the scene, like the cars ---------- */
+  function poly(pts) {
+    var segs = [], total = 0;
+    for (var i = 0; i < pts.length - 1; i++) {
+      var a = pts[i], b = pts[i + 1], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      segs.push({ a: a, b: b, L: L, start: total }); total += L;
+    }
+    return { segs: segs, len: total };
+  }
+  function onPath(path, u) {
+    u = Math.max(0, Math.min(path.len, u));
+    for (var i = 0; i < path.segs.length; i++) {
+      var sg = path.segs[i];
+      if (u <= sg.start + sg.L || i === path.segs.length - 1) {
+        var f = sg.L ? (u - sg.start) / sg.L : 0, dx = sg.b[0] - sg.a[0], dz = sg.b[1] - sg.a[1];
+        return { x: sg.a[0] + dx * f, z: sg.a[1] + dz * f, dx: dx, dz: dz };
+      }
+    }
+  }
   function Peds(scene) {
     var cols = [0xE5533D, 0x3A86D6, 0xF2B134, 0x3DAA6D, 0x8E6BD8, 0x2EB5B0, 0x56616B, 0xF07FA6];
     var skin = [0x8D5A3B, 0xC68B5E, 0xE0B48A, 0x6B4630];
-    var bodyGeo = new T.CylinderGeometry(0.26, 0.32, 0.9, 10), headGeo = new T.SphereGeometry(0.22, 12, 10);
-    // [x0, z0, x1, z1] along the sidewalk strips (centre line 7.2 from the road centre)
-    var routes = [[-40, -7.2, -11, -7.2], [11, -7.2, 44, -7.2], [-44, 7.2, -11, 7.2], [26, 7.2, 46, 7.2],
-      [-7.2, -42, -7.2, -11], [7.2, -40, 7.2, -11], [-7.2, 11, -7.2, 38], [7.2, 12, 7.2, 40], [14, 9.6, 24, 9.6]];
-    this.list = [];
-    this.people = [];
-    this.active = false;
+    var bodyGeo = new T.CylinderGeometry(0.26, 0.32, 0.9, 12), headGeo = new T.SphereGeometry(0.22, 14, 12);
     var self = this;
-    function person(x, z, k) {
+    this.walkers = []; this.standers = []; this.active = false; this.started = false;
+    function person(k) {
       var g = new T.Group();
       var b = new T.Mesh(bodyGeo, new T.MeshStandardMaterial({ color: cols[k % cols.length], roughness: 0.7 }));
       b.position.y = 0.45; b.castShadow = true; g.add(b);
       var h = new T.Mesh(headGeo, new T.MeshStandardMaterial({ color: skin[k % skin.length], roughness: 0.7 }));
       h.position.y = 1.12; h.castShadow = true; g.add(h);
-      g.position.set(x, 0.16, z); g.visible = false; scene.add(g);
-      self.people.push(g);
+      g.visible = false; scene.add(g);
       return g;
     }
-    routes.forEach(function (r, k) {
-      var len = Math.hypot(r[2] - r[0], r[3] - r[1]);
-      self.list.push({ r: r, len: len, u: Math.random() * len, dir: Math.random() < 0.5 ? 1 : -1, v: 1.1 + Math.random() * 0.5, g: person(r[0], r[1], k), ph: Math.random() * 6 });
+    // walkers: each path starts outside the view; they stroll back and forth along the sidewalk
+    [[[-48, -7.2], [-11, -7.2]], [[48, -7.2], [11, -7.2]], [[-48, 7.2], [-11, 7.2]], [[50, 7.4], [26, 7.4]],
+     [[-7.2, -46], [-7.2, -11]], [[7.2, -46], [7.2, -11]], [[-7.2, 44], [-7.2, 11]], [[7.2, 44], [7.2, 12]],
+     [[46, 7.4], [24.6, 7.4], [24.6, 9.6], [14, 9.6]]
+    ].forEach(function (pts, k) {
+      self.walkers.push({ path: poly(pts), u: 0, dir: 1, v: 1.2 + Math.random() * 0.5, g: person(k), ph: Math.random() * 6 });
     });
-    // two people waiting at the bus stop, one by the metro
-    person(18.2, 12.1, 3); person(20.1, 12.3, 6); person(-15.2, 11.4, 1);
+    // standers: walk in from outside, then wait at the bus shelter and the metro
+    [[[38, 7.2], [24.6, 7.2], [24.6, 9.6], [18.2, 9.6], [18.2, 12.1]],
+     [[42, 7.2], [24.6, 7.2], [24.6, 9.6], [20.1, 9.6], [20.1, 12.3]],
+     [[-38, 7.2], [-15.2, 7.2], [-15.2, 11.4]]
+    ].forEach(function (pts, k) {
+      self.standers.push({ path: poly(pts), u: 0, v: 1.8, g: person(k + 3), ph: 0, done: false });
+    });
   }
-  // p = 0..1: people pop into view one after another
-  Peds.prototype.reveal = function (p) {
-    var n = this.people.length;
-    this.people.forEach(function (g, i) {
-      var f = Math.max(0, Math.min(1, p * 1.5 - i / n * 0.5));
-      g.visible = f > 0.01; g.scale.setScalar(Math.max(0.001, f));
-    });
-    this.active = p > 0.99;
+  Peds.prototype.start = function (instant) {
+    this.started = true; this.active = true;
+    this.walkers.forEach(function (w) { w.g.visible = true; w.u = instant ? Math.random() * w.path.len : 0; w.dir = 1; });
+    this.standers.forEach(function (s) { s.g.visible = true; s.u = instant ? s.path.len : 0; s.done = !!instant; });
+    this.step(0);
+  };
+  Peds.prototype.stop = function () {
+    this.started = false; this.active = false;
+    this.walkers.concat(this.standers).forEach(function (p) { p.g.visible = false; });
+  };
+  Peds.prototype.reveal = function (p) {             // used by the intro: start walking in, or clear
+    if (p > 0 && !this.started) this.start(false);
+    else if (p <= 0 && this.started) this.stop();
   };
   Peds.prototype.step = function (dt) {
     if (!this.active) return;
-    this.list.forEach(function (p) {
-      p.u += p.dir * p.v * dt;
-      if (p.u > p.len) { p.u = p.len; p.dir = -1; } else if (p.u < 0) { p.u = 0; p.dir = 1; }
-      var f = p.u / p.len, r = p.r;
+    function place(p, walking) {
+      var q = onPath(p.path, p.u), d = p.dir || 1;
       p.ph += dt * 9;
-      p.g.position.set(r[0] + (r[2] - r[0]) * f, 0.16 + Math.abs(Math.sin(p.ph)) * 0.08, r[1] + (r[3] - r[1]) * f);
-      p.g.rotation.y = Math.atan2((r[2] - r[0]) * p.dir, (r[3] - r[1]) * p.dir);
+      p.g.position.set(q.x, 0.16 + (walking ? Math.abs(Math.sin(p.ph)) * 0.08 : 0), q.z);
+      if (walking) p.g.rotation.y = Math.atan2(q.dx * d, q.dz * d);
+    }
+    this.walkers.forEach(function (w) {
+      w.u += w.dir * w.v * dt;
+      if (w.u > w.path.len) { w.u = w.path.len; w.dir = -1; } else if (w.u < 0) { w.u = 0; w.dir = 1; }
+      place(w, true);
+    });
+    this.standers.forEach(function (s) {
+      if (!s.done) { s.u += s.v * dt; if (s.u >= s.path.len) { s.u = s.path.len; s.done = true; } }
+      place(s, !s.done);
     });
   };
 

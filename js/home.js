@@ -93,7 +93,7 @@
     });
     if (s.status === "green") {
       var i = SITE.phases[s.phase];
-      status.innerHTML = "Serving <b>" + esc(name(s.phase)) + "</b>" + (i.turn === "left" ? " (protected left turn)." : ".");
+      status.innerHTML = (autoTimer ? "Pre-timed · " : "") + "Serving <b>" + esc(name(s.phase)) + "</b>" + (i.turn === "left" ? " (protected left turn)." : ".");
       if (shown !== s.phase) { renderCard(s.phase); shown = s.phase; }
       body.classList.remove("out");
     } else if (s.status === "yellow") {
@@ -115,10 +115,11 @@
     if (!autoTimer) return;
     clearInterval(autoTimer); autoTimer = null;
     autoBtn.setAttribute("aria-pressed", "false"); autoBtn.innerHTML = "▶ Run pre-timed tour";
+    emit();                                              // back to actuated: the signal waits for clicks
   }
   function toggleAuto() {
     if (autoTimer) { stopAuto(); return; }
-    autoBtn.setAttribute("aria-pressed", "true"); autoBtn.innerHTML = "■ Stop tour";
+    autoBtn.setAttribute("aria-pressed", "true"); autoBtn.innerHTML = "↩ Back to actuated signal";
     autoBtn.classList.remove("pulse");
     var i = seq.indexOf(S.phase);
     i = (i + 1) % seq.length;

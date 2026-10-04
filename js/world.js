@@ -318,16 +318,34 @@ window.World = (function () {
       anchors.push({ kind: "obj push", text: "Push for contact", short: "Contact", x: x, y: 2.3, z: z, action: act });
     })();
 
-    /* NW corner: controller cabinet (pre-timed tour) */
+    /* NW corner: a city map board (opens the map) */
     (function () {
-      var g = new T.Group(), x = -12.2, z = -10.6;
-      var cab = mesh(unitBox, mat(0xB9C0BB, { roughness: 0.5 })); cab.scale.set(1.0, 1.6, 0.7); cab.position.set(x, 0.8, z); g.add(cab);
-      var dr = mesh(unitBox, mat(0xA3ABA6)); dr.scale.set(0.8, 1.3, 0.05); dr.position.set(x, 0.8, z + 0.37); g.add(dr);
-      var pad = mesh(unitBox, mat(0xA9A59A)); pad.scale.set(1.4, 0.1, 1.1); pad.position.set(x, 0.05, z); g.add(pad);
-      recenter(g, x, z); claim(x, z, 1.2);
-      var act = pickable(g, { type: "auto" });
+      var g = new T.Group(), x = -12.8, z = -11.2;
+      [-1.15, 1.15].forEach(function (k) { var pl = mesh(new T.CylinderGeometry(0.07, 0.07, 2.7, 8), poleMat); pl.position.set(x + k, 1.35, z); g.add(pl); });
+      var mapTex = canvasTex(512, 320, function (c, w, h) {
+        c.fillStyle = "#F3F5F1"; c.fillRect(0, 0, w, h);
+        c.fillStyle = "#CFE4EE"; c.fillRect(236, 0, 60, h);
+        c.lineCap = "round"; c.lineJoin = "round"; c.lineWidth = 15;
+        [["#1baf7a", [[52, 176], [104, 124], [420, 124], [462, 166]]], ["#eb6834", [[52, 176], [470, 176]]],
+         ["#17201C", [[52, 176], [104, 228], [470, 228]]], ["#2a78d6", [[330, 72], [420, 72], [470, 122], [470, 176]]]
+        ].forEach(function (ln) {
+          c.strokeStyle = ln[0]; c.beginPath();
+          ln[1].forEach(function (q, i) { if (i) c.lineTo(q[0], q[1]); else c.moveTo(q[0], q[1]); }); c.stroke();
+        });
+        c.fillStyle = "#fff"; c.strokeStyle = "#17201C"; c.lineWidth = 5;
+        [[52, 176], [150, 124], [200, 228], [170, 176], [330, 72], [400, 124], [380, 176], [380, 228], [470, 176], [420, 72]].forEach(function (q) {
+          c.beginPath(); c.arc(q[0], q[1], 11, 0, Math.PI * 2); c.fill(); c.stroke();
+        });
+        c.fillStyle = "#17201C"; c.font = "bold 40px Arial, sans-serif"; c.fillText("MAP", 22, 52);
+        c.strokeStyle = "#17201C"; c.lineWidth = 8; c.strokeRect(4, 4, w - 8, h - 8);
+      });
+      var edge = mat(0x2E3B42), face = new T.MeshStandardMaterial({ map: mapTex, roughness: 0.6 });
+      var board = new T.Mesh(new T.BoxGeometry(2.9, 1.8, 0.12), [edge, edge, edge, edge, face, edge]);
+      board.position.set(x, 2.2, z); board.castShadow = true; g.add(board);
+      recenter(g, x, z); claim(x, z, 1.8);
+      var act = pickable(g, { type: "link", href: "map.html" });
       addDecor(g, x, z);
-      anchors.push({ kind: "obj", text: "Cabinet · Auto tour", short: "Auto tour", x: x, y: 2.3, z: z, action: act });
+      anchors.push({ kind: "obj", text: "City map · Map", short: "Map", arrow: "▸", x: x, y: 3.8, z: z, action: act });
     })();
 
     /* NE: the ITS Lab (opens research) + a pond */

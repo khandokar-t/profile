@@ -121,11 +121,14 @@
       cardW = document.getElementById("card").offsetWidth + 30;
       topPad = 74;
       botPad = document.querySelector(".dock-inner").offsetHeight + 26;
+    } else {                                            // phones: the tour button and the rings float over the scene
+      topPad = document.getElementById("ctrl").offsetHeight + 18;
+      botPad = document.querySelector(".dock-inner").offsetHeight + 18;
     }
     var visW = Math.max(200, w - cardW), visH = Math.max(160, h - topPad - botPad);
     var xHalf = w < 640 ? 16 : 22, zHalf = w < 640 ? 17 : 19;
     var Rf = Math.max(xHalf * h / (visW * tanH), (zHalf * Math.sin(ELEV_FULL) + 2) * h / (visH * tanH));
-    var px = Math.min(0.46 * h, 0.34 * w, 430), ppu = px / (World.EDGE * 2);
+    var px = Math.min(0.46 * h, (w < 700 ? 0.62 : 0.34) * w, 430), ppu = px / (World.EDGE * 2);
     var wide = w >= 700;
     return {
       w: w, h: h, desktop: desktop, cardW: cardW, topPad: topPad, botPad: botPad,
@@ -150,7 +153,7 @@
     renderer.setPixelRatio(pixelRatio(F.w, F.h));
     renderer.setSize(F.w, F.h, false);
     camera.aspect = F.w / F.h;
-    limits = { top: F.desktop ? F.topPad + 30 : 34, right: F.cardW, bottom: F.desktop ? F.botPad + 6 : 6 };
+    limits = { top: F.topPad + (F.desktop ? 30 : 26), right: F.cardW, bottom: F.botPad + 6 };
     applyCamera();
     if (Ctl.state === "gate") positionGate();
   }
@@ -196,14 +199,14 @@
   var LAST = steps.length - 1;
   var Ctl = { state: "name", cur: 0, prog: 0, dir: 0, auto: false, done: false };
 
-  function positionGate() {
-    var r = stage.getBoundingClientRect(), p = new THREE.Vector3();
+  function positionGate() {                           // the gate lives inside the stage, so it scrolls with it
+    var p = new THREE.Vector3();
     if (F.w >= 700) {
       p.set(World.EDGE, 0, 0).project(camera);
-      window.Intro.showGate(r.left + (p.x + 1) / 2 * F.w + 34, r.top + (1 - p.y) / 2 * F.h, false);
+      window.Intro.showGate((p.x + 1) / 2 * F.w + 34, (1 - p.y) / 2 * F.h, false);
     } else {
       p.set(0, 0, World.EDGE).project(camera);
-      window.Intro.showGate(r.left + F.w / 2, r.top + (1 - p.y) / 2 * F.h + 22, true);
+      window.Intro.showGate(F.w / 2, (1 - p.y) / 2 * F.h + 22, true);
     }
   }
   function go() {                                       // the visitor clicked the square
@@ -256,6 +259,7 @@
   if (window.Intro.skip) {
     steps.forEach(function (st) { st.apply(1); });
     sim.disable(); sim.enable(true);
+    peds.stop(); peds.start(true);
     camK = 1; Ctl.cur = LAST; Ctl.prog = 1; finish(); uiOn();
   } else {
     camK = 0; steps[0].apply(0);
