@@ -1,7 +1,8 @@
-/* Traffic: Mini Motorways-style cars and a small car-following simulation.
-   Each approach has a left-turn lane and a through/right lane. Cars follow the
-   car ahead (Intelligent Driver Model), stop at the stop bar on red, decide at
-   yellow whether they can stop, and on green drive all the way through and away. */
+/* Traffic: Mini Motorways-style cars and a small car-following simulation, plus the people.
+   Each approach has three lanes in: left turn only, through only and right turn only.
+   Cars follow the car ahead (Intelligent Driver Model), stop at the stop bar on red, decide
+   at yellow whether they can stop, and on green drive all the way through and away.
+   People pop up in place and only move a little: no walking, so the scene stays calm. */
 window.Traffic = (function () {
   "use strict";
   var T = THREE;
@@ -62,8 +63,11 @@ window.Traffic = (function () {
     return g;
   }
 
-  /* ---------- paths, in an approach's local frame (s along travel, t to the right) ---------- */
+  /* ---------- paths, in an approach's local frame (s along travel, t to the right) ----------
+     Lanes in: left turn t = 0, through t = 3, right turn t = 6. Lanes out: t = 3 and 6 on the far
+     leg (through), the outer lane of the cross street (right turn), its inner lane (left turn). */
   var SPAWN = -80, OUT = 80;
+  var STOP_S = -10.75, BOX_S = -9.9;           // front bumper waits at STOP_S (stop bar at s = -10.5); the box starts at BOX_S
   function line(s0, t0, s1, t1) { return { k: "L", s0: s0, t0: t0, s1: s1, t1: t1, len: Math.hypot(s1 - s0, t1 - t0) }; }
   function arc(cs, ct, r, a0, a1) { return { k: "A", cs: cs, ct: ct, r: r, a0: a0, a1: a1, len: Math.abs(a1 - a0) * r }; }
   function mkPath(segs, arcSpeed) {
@@ -72,14 +76,17 @@ window.Traffic = (function () {
     return { segs: segs, len: total, arcStart: arcStart, arcEnd: arcEnd, arcSpeed: arcSpeed };
   }
   var PATHS = {
-    thru: mkPath([line(SPAWN, 4.5, OUT, 4.5)], 0),
-    right: mkPath([line(SPAWN, 4.5, -9, 4.5), arc(-9, 9, 4.5, -Math.PI / 2, 0), line(-4.5, 9, -4.5, OUT)], 4.6),
-    left: mkPath([line(SPAWN, 1.5, -6, 1.5), arc(-6, -6, 7.5, Math.PI / 2, 0), line(1.5, -6, 1.5, -OUT)], 6.5)
+    thru: mkPath([line(SPAWN, 3, OUT, 3)], 0),
+    right: mkPath([line(SPAWN, 6, -10.2, 6), arc(-10.2, 10.2, 4.2, -Math.PI / 2, 0), line(-6, 10.2, -6, OUT)], 4.6),
+    left: mkPath([line(SPAWN, 0, -8, 0), arc(-8, -11, 11, Math.PI / 2, 0), line(3, -11, 3, -OUT)], 6.5)
   };
-  var STOP_D = -9.25 - SPAWN;        // front bumper waits here (stop bar at s = -9)
-  var ENTRY_D = -6 - SPAWN;          // front enters the box
-  var SPLIT_D = -9 - SPAWN;          // right-turners leave the shared lane here
-  function exitD(move) { return move === "thru" ? 6 - SPAWN + CAR_LEN : move === "right" ? PATHS.right.arcEnd + CAR_LEN : PATHS.left.arcEnd + CAR_LEN; }
+  var STOP_D = STOP_S - SPAWN;                 // distance along the path where the front waits
+  var ENTRY_D = BOX_S - SPAWN;                 // the front enters the box
+  var EXIT_D = {                               // the rear has left the box
+    thru: -BOX_S - SPAWN + CAR_LEN,
+    right: PATHS.right.arcEnd + CAR_LEN,
+    left: PATHS.left.arcEnd + CAR_LEN
+  };
 
   function evalPath(path, d) {
     var segs = path.segs;
@@ -111,8 +118,9 @@ window.Traffic = (function () {
     this.time = 0; this.lanes = [];
     var self = this;
     Object.keys(World.APP).forEach(function (a) {
-      self.lanes.push({ a: a, kind: "thru", cars: [], next: Math.random() * 2, mean: 2.6, maxQ: 6 });
-      self.lanes.push({ a: a, kind: "left", cars: [], next: 1 + Math.random() * 4, mean: 6.0, maxQ: 3 });
+      self.lanes.push({ a: a, kind: "left",  stage: World.stageOf(a, "left"), cars: [], next: 0, mean: 6.5, maxQ: 3, start: 1 });
+      self.lanes.push({ a: a, kind: "thru",  stage: World.stageOf(a, "thru"), cars: [], next: 0, mean: 3.2, maxQ: 6, start: 3 });
+      self.lanes.push({ a: a, kind: "right", stage: World.stageOf(a, "thru"), cars: [], next: 0, mean: 7.0, maxQ: 3, start: 1 });
     });
     this.enabled = false;
   }
@@ -123,10 +131,9 @@ window.Traffic = (function () {
     this.enabled = true;
     var self = this;
     this.lanes.forEach(function (ln) {
-      var n = ln.kind === "thru" ? 3 : 1;
-      for (var k = 0; k < n; k++) {
+      for (var k = 0; k < ln.start; k++) {
         if (instant) self.spawn(ln, STOP_D - 0.3 - k * (CAR_LEN + 1.9), 0);
-        else self.spawn(ln, 36 - k * 13, V0 * 0.95);
+        else self.spawn(ln, 36 - k * 13 - Math.random() * 4, V0 * 0.95);
       }
       ln.cars.sort(function (x, y) { return y.d - x.d; });
       ln.next = self.time + 2 + Math.random() * 3;
@@ -140,9 +147,8 @@ window.Traffic = (function () {
   };
 
   Sim.prototype.spawn = function (lane, d, v) {
-    var move = lane.kind === "left" ? "left" : (Math.random() < 0.25 ? "right" : "thru");
     var mesh = makeCar(PALETTE[Math.floor(Math.random() * PALETTE.length)]);
-    var car = { a: lane.a, lane: lane, move: move, path: PATHS[move], d: d, v: v, mesh: mesh, goYellow: false, braking: false };
+    var car = { a: lane.a, lane: lane, move: lane.kind, path: PATHS[lane.kind], d: d, v: v, mesh: mesh, goYellow: false, braking: false };
     this.scene.add(mesh);
     lane.cars.push(car);
     this.place(car);
@@ -159,18 +165,18 @@ window.Traffic = (function () {
   };
 
   Sim.prototype.signalFor = function (car) {
-    var st = this.Sig.state, A = this.W.APP[car.a];
-    var need = car.move === "left" ? A.left : A.thru;
-    if (st.phase !== need || st.status === "allred") return "red";
+    var st = this.Sig.state;
+    if (st.stage !== car.lane.stage || st.status === "allred") return "red";
     return st.status;                                  // 'green' or 'yellow'
   };
 
+  // Don't enter while a car from another stage is still clearing the box.
   Sim.prototype.boxBusy = function (car) {
     for (var i = 0; i < this.lanes.length; i++) {
-      var ln = this.lanes[i]; if (ln.a === car.a) continue;
+      var ln = this.lanes[i]; if (ln.stage === car.lane.stage) continue;
       for (var j = 0; j < ln.cars.length; j++) {
         var c = ln.cars[j];
-        if (c.d > ENTRY_D - 0.5 && c.d < exitD(c.move)) return true;
+        if (c.d > ENTRY_D - 0.5 && c.d < EXIT_D[c.move]) return true;
       }
     }
     return false;
@@ -190,14 +196,7 @@ window.Traffic = (function () {
           if (c.d < c.path.arcEnd) v0 = Math.min(V0, c.path.arcSpeed + Math.max(0, toArc) * 0.45);
         }
         var acc = ACC * (1 - Math.pow(c.v / v0, 4));
-        // the car ahead that still shares this car's path
-        for (var j = i - 1; j >= 0; j--) {
-          var L = cars[j];
-          if (L.move === c.move || (L.d < SPLIT_D + 0.5 && c.d < SPLIT_D + 0.5)) {
-            acc = Math.min(acc, idm(c.v, L.d - CAR_LEN - c.d, c.v - L.v, v0, GAP));
-            break;
-          }
-        }
+        if (i > 0) { var L = cars[i - 1]; acc = Math.min(acc, idm(c.v, L.d - CAR_LEN - c.d, c.v - L.v, v0, GAP)); }
         // the stop bar, until the car has crossed it
         if (c.d < STOP_D + 0.05) {
           var sig = self.signalFor(c), go = false, dist = STOP_D - c.d;
@@ -233,85 +232,59 @@ window.Traffic = (function () {
     });
   };
 
-  /* ---------- people: they walk in from outside the scene, like the cars ---------- */
-  function poly(pts) {
-    var segs = [], total = 0;
-    for (var i = 0; i < pts.length - 1; i++) {
-      var a = pts[i], b = pts[i + 1], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
-      segs.push({ a: a, b: b, L: L, start: total }); total += L;
-    }
-    return { segs: segs, len: total };
-  }
-  function onPath(path, u) {
-    u = Math.max(0, Math.min(path.len, u));
-    for (var i = 0; i < path.segs.length; i++) {
-      var sg = path.segs[i];
-      if (u <= sg.start + sg.L || i === path.segs.length - 1) {
-        var f = sg.L ? (u - sg.start) / sg.L : 0, dx = sg.b[0] - sg.a[0], dz = sg.b[1] - sg.a[1];
-        return { x: sg.a[0] + dx * f, z: sg.a[1] + dz * f, dx: dx, dz: dz };
-      }
-    }
-  }
-  function Peds(scene) {
+  /* ---------- people: they pop up where they stand, then only move in place ---------- */
+  function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+  function back(x) { var c = 1.7; return x <= 0 ? 0 : 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); }
+  function Peds(scene, spots) {
     var cols = [0xE5533D, 0x3A86D6, 0xF2B134, 0x3DAA6D, 0x8E6BD8, 0x2EB5B0, 0x56616B, 0xF07FA6];
     var skin = [0x8D5A3B, 0xC68B5E, 0xE0B48A, 0x6B4630];
     var bodyGeo = new T.CylinderGeometry(0.26, 0.32, 0.9, 12), headGeo = new T.SphereGeometry(0.22, 14, 12);
+    var armGeo = new T.CylinderGeometry(0.075, 0.065, 0.52, 8); armGeo.translate(0, -0.26, 0);   // pivots at the shoulder
     var self = this;
-    this.walkers = []; this.standers = []; this.active = false; this.started = false;
-    function person(k) {
-      var g = new T.Group();
-      var b = new T.Mesh(bodyGeo, new T.MeshStandardMaterial({ color: cols[k % cols.length], roughness: 0.7 }));
-      b.position.y = 0.45; b.castShadow = true; g.add(b);
+    this.people = []; this.time = 0;
+    spots.slice().sort(function (p, q) { return Math.hypot(p.x, p.z) - Math.hypot(q.x, q.z); }).forEach(function (sp, k) {
+      var shirt = new T.MeshStandardMaterial({ color: cols[k % cols.length], roughness: 0.7 });
+      var g = new T.Group(), inner = new T.Group(), headG = new T.Group();
+      g.position.set(sp.x, 0.16, sp.z); g.rotation.y = sp.rot || 0; g.add(inner);
+      var b = new T.Mesh(bodyGeo, shirt); b.position.y = 0.45; b.castShadow = true; inner.add(b);
       var h = new T.Mesh(headGeo, new T.MeshStandardMaterial({ color: skin[k % skin.length], roughness: 0.7 }));
-      h.position.y = 1.12; h.castShadow = true; g.add(h);
-      g.visible = false; scene.add(g);
-      return g;
-    }
-    // walkers: each path starts outside the view; they stroll back and forth along the sidewalk
-    [[[-48, -7.2], [-11, -7.2]], [[48, -7.2], [11, -7.2]], [[-48, 7.2], [-11, 7.2]], [[50, 7.4], [26, 7.4]],
-     [[-7.2, -46], [-7.2, -11]], [[7.2, -46], [7.2, -11]], [[-7.2, 44], [-7.2, 11]], [[7.2, 44], [7.2, 12]],
-     [[46, 7.4], [24.6, 7.4], [24.6, 9.6], [14, 9.6]]
-    ].forEach(function (pts, k) {
-      self.walkers.push({ path: poly(pts), u: 0, dir: 1, v: 1.2 + Math.random() * 0.5, g: person(k), ph: Math.random() * 6 });
-    });
-    // standers: walk in from outside, then wait at the bus shelter and the metro
-    [[[38, 7.2], [24.6, 7.2], [24.6, 9.6], [18.2, 9.6], [18.2, 12.1]],
-     [[42, 7.2], [24.6, 7.2], [24.6, 9.6], [20.1, 9.6], [20.1, 12.3]],
-     [[-38, 7.2], [-15.2, 7.2], [-15.2, 11.4]]
-    ].forEach(function (pts, k) {
-      self.standers.push({ path: poly(pts), u: 0, v: 1.8, g: person(k + 3), ph: 0, done: false });
+      h.castShadow = true; headG.add(h); headG.position.y = 1.12; inner.add(headG);
+      var armL = new T.Mesh(armGeo, shirt), armR = new T.Mesh(armGeo, shirt);
+      armL.position.set(-0.31, 0.84, 0); armR.position.set(0.31, 0.84, 0);
+      armL.rotation.z = -0.1; armR.rotation.z = 0.1; armL.castShadow = armR.castShadow = true;
+      inner.add(armL); inner.add(armR);
+      g.visible = false; g.scale.setScalar(0.001); scene.add(g);
+      self.people.push({ g: g, inner: inner, head: headG, armL: armL, armR: armR, pose: sp.pose, ph: Math.random() * 10, f: 0 });
     });
   }
-  Peds.prototype.start = function (instant) {
-    this.started = true; this.active = true;
-    this.walkers.forEach(function (w) { w.g.visible = true; w.u = instant ? Math.random() * w.path.len : 0; w.dir = 1; });
-    this.standers.forEach(function (s) { s.g.visible = true; s.u = instant ? s.path.len : 0; s.done = !!instant; });
-    this.step(0);
-  };
-  Peds.prototype.stop = function () {
-    this.started = false; this.active = false;
-    this.walkers.concat(this.standers).forEach(function (p) { p.g.visible = false; });
-  };
-  Peds.prototype.reveal = function (p) {             // used by the intro: start walking in, or clear
-    if (p > 0 && !this.started) this.start(false);
-    else if (p <= 0 && this.started) this.stop();
-  };
-  Peds.prototype.step = function (dt) {
-    if (!this.active) return;
-    function place(p, walking) {
-      var q = onPath(p.path, p.u), d = p.dir || 1;
-      p.ph += dt * 9;
-      p.g.position.set(q.x, 0.16 + (walking ? Math.abs(Math.sin(p.ph)) * 0.08 : 0), q.z);
-      if (walking) p.g.rotation.y = Math.atan2(q.dx * d, q.dz * d);
-    }
-    this.walkers.forEach(function (w) {
-      w.u += w.dir * w.v * dt;
-      if (w.u > w.path.len) { w.u = w.path.len; w.dir = -1; } else if (w.u < 0) { w.u = 0; w.dir = 1; }
-      place(w, true);
+  // The intro drives this: p = 0 hides everyone, p = 1 shows everyone; in between they pop up one by one.
+  Peds.prototype.reveal = function (p) {
+    var n = this.people.length;
+    this.people.forEach(function (q, i) {
+      var f = back(clamp01((p - (i / n) * 0.6) / 0.4));
+      q.f = f; q.g.visible = f > 0.001; q.g.scale.setScalar(Math.max(0.001, f));
     });
-    this.standers.forEach(function (s) {
-      if (!s.done) { s.u += s.v * dt; if (s.u >= s.path.len) { s.u = s.path.len; s.done = true; } }
-      place(s, !s.done);
+  };
+  // Small movements in place: breathing, a gentle sway, looking around, the odd gesture or wave.
+  Peds.prototype.step = function (dt) {
+    var t = (this.time += dt);
+    this.people.forEach(function (q) {
+      if (!q.g.visible) return;
+      var u = t + q.ph;
+      q.inner.position.y = 0.012 * Math.sin(u * 2.1);
+      q.inner.rotation.z = 0.03 * Math.sin(u * 1.2);
+      q.head.rotation.y = 0.5 * Math.sin(u * 0.45);
+      var swing = 0.08 * Math.sin(u * 1.2);
+      q.armL.rotation.x = swing; q.armR.rotation.x = -swing;
+      if (q.pose === "talk") {
+        var gst = Math.max(0, Math.sin(u * 1.7));
+        q.armR.rotation.x = -0.35 - 0.6 * gst;
+        q.armR.rotation.z = 0.1 + 0.15 * gst;
+      } else if (q.pose === "wave") {
+        var w = (u % 9) < 2.6 ? Math.min(1, Math.min(u % 9, 2.6 - (u % 9)) * 3) : 0;   // wave for a moment, rest a while
+        q.armR.rotation.z = 0.1 + w * (2.5 + 0.35 * Math.sin(u * 9));
+        q.armR.rotation.x = -swing * (1 - w);
+      }
     });
   };
 

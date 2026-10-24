@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Tour · Khandokar Tanvir Rahman</title>
-<meta name="description" content="A seven-stop guided tour of Khandokar Tanvir Rahman's work: waterbus research, crash forecasting, MDOT work zones and a turbo roundabout design.">
+<meta name="description" content="Khandokar Tanvir Rahman's path in time order, from Bangladesh to Michigan: BUET, crash forecasting, Dhaka's waterbus, a river capstone, industry work, teaching, MDOT work-zone research and a turbo roundabout design.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,233 +16,437 @@
 
 <header class="topbar">
   <a class="brand" href="index.html" aria-label="Home: the intersection">
-    <svg viewBox="0 0 48 40" aria-hidden="true"><rect x=".5" y=".5" width="47" height="39" rx="8" fill="#1F2623"/><rect x="2.5" y="2.5" width="43" height="35" rx="6.5" fill="none" stroke="#3A423E"/><g fill="#F07F2E"><rect x="7.6" y="19.5" width="12.4" height="12.5" rx="3.2"/><rect x="7.8" y="11" width="2.7" height="11" rx="1.35"/><rect x="10.9" y="8.6" width="2.7" height="13" rx="1.35"/><rect x="14" y="9.2" width="2.7" height="12.5" rx="1.35"/><rect x="17.1" y="11.6" width="2.7" height="10" rx="1.35"/><rect x="19.2" y="19" width="3" height="8.5" rx="1.5" transform="rotate(38 20.7 23.2)"/></g><circle cx="35.6" cy="9.8" r="3.3" fill="#F3F5F0"/><path d="M34.6 14.2L32.9 23.2M34.3 15.6L30.2 20.4M34.3 15.6L38.4 19.2M32.9 23.2L29.6 31.4M32.9 23.2L36.9 30.8" fill="none" stroke="#F3F5F0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 40 40" aria-hidden="true"><rect x=".5" y=".5" width="39" height="39" rx="8.5" fill="#1F2623"/><rect x="2.5" y="2.5" width="35" height="35" rx="6.8" fill="none" stroke="#3A423E"/><g fill="#F07F2E"><rect x="5.4" y="20.6" width="12.3" height="14.4" rx="3.4"/><rect x="5.5" y="9.4" width="2.6" height="13.6" rx="1.3"/><rect x="8.65" y="6.3" width="2.6" height="16" rx="1.3"/><rect x="11.8" y="7" width="2.6" height="15.4" rx="1.3"/><rect x="14.95" y="9.9" width="2.6" height="12.8" rx="1.3"/><rect x="16.9" y="20" width="3" height="9.6" rx="1.5" transform="rotate(36 18.4 24.8)"/></g><circle cx="30.3" cy="8.3" r="3.5" fill="#F3F5F0"/><path d="M29.3 13.4L27.6 23.6M29 15L24.7 20.4M29 15L33.3 19.4M27.6 23.6L24.2 33.4M27.6 23.6L31.9 33" fill="none" stroke="#F3F5F0" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span class="brand-text"><b>Khandokar Tanvir Rahman</b><span>Graduate Assistant, Intelligent Transportation Systems Lab, Western Michigan University</span></span>
   </a>
   <nav class="nav" aria-label="Main">
     <a href="index.html">Intersection</a>
     <a href="tour.html" aria-current="page">Tour</a>
-    <a href="map.html">Map</a>
     <a href="cv.html">Plain CV</a>
     <button type="button" class="push" data-contact>Contact</button>
   </nav>
 </header>
 
 <main class="tour" id="tour">
-  <ol class="lamps" id="lamps" aria-label="Tour progress">
-    <li><button type="button" data-i="0"><i></i><span>Hello</span></button></li>
-    <li><button type="button" data-i="1"><i></i><span>Dhaka → Kalamazoo</span></button></li>
-    <li><button type="button" data-i="2"><i></i><span>Waterbus</span></button></li>
-    <li><button type="button" data-i="3"><i></i><span>Crash forecasting</span></button></li>
-    <li><button type="button" data-i="4"><i></i><span>Work zones</span></button></li>
-    <li><button type="button" data-i="5"><i></i><span>Turbo roundabout</span></button></li>
-    <li><button type="button" data-i="6"><i></i><span>Walk: contact</span></button></li>
-  </ol>
+  <nav class="rail" aria-label="Tour stops in time order"><ol id="rail"></ol></nav>
 
   <div class="stagebox" id="stagebox">
 
-    <!-- 1 · Hello -->
-    <section class="scene" data-name="Hello" aria-label="Scene 1 of 7: Hello">
+    <!-- 1 · Bangladesh -->
+    <section class="scene" data-scene="start" data-year="2017" data-name="Bangladesh">
       <div class="txt">
-        <p class="eyebrow">Phase 1 · Hello</p>
+        <p class="kicker"><span class="cat start">Where it starts</span><span class="when">Bangladesh · 2017</span></p>
         <h1 class="big">Hi, I'm Tanvir.</h1>
-        <p class="lede">Transportation engineer: signals, safety and the data in between. I'm an M.S. student at Western Michigan University in Kalamazoo.</p>
-        <div class="row">
-          <button type="button" class="btn sign" data-next>Start the tour ▸</button>
-        </div>
-      </div>
-      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
-        <ellipse cx="280" cy="392" rx="190" ry="18" fill="#DCE5D6"/>
-        <rect x="268" y="300" width="24" height="92" rx="6" fill="#4A524E"/>
-        <rect x="214" y="22" width="132" height="290" rx="30" fill="#1F2623"/>
-        <g class="visors" fill="#141A18"><path d="M232 66a48 30 0 0 1 96 0z"/><path d="M232 152a48 30 0 0 1 96 0z"/><path d="M232 238a48 30 0 0 1 96 0z"/></g>
-        <circle class="boot r" cx="280" cy="88" r="36"/>
-        <circle class="boot y" cx="280" cy="174" r="36"/>
-        <circle class="boot g" cx="280" cy="260" r="36"/>
-        <text x="380" y="96" class="note">startup flash…</text>
-        <text x="380" y="268" class="note">…then green</text>
-      </svg>
-    </section>
-
-    <!-- 2 · Dhaka to Kalamazoo -->
-    <section class="scene" data-name="Dhaka to Kalamazoo" aria-label="Scene 2 of 7: Dhaka to Kalamazoo" hidden>
-      <div class="txt">
-        <p class="eyebrow">Phase 2 · Dhaka → Kalamazoo</p>
-        <p class="stat">12,664 km</p>
-        <p class="lede">From Dhaka's waterways to Michigan's work zones.</p>
+        <p class="lede">I'm a transportation engineer from Bangladesh, now a graduate student in Michigan. This tour follows my path in order, from my first scholarship to today.</p>
         <ul class="facts">
-          <li><b>B.Sc. Civil Engineering (Transportation)</b><span>BUET, Dhaka · 2023</span></li>
-          <li><b>M.S. Civil Engineering (Transportation)</b><span>Western Michigan University · 2025 – Present · GPA 3.88</span></li>
+          <li><em>Scholarship · 2017</em><b>Board Scholarship, Higher Secondary School Certificate</b><span>The Higher Secondary Certificate (HSC) is Bangladesh's national exam at the end of grade 12. My result earned a scholarship from the education board.</span></li>
         </ul>
+        <div class="row"><button type="button" class="btn sign" data-next>Start the tour ▸</button></div>
       </div>
-      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
-        <defs><pattern id="dots2" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.6" fill="#C9D6C9"/></pattern></defs>
-        <rect x="20" y="40" width="520" height="320" rx="26" fill="#E3EEF2"/>
-        <rect x="20" y="40" width="520" height="320" rx="26" fill="url(#dots2)"/>
-        <path id="flight" d="M440 262Q300 30 130 190" fill="none" stroke="#17201C" stroke-width="3" stroke-dasharray="4 10" stroke-linecap="round" class="draw"/>
-        <circle cx="440" cy="262" r="9" fill="#17201C"/><circle cx="130" cy="190" r="9" fill="#17201C"/>
-        <text x="440" y="300" class="lbl" text-anchor="middle">DHAKA</text><text x="440" y="320" class="sub" text-anchor="middle">BUET</text>
-        <text x="130" y="228" class="lbl" text-anchor="middle">KALAMAZOO</text><text x="130" y="248" class="sub" text-anchor="middle">WMU</text>
-        <g id="plane"><path d="M-14 0L10 -3L16 0L10 3Z M-2 -1L-8 -12L-4 -12L6 -1Z M-2 1L-8 12L-4 12L6 1Z M-14 0L-18 -6L-15 -6L-10 -1Z" fill="#0B6A4C"/></g>
-      </svg>
+      <figure class="art">
+        <div class="globe"><canvas id="globe-start"></canvas></div>
+        <figcaption class="cap">Dhaka, Bangladesh</figcaption>
+      </figure>
     </section>
 
-    <!-- 3 · Waterbus -->
-    <section class="scene" data-name="Waterbus" aria-label="Scene 3 of 7: Waterbus" hidden>
+    <!-- 2 · BUET -->
+    <section class="scene" data-scene="buet" data-year="2018" data-name="BUET" hidden>
       <div class="txt">
-        <p class="eyebrow">Phase 3 · Waterbus · thesis + ICCESD 2024</p>
-        <h2 class="h">Why Dhaka's first waterbus stopped after 18 months</h2>
-        <div class="seg" role="group" aria-label="Compare">
-          <button type="button" class="on" data-wb="old" aria-pressed="true">2010 service</button>
-          <button type="button" data-wb="new" aria-pressed="false">Proposed</button>
-        </div>
-        <div class="wb" data-wbpanel="old">
-          <p class="stat sm">16 km in ~90 min</p>
-          <ul class="facts">
-            <li><b>35 seats per boat</b><span>Two boats could not meet demand</span></li>
-            <li><b>Unreliable and infrequent</b><span>Breakdowns, scattered schedules, little awareness</span></li>
-            <li><b>Shut down within 18 months</b><span>Launched 28 August 2010 by BIWTC</span></li>
-          </ul>
-        </div>
-        <div class="wb" data-wbpanel="new" hidden>
-          <p class="stat sm">16 km in ~24 min</p>
-          <ul class="facts">
-            <li><b>Hybrid electric water taxi, 50 seats</b><span>Faster and lighter on fuel</span></li>
-            <li><b>20 vessels on the 110 km circular route</b><span>Every 20 min at the peak, 40 min off-peak</span></li>
-            <li><b>Built on a survey of 310 respondents</b><span>Plus BIWTA and BIWTC operating data</span></li>
-          </ul>
-        </div>
-        <a class="btn small" href="https://www.researchgate.net/publication/379118004" target="_blank" rel="noopener">Read the paper ↗</a>
+        <p class="kicker"><span class="cat edu">Undergraduate degree</span><span class="when">BUET, Dhaka · graduated May 2023</span></p>
+        <h2 class="h">Civil engineering at BUET</h2>
+        <p class="lede">I studied civil engineering at the Bangladesh University of Engineering and Technology (BUET) in Dhaka, with a major in transportation engineering.</p>
+        <ul class="facts">
+          <li><em>Degree · May 2023</em><b>B.Sc. in Civil Engineering (Transportation)</b><span>GPA 3.49 / 4.00</span></li>
+          <li><em>Competition · 2018</em><b>First Runner-Up, Mechanics Maestro</b><span>Eccentric Civil Engineering Festival, BUET</span></li>
+          <li><em>Leadership · 2022 – 2023</em><b>Deputy Secretary, Internal Affairs</b><span>American Society of Civil Engineers (ASCE) Student Chapter, BUET</span></li>
+        </ul>
+        <p class="note">Next come three pieces of undergraduate work: a crash forecasting paper, a river capstone and a thesis on Dhaka's waterbus.</p>
       </div>
-      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
-        <ellipse cx="280" cy="210" rx="215" ry="160" fill="#CFE4EE"/>
-        <ellipse cx="280" cy="210" rx="187" ry="132" fill="#E6EFDF"/>
-        <ellipse id="wb-ring" cx="280" cy="210" rx="201" ry="146" fill="none" stroke="#8EC1D6" stroke-width="2" stroke-dasharray="6 8"/>
-        <path id="wb-old" d="M280 356A201 146 0 0 1 79 210" fill="none" stroke="#0B6A4C" stroke-width="7" stroke-linecap="round"/>
-        <text x="280" y="204" class="lbl" text-anchor="middle" fill="#6B7A72">DHAKA</text>
-        <g class="ghats">
-          <circle cx="280" cy="356" r="8"/><text x="280" y="392" text-anchor="middle">SADARGHAT</text>
-          <circle cx="79" cy="210" r="8"/><text x="64" y="214" text-anchor="end">GABTOLI</text>
-          <circle cx="280" cy="64" r="8"/><text x="280" y="44" text-anchor="middle">TONGI</text>
-          <circle cx="481" cy="210" r="8"/><text x="496" y="214">KACHPUR</text>
-          <circle cx="422" cy="313" r="8"/><text x="436" y="342">NARAYANGANJ</text>
-        </g>
-        <g id="boat"><path d="M-18 0H18L12 9H-12Z" fill="#17201C"/><rect x="-9" y="-9" width="16" height="9" rx="2" fill="#F2B134"/></g>
-      </svg>
+      <figure class="art">
+        <svg class="art-svg" id="truss" viewBox="0 0 560 420" aria-hidden="true">
+          <rect x="0" y="300" width="560" height="120" fill="#DCE8D2"/>
+          <path d="M64 420C150 350 410 350 496 420" fill="#CFE4EE"/>
+          <path d="M0 266H64V420H40V300H0Z" fill="#B9C4BD"/>
+          <path d="M560 266H496V420H520V300H560Z" fill="#B9C4BD"/>
+          <path d="M0 264H64M496 264H560" stroke="#8E9892" stroke-width="4"/>
+          <g class="legend"><path d="M24 30H52" stroke="#2a78d6" stroke-width="6" stroke-linecap="round"/><text x="60" y="34">Tension: pulled</text>
+            <path d="M200 30H228" stroke="#D63A2F" stroke-width="6" stroke-linecap="round"/><text x="236" y="34">Compression: pushed</text></g>
+          <g id="truss-truck"><rect x="-44" y="-30" width="54" height="26" rx="4" fill="#F2B134"/><rect x="12" y="-24" width="24" height="20" rx="4" fill="#E5533D"/><rect x="21" y="-21" width="11" height="8" rx="2" fill="#CFE4EE"/><circle cx="-32" cy="-3" r="6" fill="#17201C"/><circle cx="-10" cy="-3" r="6" fill="#17201C"/><circle cx="24" cy="-3" r="6" fill="#17201C"/></g>
+          <g id="truss-members"></g>
+          <g id="truss-nodes"></g>
+          <g id="truss-supports"><path d="M64 262L52 286H76Z" fill="#17201C"/><path d="M496 262L484 280H508Z" fill="#17201C"/><circle cx="489" cy="285" r="4" fill="#17201C"/><circle cx="503" cy="285" r="4" fill="#17201C"/></g>
+          <g class="react"><path id="ra" d="M64 340V290"/><path id="rb" d="M496 340V290"/></g>
+          <text x="280" y="394" class="sub" text-anchor="middle" id="truss-note">A STEEL TRUSS BRIDGE WITH SIX PANELS</text>
+        </svg>
+        <figcaption class="cap">Engineering mechanics, calculated live: as the truck crosses, each member of the truss is pulled (blue) or pushed (red). Thicker means a larger force.</figcaption>
+      </figure>
     </section>
 
-    <!-- 4 · Crash forecasting -->
-    <section class="scene" data-name="Crash forecasting" aria-label="Scene 4 of 7: Crash forecasting" hidden>
+    <!-- 3 · Crash forecasting paper -->
+    <section class="scene" data-scene="crash" data-year="2022" data-name="Crash paper" hidden>
       <div class="txt">
-        <p class="eyebrow">Phase 4 · Safety · ICACE 2022</p>
-        <h2 class="h">Forecasting crashes with unauthorized vehicles</h2>
-        <p class="lede">Police-recorded crashes in Bangladesh involving unregistered local vehicles such as easy-bikes and nosimons, 2009–2015, modeled with ARIMA(6,1,7) to forecast 2016–2020.</p>
+        <p class="kicker"><span class="cat paper">Academic paper</span><span class="when">Conference paper · December 2022</span></p>
+        <h2 class="h">Forecasting crashes that involve unauthorized vehicles in Bangladesh</h2>
+        <p class="lede">Many small vehicles on Bangladesh's roads are not registered, such as battery-run easy-bikes and locally built nosimons and korimons. They are cheap and popular, but they lack basic safety features. We studied the crashes they were involved in and forecast the next five years.</p>
+        <ul class="facts">
+          <li><em>Data</em><b>Police-recorded crashes, 2009 – 2015, all of Bangladesh</b><span>Provided by the Accident Research Institute (ARI), BUET</span></li>
+          <li><em>Method</em><b>ARIMA(6,1,7) time-series model</b><span>It learns the pattern of past monthly crashes and projects it forward.</span></li>
+          <li><em>Findings</em><b>About 330 crashes a year expected for 2016 – 2020</b><span>Hitting a pedestrian was the most common crash type, so pedestrians were the main victims.</span></li>
+          <li><em>Published</em><b>6th International Conference on Advances in Civil Engineering (ICACE 2022)</b><span>CUET, Chattogram · Huq, Rahman &amp; Shristi</span></li>
+        </ul>
         <div class="row">
-          <button type="button" class="btn sign" id="run-arima">Run ARIMA(6,1,7) ▸</button>
+          <button type="button" class="btn sign" id="run-arima" aria-pressed="false">Run the forecast ▸</button>
           <a class="btn small" href="https://www.researchgate.net/publication/368713906" target="_blank" rel="noopener">Read the paper ↗</a>
         </div>
       </div>
-      <svg class="art chart" viewBox="0 0 560 420" role="img" aria-label="Crashes per year: 345 in 2009, 322 in 2010, 287 in 2011, 211 in 2012, 324 in 2013, 314 in 2014, 327 in 2015, then a forecast band to 2020.">
-        <text x="70" y="22" class="sub">CRASHES PER YEAR</text>
-        <g class="grid"><path d="M70 296H530M70 168H530M70 40H530"/></g>
-        <g class="ylab"><text x="60" y="300">200</text><text x="60" y="172">300</text><text x="60" y="44">400</text></g>
-        <path d="M70 360H530" class="axis"/>
-        <g class="xlab"><text x="70" y="384">2009</text><text x="195.5" y="384">2012</text><text x="320.9" y="384">2015</text><text x="530" y="384">2020</text></g>
-        <g class="fc" id="forecast">
-          <path d="M320.9 133.4L362.7 112L404.5 101L446.4 91L488.2 80L530 70L530 190L488.2 177L446.4 163L404.5 151L362.7 143Z" class="band"/>
-          <polyline points="320.9,133.4 362.7,130 404.5,129.8 446.4,129.7 488.2,129.6 530,129.6" class="fline"/>
-          <text x="530" y="56" class="sub" text-anchor="end">FORECAST BAND, 2016–2020</text>
-        </g>
-        <polyline points="70,110.4 111.8,139.8 153.6,184.6 195.5,281.9 237.3,137.3 279.1,150.1 320.9,133.4" class="obs draw"/>
-        <g class="pts"><circle cx="70" cy="110.4" r="5"/><circle cx="195.5" cy="281.9" r="5"/><circle cx="320.9" cy="133.4" r="5"/></g>
-        <g class="vlab"><text x="70" y="96">345</text><text x="195.5" y="306">211</text><text x="320.9" y="119">327</text></g>
-      </svg>
-    </section>
-
-    <!-- 5 · Work zones -->
-    <section class="scene" data-name="Work zones" aria-label="Scene 5 of 7: Work zones" hidden>
-      <div class="txt">
-        <p class="eyebrow">Phase 5 · Research · MDOT · ITS Lab, WMU</p>
-        <h2 class="h">What does a lane closure cost road users?</h2>
-        <p class="lede">Research for the Michigan Department of Transportation: testing five traffic data sources to evaluate how MDOT estimates work-zone user delay and cost.</p>
-        <div class="tags"><span>RITIS</span><span>Bluetooth</span><span>API feeds</span><span>MVDS</span><span>Video</span></div>
-        <div class="row"><button type="button" class="btn sign" id="close-lane" aria-pressed="false">Close a lane ▸</button></div>
-        <p class="tiny">Animation for illustration only, not study results.</p>
-      </div>
-      <svg class="art wz" id="wz" viewBox="0 0 560 420" aria-hidden="true">
-        <g class="chips">
-          <rect x="24" y="40" width="88" height="28" rx="6"/><text x="68" y="59">RITIS</text>
-          <rect x="124" y="40" width="112" height="28" rx="6"/><text x="180" y="59">BLUETOOTH</text>
-          <rect x="248" y="40" width="64" height="28" rx="6"/><text x="280" y="59">API</text>
-          <rect x="324" y="40" width="76" height="28" rx="6"/><text x="362" y="59">MVDS</text>
-          <rect x="412" y="40" width="84" height="28" rx="6"/><text x="454" y="59">VIDEO</text>
-        </g>
-        <path d="M68 68V150M180 68V150M280 68V150M362 68V150M454 68V150" class="feed"/>
-        <rect x="0" y="150" width="560" height="120" fill="#CFCCC4"/>
-        <path d="M0 150H560M0 270H560" stroke="#9AA39D" stroke-width="2"/>
-        <path d="M0 210H560" stroke="#fff" stroke-width="3" stroke-dasharray="18 16"/>
-        <g class="lane-top"><g class="flow"><rect class="c c1" x="-60" y="167" width="44" height="26" rx="8"/><rect class="c c2" x="-60" y="167" width="44" height="26" rx="8"/><rect class="c c3" x="-60" y="167" width="44" height="26" rx="8"/></g></g>
-        <g class="lane-bot"><g class="flow"><rect class="c c4" x="-60" y="227" width="44" height="26" rx="8"/><rect class="c c5" x="-60" y="227" width="44" height="26" rx="8"/><rect class="c c6" x="-60" y="227" width="44" height="26" rx="8"/></g></g>
-        <g class="closure">
-          <g class="cones"><path d="M262 264l8-18 8 18z"/><path d="M290 252l8-18 8 18z"/><path d="M318 240l8-18 8 18z"/><path d="M346 228l8-18 8 18z"/><path d="M394 228l8-18 8 18z"/><path d="M442 228l8-18 8 18z"/><path d="M490 228l8-18 8 18z"/><path d="M538 228l8-18 8 18z"/></g>
-          <rect x="380" y="232" width="70" height="30" rx="4" fill="#1F2623"/><text x="415" y="252" class="ab">◀◀◀</text>
-          <g class="queue">
-            <rect x="196" y="227" width="44" height="26" rx="8"/><rect x="146" y="227" width="44" height="26" rx="8"/><rect x="96" y="227" width="44" height="26" rx="8"/><rect x="46" y="227" width="44" height="26" rx="8"/>
+      <figure class="art">
+        <svg class="art-svg chart" id="chart" viewBox="0 0 560 420" role="img" aria-label="Crashes per year involving unauthorized vehicles: 345 in 2009, 322 in 2010, 287 in 2011, 211 in 2012, 324 in 2013, 314 in 2014, 327 in 2015. Forecast: 331 in 2016, 329 in 2017, 329 in 2018, 330 in 2019, 329 in 2020.">
+          <text x="70" y="20" class="sub">CRASHES PER YEAR</text>
+          <g class="grid"><path d="M70 296H530M70 232H530M70 168H530M70 104H530M70 40H530"/></g>
+          <g class="ylab"><text x="60" y="300">200</text><text x="60" y="236">250</text><text x="60" y="172">300</text><text x="60" y="108">350</text><text x="60" y="44">400</text></g>
+          <path d="M70 360H530" class="axis"/>
+          <rect x="341" y="34" width="190" height="326" class="fczone"/>
+          <g class="xlab"><text x="70" y="384">2009</text><text x="153.6" y="384">2011</text><text x="237.3" y="384">2013</text><text x="320.9" y="384">2015</text><text x="404.5" y="384">2017</text><text x="488.2" y="384">2019</text></g>
+          <polyline points="70,110.4 111.8,139.8 153.6,184.6 195.5,281.9 237.3,137.3 279.1,150.1 320.9,133.4" class="obs draw"/>
+          <g class="pts"><circle cx="70" cy="110.4" r="4.5"/><circle cx="111.8" cy="139.8" r="4.5"/><circle cx="153.6" cy="184.6" r="4.5"/><circle cx="195.5" cy="281.9" r="4.5"/><circle cx="237.3" cy="137.3" r="4.5"/><circle cx="279.1" cy="150.1" r="4.5"/><circle cx="320.9" cy="133.4" r="4.5"/></g>
+          <g class="vlab"><text x="70" y="97">345</text><text x="111.8" y="127">322</text><text x="153.6" y="172">287</text><text x="195.5" y="304">211</text><text x="237.3" y="124">324</text><text x="279.1" y="170">314</text><text x="320.9" y="120">327</text></g>
+          <g class="fc" id="forecast">
+            <polyline points="320.9,133.4 362.7,128.3 404.5,130.9 446.4,130.9 488.2,129.6 530,130.9" class="fline"/>
+            <g class="fpts"><circle cx="362.7" cy="128.3" r="5"/><circle cx="404.5" cy="130.9" r="5"/><circle cx="446.4" cy="130.9" r="5"/><circle cx="488.2" cy="129.6" r="5"/><circle cx="530" cy="130.9" r="5"/></g>
+            <g class="fvlab"><text x="362.7" y="160">331</text><text x="404.5" y="160">329</text><text x="446.4" y="160">329</text><text x="488.2" y="160">330</text><text x="530" y="160">329</text></g>
+            <text x="436" y="60" class="sub" text-anchor="middle">ARIMA(6,1,7) FORECAST</text>
           </g>
-        </g>
-        <text x="280" y="320" class="sub" text-anchor="middle" id="wz-note">TWO LANES OPEN · FREE FLOW</text>
-      </svg>
+          <g class="key"><path d="M86 404H112" class="obs"/><text x="118" y="408">Police-recorded</text><path d="M262 404H288" class="fline"/><text x="294" y="408">Forecast</text></g>
+        </svg>
+        <figcaption class="cap">Yearly totals and the forecast, from the paper.</figcaption>
+      </figure>
     </section>
 
-    <!-- 6 · Turbo roundabout -->
-    <section class="scene" data-name="Turbo roundabout" aria-label="Scene 6 of 7: Turbo roundabout" hidden>
+    <!-- 4 · Capstone -->
+    <section class="scene" data-scene="capstone" data-year="2023" data-name="Capstone" hidden>
       <div class="txt">
-        <p class="eyebrow">Phase 6 · Design competition · ITE Great Lakes District 2026</p>
-        <h2 class="h">Winner: a turbo roundabout for a high-crash two-lane roundabout</h2>
-        <p class="stat"><span id="bc">B/C 1.12</span></p>
-        <p class="lede">Spiral lane dividers stop lane changes inside the circle. The design covered crash history, demand, pedestrians, signing and marking, and a 20-year benefit–cost analysis.</p>
+        <p class="kicker"><span class="cat project">Capstone project</span><span class="when">BUET · 2023</span></p>
+        <h2 class="h">Restoring a river channel at Kamrangirchar</h2>
+        <p class="lede">Kamrangirchar is a densely built area beside Old Dhaka, almost surrounded by the Buriganga River. My undergraduate capstone planned how the river channel and the roads around it could be improved together, so boats, vehicles and people all get around better.</p>
+        <div class="chips" role="group" aria-label="Parts of the plan">
+          <button type="button" data-layer="1" aria-pressed="false">1 · Dredge the channel</button>
+          <button type="button" data-layer="2" aria-pressed="false">2 · Protect the banks</button>
+          <button type="button" data-layer="3" aria-pressed="false">3 · Improve the roads</button>
+          <button type="button" data-layer="4" aria-pressed="false">4 · Bridges and jetties</button>
+          <button type="button" data-layer="5" aria-pressed="false">5 · Riverside walkways</button>
+        </div>
+        <ul class="facts">
+          <li><em>Goal</em><b>Better connectivity, navigation, road capacity and access by every mode</b><span>One integrated plan for the roadway and the waterway</span></li>
+        </ul>
+        <div class="row"><button type="button" class="btn sign" id="build-plan">Build the plan ▸</button></div>
       </div>
-      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
-        <rect x="0" y="182" width="560" height="56" fill="#CFCCC4"/><rect x="252" y="0" width="56" height="420" fill="#CFCCC4"/>
-        <circle cx="280" cy="210" r="150" fill="#CFCCC4"/>
-        <circle cx="280" cy="210" r="150" fill="none" stroke="#9AA39D" stroke-width="2"/>
-        <circle cx="280" cy="210" r="56" fill="#BFDCA6" stroke="#17201C" stroke-width="2"/>
-        <path class="spiral draw" d="M364 210L364.9 201.1L364.8 192L363.7 182.8L361.6 173.7L358.5 164.7L354.4 155.9L349.4 147.5L343.3 139.6L336.4 132.3L328.7 125.7L320.1 119.9L310.9 114.9L301.1 110.9L290.7 107.9L280 106L269 105.2L257.8 105.7L246.6 107.3L235.5 110.1L224.7 114.2L214.2 119.4L204.2 125.8L194.8 133.3L186.2 141.8L178.4 151.3L171.6 161.7L165.9 172.9L161.3 184.8L158 197.2L156 210"/>
-        <path class="spiral draw" d="M196 210L195.1 218.9L195.2 228L196.3 237.2L198.4 246.3L201.5 255.3L205.6 264.1L210.6 272.5L216.7 280.4L223.6 287.7L231.3 294.3L239.9 300.1L249.1 305.1L258.9 309.1L269.3 312.1L280 314L291 314.8L302.2 314.3L313.4 312.7L324.5 309.9L335.3 305.8L345.8 300.6L355.8 294.2L365.2 286.7L373.8 278.2L381.6 268.7L388.4 258.3L394.1 247.1L398.7 235.2L402 222.8L404 210"/>
-        <g id="rcar"><rect x="-14" y="-8" width="28" height="16" rx="5" fill="#E5533D"/><rect x="-5" y="-6" width="11" height="12" rx="3" fill="#F5B3A8"/></g>
-      </svg>
+      <figure class="art">
+        <svg class="art-svg" id="kchar" viewBox="0 0 560 420" aria-hidden="true">
+          <rect width="560" height="420" fill="#EEEFE6"/>
+          <path d="M40 280C70 220 130 196 200 190C270 184 350 182 410 196C460 208 492 236 506 270L506 330L40 330Z" fill="#E1EAD3"/>
+          <path d="M0 262C120 290 210 318 300 322C390 326 470 298 560 258L560 322C470 362 390 388 300 388C200 388 110 360 0 326Z" fill="#B9DBEA"/>
+          <g class="ly ly2"><path class="bank" d="M0 262C120 290 210 318 300 322C390 326 470 298 560 258"/><path class="bank wide" d="M36 282C70 214 130 192 200 186C270 180 350 178 410 192C460 204 492 232 506 288"/></g>
+          <path class="oc-silt" d="M36 282C70 214 130 192 200 186C270 180 350 178 410 192C460 204 492 232 506 288"/>
+          <path class="oc-open" d="M36 282C70 214 130 192 200 186C270 180 350 178 410 192C460 204 492 232 506 288"/>
+          <g class="ly ly1 flow"><path d="M118 213l8 4-8 4"/><path d="M262 183l8 4-8 4"/><path d="M402 196l8 4-8 4"/><g class="dredger"><rect x="320" y="166" width="34" height="14" rx="3"/><path d="M346 166V150L364 158"/></g></g>
+          <g class="ly ly3 roads"><path d="M90 268C120 232 170 216 220 212C290 206 360 206 410 218C450 228 470 248 478 268C420 292 360 300 300 300C220 300 150 290 90 268Z"/><path d="M300 210V300M190 222L210 294M408 220L392 296"/></g>
+          <g class="ly ly4 bridges"><rect x="140" y="180" width="12" height="40" rx="2" transform="rotate(-24 146 200)"/><rect x="292" y="160" width="12" height="40" rx="2"/><rect x="430" y="184" width="12" height="40" rx="2" transform="rotate(28 436 204)"/>
+            <path class="jetty" d="M236 318V346M226 346H246M384 320V348M374 348H394"/><g class="boat"><path d="M394 356H420L414 364H400Z"/><rect x="401" y="350" width="10" height="6" rx="1.5"/></g></g>
+          <g class="ly ly5 walks"><path d="M62 276C92 230 140 212 204 206C270 200 348 198 404 210C448 220 476 244 490 270"/><path d="M70 286C150 304 220 314 300 314C380 316 450 300 492 282"/></g>
+          <text x="300" y="82" class="lbl" text-anchor="middle">OLD DHAKA</text>
+          <text x="120" y="146" class="sub" text-anchor="middle">HAZARIBAGH</text><text x="440" y="136" class="sub" text-anchor="middle">LALBAGH</text>
+          <text x="290" y="256" class="lbl" text-anchor="middle">KAMRANGIRCHAR</text>
+          <text x="300" y="362" class="water-lbl" text-anchor="middle">BURIGANGA RIVER</text>
+          <text x="226" y="156" class="water-lbl small" text-anchor="middle">OLD CHANNEL</text>
+          <text x="300" y="410" class="sub" text-anchor="middle">KERANIGANJ</text>
+        </svg>
+        <figcaption class="cap">Concept sketch, not to scale. Click a part to show or hide it.</figcaption>
+      </figure>
     </section>
 
-    <!-- 7 · Walk: contact -->
-    <section class="scene" data-name="Walk" aria-label="Scene 7 of 7: Walk, contact" hidden>
+    <!-- 5 · Waterbus thesis + paper -->
+    <section class="scene" data-scene="waterbus" data-year="2023" data-name="Waterbus thesis" hidden>
       <div class="txt">
-        <p class="eyebrow">Phase 7 · Walk</p>
+        <p class="kicker"><span class="cat paper">Undergraduate thesis · Academic paper</span><span class="when">Thesis 2023 · paper March 2024</span></p>
+        <h2 class="h">Why Dhaka's waterbus failed, and how it could come back</h2>
+        <p class="lede">Rivers form a 110 km loop around Dhaka. In 2010 a waterbus started on 16 km of it, but it shut down within 18 months. My thesis asked why, and what passengers would need to use it.</p>
+        <div class="seg" role="group" aria-label="Compare">
+          <button type="button" class="on" data-wb="old" aria-pressed="true">2010 service</button>
+          <button type="button" data-wb="new" aria-pressed="false">Proposed loop</button>
+        </div>
+        <ul class="facts" data-wbpanel="old">
+          <li><em>Route</em><b>Sadarghat to Gabtoli, 16 km</b><span>On the Buriganga and Turag rivers, run by BIWTC from 28 August 2010</span></li>
+          <li><em>Boats</em><b>Two boats with 35 seats each</b><span>A trip took about 90 minutes, and breakdowns were frequent</span></li>
+          <li><em>Result</em><b>About 27,400 passengers in 17 months</b><span>Every trip lost money, even when full, and the service stopped within 18 months</span></li>
+        </ul>
+        <ul class="facts" data-wbpanel="new" hidden>
+          <li><em>Survey</em><b>310 people in 2023</b><span>At Sadarghat, Showarighat, Narayanganj, Gabtoli and Uttara, plus online</span></li>
+          <li><em>Boats</em><b>Hybrid electric water taxis with 50 seats</b><span>About 40 km/h: Sadarghat to Gabtoli in 24 to 35 minutes instead of 90</span></li>
+          <li><em>Service</em><b>20 boats on the full 110 km loop</b><span>Ten each way, every 20 minutes at peak and every 40 minutes off-peak, about 2,500 passengers a day</span></li>
+        </ul>
+        <p class="note">Published at the 7th International Conference on Civil Engineering for Sustainable Development (ICCESD 2024) · Rahman, Shristi, Shahriar &amp; Rahman</p>
+        <div class="row"><a class="btn small" href="https://www.researchgate.net/publication/379118004" target="_blank" rel="noopener">Read the paper ↗</a></div>
+      </div>
+      <figure class="art">
+        <svg class="art-svg" id="wbmap" viewBox="0 0 560 420" aria-hidden="true">
+          <rect width="560" height="420" fill="#F1F3EC"/>
+          <g id="wb-water"></g>
+          <path id="wb-loop" class="wb-route new" d=""/>
+          <path id="wb-old" class="wb-route old" d=""/>
+          <g id="wb-boats"></g>
+          <g id="wb-stations"></g>
+          <g id="wb-rlabels"></g>
+          <text x="300" y="120" class="city" text-anchor="middle">DHAKA</text>
+          <g class="north" transform="translate(520 50)"><path d="M0 -20L8 6L0 1L-8 6Z"/><text y="22" text-anchor="middle">N</text></g>
+          <g class="scale" transform="translate(28 396)"><path d="M0 0H53M0 -4V4M53 -4V4"/><text x="26.5" y="-8" text-anchor="middle">5 km</text></g>
+          <g class="key" id="wb-key"><path d="M28 366H54"/><text x="60" y="370" id="wb-keytext">2010 route · 16 km · 2 boats</text></g>
+        </svg>
+        <figcaption class="cap">Simplified map of the circular waterway. Distances and routes from the paper.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 6 · Indetechs -->
+    <section class="scene" data-scene="climas" data-year="2024" data-name="Indetechs" hidden>
+      <div class="txt">
+        <p class="kicker"><span class="cat work">Work experience</span><span class="when">Indetechs Software Limited, Dhaka · Apr 2024 – Aug 2025</span></p>
+        <h2 class="h">Assistant Engineer: organizing climate evidence</h2>
+        <p class="lede">On the CLIMAS project (Climate Change Citizens Engagement Toolbox for Dealing with Societal Resilience), I helped build a Knowledge and Evidence-Based Support (KEBS) tool. It helps set the agenda for a climate assembly, where citizens meet to discuss climate action.</p>
+        <ul class="facts">
+          <li><em>Methods</em><b>Python, machine learning and natural language processing (NLP)</b><span>To organize and analyze decision-support information from reports and text</span></li>
+          <li><em>Ontologies</em><b>Maps of concepts and how they link</b><span>Built to structure the knowledge and evidence in the system</span></li>
+        </ul>
+      </div>
+      <figure class="art">
+        <svg class="art-svg" id="climas" viewBox="0 0 560 420" aria-hidden="true">
+          <g class="stage-lbl"><text x="78" y="64">EVIDENCE</text><text x="227" y="64">NLP</text><text x="374" y="64">ONTOLOGY</text><text x="502" y="64">AGENDA</text></g>
+          <g class="docs"><g class="doc d1"><rect x="34" y="96" width="78" height="100" rx="6"/><path d="M46 116H98M46 130H100M46 144H88M46 158H96M46 172H80"/></g>
+            <g class="doc d2"><rect x="44" y="206" width="78" height="100" rx="6"/><path d="M56 226H108M56 240H110M56 254H98M56 268H106M56 282H90"/></g>
+            <g class="doc d3"><rect x="34" y="316" width="78" height="64" rx="6"/><path d="M46 334H98M46 348H100M46 362H84"/></g></g>
+          <g class="nlp"><rect x="166" y="84" width="122" height="300" rx="10"/>
+            <g class="words"><rect x="178" y="104" width="44" height="12" rx="6"/><rect x="226" y="104" width="50" height="12" rx="6" class="kw k1"/>
+              <rect x="178" y="126" width="62" height="12" rx="6"/><rect x="244" y="126" width="32" height="12" rx="6"/>
+              <rect x="178" y="148" width="30" height="12" rx="6"/><rect x="212" y="148" width="64" height="12" rx="6" class="kw k2"/>
+              <rect x="178" y="170" width="70" height="12" rx="6"/><rect x="252" y="170" width="24" height="12" rx="6"/>
+              <rect x="178" y="192" width="40" height="12" rx="6" class="kw k3"/><rect x="222" y="192" width="54" height="12" rx="6"/>
+              <rect x="178" y="214" width="56" height="12" rx="6"/><rect x="238" y="214" width="38" height="12" rx="6"/>
+              <rect x="178" y="236" width="48" height="12" rx="6"/><rect x="230" y="236" width="46" height="12" rx="6" class="kw k4"/>
+              <rect x="178" y="258" width="66" height="12" rx="6"/><rect x="248" y="258" width="28" height="12" rx="6"/>
+              <rect x="178" y="280" width="36" height="12" rx="6" class="kw k5"/><rect x="218" y="280" width="58" height="12" rx="6"/>
+              <rect x="178" y="302" width="60" height="12" rx="6"/><rect x="242" y="302" width="34" height="12" rx="6"/>
+              <rect x="178" y="324" width="44" height="12" rx="6"/><rect x="226" y="324" width="50" height="12" rx="6"/>
+              <rect x="178" y="346" width="72" height="12" rx="6"/></g></g>
+          <g class="pipe"><path d="M124 230H160"/><path d="M294 230H306"/><path d="M440 230H452"/></g>
+          <g class="onto">
+            <g class="edges"><path class="e e1" d="M374 230L334 142"/><path class="e e2" d="M374 230L414 134"/><path class="e e3" d="M374 230L334 318"/><path class="e e4" d="M374 230L414 326"/><path class="e e6" d="M334 142L414 134"/><path class="e e7" d="M334 318L414 326"/></g>
+            <g class="node n0"><circle cx="374" cy="230" r="28"/><text x="374" y="227">Climate</text><text x="374" y="239">risk</text></g>
+            <g class="node n1"><circle cx="334" cy="142" r="22"/><text x="334" y="146">Floods</text></g>
+            <g class="node n2"><circle cx="414" cy="134" r="22"/><text x="414" y="138">Heat</text></g>
+            <g class="node n3"><circle cx="334" cy="318" r="22"/><text x="334" y="322">Energy</text></g>
+            <g class="node n4"><circle cx="414" cy="326" r="22"/><text x="414" y="330">Health</text></g>
+          </g>
+          <g class="agenda"><rect x="456" y="96" width="92" height="260" rx="10"/>
+            <g class="ai a1"><circle cx="472" cy="140" r="7"/><text x="484" y="136">Flood</text><text x="484" y="148">readiness</text></g>
+            <g class="ai a2"><circle cx="472" cy="210" r="7"/><text x="484" y="206">Clean</text><text x="484" y="218">energy</text></g>
+            <g class="ai a3"><circle cx="472" cy="280" r="7"/><text x="484" y="276">Heat and</text><text x="484" y="288">health</text></g></g>
+        </svg>
+        <figcaption class="cap">Illustration of the idea, with example topics.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 7 · Presidency University -->
+    <section class="scene" data-scene="lecturer" data-year="2025" data-name="Lecturer" hidden>
+      <div class="txt">
+        <p class="kicker"><span class="cat teach">Teaching</span><span class="when">Presidency University, Dhaka · Spring and Summer 2025</span></p>
+        <h2 class="h">Adjunct Lecturer: five courses in two semesters</h2>
+        <p class="lede">I taught undergraduate civil engineering students: three lab courses, which Bangladeshi universities call sessionals, and two lecture courses.</p>
+        <ul class="facts">
+          <li><em>Labs</em><b>Transportation engineering, computer programming and environmental engineering</b><span>Hands-on sessions where students run tests, write code and analyze results</span></li>
+          <li><em>Lectures</em><b>Environmental Engineering II · Hydrology and Irrigation Engineering</b></li>
+        </ul>
+      </div>
+      <figure class="art">
+        <svg class="art-svg" id="board" viewBox="0 0 560 420" aria-hidden="true">
+          <rect x="22" y="26" width="516" height="352" rx="14" fill="#8C6A4C"/>
+          <rect x="36" y="40" width="488" height="324" rx="8" fill="#245A47"/>
+          <text x="280" y="78" class="chalk-t" text-anchor="middle">SPRING · SUMMER 2025</text>
+          <path class="chalk-u draw" d="M176 90C230 95 330 86 384 92"/>
+          <g class="course c1" transform="translate(56 110)"><rect width="140" height="112" rx="10"/><text x="12" y="26" class="tag lab">LAB</text>
+            <g transform="translate(98 12)"><path d="M6 30L14 2H20L28 30Z" fill="#EE6A1F"/><rect x="2" y="28" width="30" height="5" rx="2" fill="#4A524E"/><rect x="11" y="12" width="12" height="4" fill="#fff"/></g>
+            <text x="12" y="62" class="cn">Transportation</text><text x="12" y="78" class="cn">Engineering</text><text x="12" y="94" class="cn">Sessional I</text></g>
+          <g class="course c2" transform="translate(210 110)"><rect width="140" height="112" rx="10"/><text x="12" y="26" class="tag lab">LAB</text>
+            <text x="112" y="34" text-anchor="middle" class="code">&lt;/&gt;</text>
+            <text x="12" y="62" class="cn">Computer</text><text x="12" y="78" class="cn">Programming</text><text x="12" y="94" class="cn">Sessional</text></g>
+          <g class="course c3" transform="translate(364 110)"><rect width="140" height="112" rx="10"/><text x="12" y="26" class="tag lab">LAB</text>
+            <g transform="translate(100 8)"><path d="M10 2H22M13 2V12L4 30H28L19 12V2" fill="none" stroke="#17201C" stroke-width="2.5" stroke-linejoin="round"/><path d="M8 24H24L27 29H5Z" fill="#3A86D6"/></g>
+            <text x="12" y="62" class="cn">Environmental</text><text x="12" y="78" class="cn">Engineering</text><text x="12" y="94" class="cn">Sessional I</text></g>
+          <g class="course c4" transform="translate(133 236)"><rect width="140" height="112" rx="10"/><text x="12" y="26" class="tag lec">LECTURE</text>
+            <g transform="translate(102 8)"><path d="M14 2C14 2 4 14 4 21A10 10 0 0 0 24 21C24 14 14 2 14 2Z" fill="#3A86D6"/></g>
+            <text x="12" y="62" class="cn">Environmental</text><text x="12" y="78" class="cn">Engineering II</text></g>
+          <g class="course c5" transform="translate(287 236)"><rect width="140" height="112" rx="10"/><text x="12" y="26" class="tag lec">LECTURE</text>
+            <g transform="translate(96 6)"><path d="M10 18A8 8 0 0 1 18 8A10 10 0 0 1 36 14A7 7 0 0 1 34 28H12A6 6 0 0 1 10 18Z" fill="#C9D6DD"/><path d="M14 32L12 38M22 32L20 38M30 32L28 38" stroke="#3A86D6" stroke-width="2.5" stroke-linecap="round"/></g>
+            <text x="12" y="62" class="cn">Hydrology and</text><text x="12" y="78" class="cn">Irrigation</text><text x="12" y="94" class="cn">Engineering</text></g>
+        </svg>
+        <figcaption class="cap">The five courses, as listed on the CV.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 8 · WMU -->
+    <section class="scene" data-scene="move" data-year="2025" data-name="WMU" hidden>
+      <div class="txt">
+        <p class="kicker"><span class="cat edu">Graduate school</span><span class="when">Western Michigan University, Kalamazoo · Aug 2025 – Present</span></p>
+        <h2 class="h">From Dhaka to Kalamazoo</h2>
+        <p class="stat"><span id="km">12,664</span> km</p>
+        <p class="lede">In August 2025 I moved to Michigan to start an M.S. in Civil Engineering (Transportation) at Western Michigan University (WMU).</p>
+        <ul class="facts">
+          <li><em>Degree</em><b>M.S. in Civil Engineering (Transportation)</b><span>GPA 3.88 / 4.00</span></li>
+          <li><em>Coursework</em><b>Planning, travel demand, safety and systems</b><span>Transportation Planning · Travel Demand Analysis · Traffic Safety Engineering · Civil Systems Analysis · Construction Project Delivery Systems · Modeling and Analysis of Civil Engineering Application</span></li>
+        </ul>
+      </div>
+      <figure class="art">
+        <div class="globe"><canvas id="globe-move"></canvas></div>
+        <figcaption class="cap">BUET to WMU in a straight line over the globe (the great-circle distance). That line passes near the North Pole.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 9 · Graduate Assistant -->
+    <section class="scene" data-scene="workzone" data-year="2025" data-name="Graduate Assistant" hidden>
+      <div class="txt">
+        <p class="kicker"><span class="cat research">Research · Teaching</span><span class="when">Graduate Assistant, ITS Lab, WMU · Aug 2025 – Present</span></p>
+        <h2 class="h">What does a work zone cost drivers?</h2>
+        <p class="lede">For the Michigan Department of Transportation (MDOT), our lab is evaluating how MDOT estimates the delay and cost that work zones cause road users. Closing a lane cuts capacity, a queue forms, and every vehicle loses time.</p>
+        <ul class="facts">
+          <li><em>Data</em><b>Five sources compared</b><span>RITIS, Bluetooth, API feeds, microwave vehicle detection (MVDS) and camera video: speed, volume, travel time, lane closures and work-zone layouts</span></li>
+          <li><em>My role</em><b>Cleaning, processing, visualizing and comparing the data</b><span>To judge which sources suit delay and queue evaluation. I also reviewed vehicle operating cost methods; without enough roadway-condition inputs, the findings supported keeping that cost reviewed but not monetized.</span></li>
+          <li><em>Teaching assistant</em><b>CCE 4300 Traffic Design · CCE 3300 Transportation Engineering</b></li>
+          <li><em>Training · 2025</em><b>CITI Program: Responsible Conduct of Research</b></li>
+        </ul>
+        <div class="row"><button type="button" class="btn sign" id="close-lane" aria-pressed="false">Close the right lane ▸</button></div>
+      </div>
+      <figure class="art">
+        <svg class="art-svg wz" id="wz" viewBox="0 0 560 420" aria-hidden="true">
+          <g class="chips">
+            <rect x="14" y="14" width="80" height="26" rx="6"/><text x="54" y="31">RITIS</text>
+            <rect x="104" y="14" width="106" height="26" rx="6"/><text x="157" y="31">BLUETOOTH</text>
+            <rect x="220" y="14" width="60" height="26" rx="6"/><text x="250" y="31">API</text>
+            <rect x="290" y="14" width="74" height="26" rx="6"/><text x="327" y="31">MVDS</text>
+            <rect x="374" y="14" width="80" height="26" rx="6"/><text x="414" y="31">VIDEO</text>
+          </g>
+          <g class="feed"><path d="M54 40V78"/><path d="M140 40L76 96M176 40L484 96"/><path d="M250 40V52H346V222"/><path d="M327 40V60H206V96"/><path d="M414 40V96"/></g>
+          <g id="wz-speed"></g>
+          <rect x="0" y="150" width="560" height="112" fill="#CFCCC4"/>
+          <path d="M0 150H560M0 262H560" stroke="#8E9892" stroke-width="2"/>
+          <path d="M0 206H560" stroke="#fff" stroke-width="3" stroke-dasharray="18 16"/>
+          <g class="sensor" id="bt1"><path d="M70 104V150"/><rect x="58" y="94" width="24" height="16" rx="4"/><text x="70" y="106">BT</text></g>
+          <g class="sensor" id="bt2"><path d="M490 104V150"/><rect x="478" y="94" width="24" height="16" rx="4"/><text x="490" y="106">BT</text></g>
+          <g class="sensor" id="mvds"><path d="M206 104V150"/><rect x="194" y="94" width="24" height="16" rx="4"/><text x="206" y="106">R</text><path class="beam" d="M206 112L184 262H228Z"/></g>
+          <g class="sensor" id="cam"><path d="M414 104V150"/><rect x="402" y="94" width="24" height="16" rx="4"/><circle cx="414" cy="102" r="4.5" fill="#CFE4EE"/><path class="beam" d="M414 112L386 262H442Z"/></g>
+          <g id="wz-cars"></g>
+          <g class="closure" id="wz-closure">
+            <g class="cones"><path d="M248 262l7-16 7 16z"/><path d="M264 248l7-16 7 16z"/><path d="M280 234l7-16 7 16z"/><path d="M296 220l7-16 7 16z"/>
+              <path d="M336 220l7-16 7 16z"/><path d="M376 220l7-16 7 16z"/><path d="M416 220l7-16 7 16z"/><path d="M456 220l7-16 7 16z"/><path d="M496 220l7-16 7 16z"/><path d="M536 220l7-16 7 16z"/></g>
+            <g class="board"><rect x="318" y="226" width="56" height="28" rx="4" fill="#1F2623"/><path d="M328 248L338 234L348 248M344 248L354 234L364 248" stroke="#F2A900" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+            <g class="crew"><rect x="430" y="232" width="44" height="22" rx="4" fill="#F2B134"/><rect x="462" y="226" width="16" height="12" rx="2" fill="#F2B134"/><circle cx="440" cy="257" r="4" fill="#17201C"/><circle cx="466" cy="257" r="4" fill="#17201C"/></g>
+          </g>
+          <g class="readout">
+            <rect x="14" y="280" width="532" height="128" rx="12"/>
+            <text x="30" y="304" class="rl">BLUETOOTH TRAVEL TIME, READER TO READER</text>
+            <text x="30" y="329" class="rk">Normal</text><rect x="96" y="319" width="0" height="12" rx="3" class="bar n" id="bar-n"/><text x="100" y="329" class="rv" id="val-n">2.0 min</text>
+            <text x="30" y="353" class="rk">Now</text><rect x="96" y="343" width="0" height="12" rx="3" class="bar c" id="bar-c"/><text x="100" y="353" class="rv" id="val-c">2.0 min</text>
+            <text x="30" y="391" class="rl">DELAY PER VEHICLE</text><text x="168" y="392" class="big-v" id="val-d">+0.0 min</text>
+            <text x="318" y="391" class="rl">MVDS SPEED</text><text x="400" y="392" class="big-v" id="val-s">60 mph</text>
+          </g>
+        </svg>
+        <figcaption class="cap">Illustration only, not study data. Bluetooth readers about 2 miles apart, 60 mph speed limit.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 10 · ITE student chapter -->
+    <section class="scene" data-scene="safe" data-year="2025" data-name="ITE chapter" hidden>
+      <div class="txt">
+        <p class="kicker"><span class="cat lead">Leadership</span><span class="when">ITE Student Chapter, WMU · Sep 2025 – Present</span></p>
+        <h2 class="h">Vice Secretary, ITE Student Chapter</h2>
+        <p class="lede">The Institute of Transportation Engineers (ITE) is the professional society for transportation engineers. Since September 2025 I have served as Vice Secretary of its student chapter at Western Michigan University.</p>
+        <ul class="facts">
+          <li><em>Competition · 2025</em><b>Participant, ITE Safe System Approach Student Competition</b><span>The Safe System approach starts from two facts: people make mistakes, and human bodies are fragile. So roads, vehicles and speeds are designed in layers, and one mistake does not have to cost a life.</span></li>
+        </ul>
+      </div>
+      <figure class="art">
+        <svg class="art-svg" id="safe" viewBox="0 0 560 420" aria-hidden="true">
+          <text x="70" y="166" class="sub" text-anchor="middle">A MISTAKE</text>
+          <g class="car"><rect x="40" y="196" width="58" height="30" rx="10" fill="#E5533D"/><rect x="58" y="200" width="24" height="22" rx="6" fill="#F5B3A8"/></g>
+          <g id="layers"></g>
+          <circle id="risk" cx="104" cy="211" r="9"/>
+          <g class="goal"><circle cx="512" cy="211" r="34"/><text x="512" y="207" text-anchor="middle">ZERO</text><text x="512" y="221" text-anchor="middle">deaths</text></g>
+          <text x="512" y="264" class="sub" text-anchor="middle">OR SERIOUS</text><text x="512" y="278" class="sub" text-anchor="middle">INJURIES</text>
+          <text x="280" y="404" class="sub" text-anchor="middle" id="safe-note">EACH LAYER CAN CATCH A MISTAKE THE OTHERS MISS</text>
+        </svg>
+        <figcaption class="cap">The Safe System approach as layers of protection: if one layer fails, the next can still prevent the crash or make it survivable.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 11 · Design competition -->
+    <section class="scene" data-scene="turbo" data-year="2026" data-name="Design award" hidden>
+      <div class="txt">
+        <p class="kicker"><span class="cat award">Award · Design competition</span><span class="when">ITE Great Lakes District Student Leadership Summit, Detroit · 2026</span></p>
+        <h2 class="h">Winner: a turbo roundabout for a high-crash roundabout</h2>
+        <p class="lede">In a two-lane roundabout, drivers often change lanes inside the circle, and that causes crashes. A turbo roundabout adds raised spiral lane dividers, so drivers pick their lane before entering and cannot change lanes inside.</p>
+        <div class="seg" role="group" aria-label="Compare">
+          <button type="button" class="on" data-rb="two" aria-pressed="true">Two-lane roundabout</button>
+          <button type="button" data-rb="turbo" aria-pressed="false">Turbo roundabout</button>
+        </div>
+        <ul class="facts">
+          <li><em>Studied</em><b>Crash history, traffic demand, pedestrians and the alternatives</b></li>
+          <li><em>Designed</em><b>Pedestrian crossings, signing and marking, safety and lifecycle cost</b></li>
+          <li><em>Benefit–cost</em><b><span id="bc">B/C = 1.12</span> over 20 years</b><span>The benefits are larger than the costs</span></li>
+          <li><em>Also in 2026</em><b>Finalist, Traffic Bowl, at the same summit</b><span>And an attendee at the Joint ITE International and Great Lakes District Annual Meeting and Exhibition</span></li>
+        </ul>
+      </div>
+      <figure class="art">
+        <svg class="art-svg" id="rbt" viewBox="0 0 560 420" aria-hidden="true">
+          <rect width="560" height="420" fill="#DCE8D2"/>
+          <g id="rbt-base"></g>
+          <g id="rbt-two" class="mode"></g>
+          <g id="rbt-turbo" class="mode"></g>
+          <g id="rbt-cars"></g>
+          <g id="rbt-flash" class="flash"><circle r="24"/></g>
+          <text x="280" y="408" class="sub" text-anchor="middle" id="rbt-note">TWO-LANE: A CAR CHANGES LANES INSIDE AND CUTS ANOTHER OFF</text>
+        </svg>
+        <figcaption class="cap">Illustration of the idea, not the competition site.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 12 · Contact -->
+    <section class="scene" data-scene="walk" data-year="Now" data-name="Contact" hidden>
+      <div class="txt">
+        <p class="kicker"><span class="cat contact">Contact</span><span class="when">Kalamazoo, Michigan · now</span></p>
         <h2 class="big">Let's talk.</h2>
         <p class="lede">Research, teaching or a role in transportation engineering: email is the fastest way to reach me.</p>
         <div class="email-row"><code data-email></code><button type="button" class="btn small sign" id="copy-email2">Copy email</button></div>
         <div class="links" data-links></div>
         <div class="row"><a class="btn" href="index.html">Back to the intersection</a></div>
       </div>
-      <svg class="art" viewBox="0 0 560 420" aria-hidden="true">
-        <rect x="150" y="40" width="260" height="320" rx="26" fill="#1F2623"/>
-        <g id="ped-hand" fill="#FF8A3D"><rect x="222" y="160" width="74" height="70" rx="16"/><rect x="222" y="108" width="16" height="64" rx="8"/><rect x="241" y="98" width="16" height="72" rx="8"/><rect x="260" y="100" width="16" height="70" rx="8"/><rect x="279" y="112" width="16" height="60" rx="8"/><rect x="198" y="172" width="24" height="48" rx="10" transform="rotate(-32 210 196)"/></g>
-        <g id="ped-man" fill="none" stroke="#F3F5F0" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="262" cy="104" r="16" fill="#F3F5F0" stroke="none"/><path d="M258 130L250 196M256 146L226 180M256 146L288 170M250 196L226 252M250 196L284 248"/></g>
-        <text x="352" y="300" id="ped-count" class="count" text-anchor="middle"></text>
-        <text x="280" y="336" id="ped-word" class="word" text-anchor="middle">WAIT</text>
-      </svg>
+      <figure class="art">
+        <svg class="art-svg" viewBox="0 0 560 420" aria-hidden="true">
+          <rect x="150" y="40" width="260" height="320" rx="26" fill="#1F2623"/>
+          <g id="ped-hand" fill="#FF8A3D"><rect x="222" y="160" width="74" height="70" rx="16"/><rect x="222" y="108" width="16" height="64" rx="8"/><rect x="241" y="98" width="16" height="72" rx="8"/><rect x="260" y="100" width="16" height="70" rx="8"/><rect x="279" y="112" width="16" height="60" rx="8"/><rect x="198" y="172" width="24" height="48" rx="10" transform="rotate(-32 210 196)"/></g>
+          <g id="ped-man" fill="none" stroke="#F3F5F0" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="262" cy="104" r="16" fill="#F3F5F0" stroke="none"/><path d="M258 130L250 196M256 146L226 180M256 146L288 170M250 196L226 252M250 196L284 248"/></g>
+          <text x="352" y="300" id="ped-count" class="count" text-anchor="middle"></text>
+          <text x="280" y="336" id="ped-word" class="word" text-anchor="middle">WAIT</text>
+        </svg>
+      </figure>
     </section>
 
     <div class="tournav">
       <button type="button" class="btn" id="prev">◂ Back</button>
-      <span class="count mono" id="count">PHASE 1 OF 7</span>
-      <button type="button" class="btn sign" id="next">Next phase ▸</button>
+      <span class="count mono" id="count">STOP 1 OF 12</span>
+      <button type="button" class="btn sign" id="next">Next stop ▸</button>
     </div>
   </div>
 
-  <div class="route" id="route" aria-label="Tour stops">
-    <div class="road" aria-hidden="true"></div>
+  <div class="route" id="route" aria-hidden="true">
+    <div class="road"></div>
     <div class="stops" id="stops"></div>
-    <div class="bus" id="bus" aria-hidden="true">
+    <div class="bus" id="bus">
       <svg viewBox="0 0 64 34"><rect x="2" y="4" width="60" height="22" rx="7" fill="#F2B134"/><rect x="8" y="8" width="40" height="8" rx="2" fill="#2E3B42"/><rect x="52" y="8" width="7" height="10" rx="2" fill="#2E3B42"/><circle cx="16" cy="27" r="5" fill="#17201C"/><circle cx="48" cy="27" r="5" fill="#17201C"/></svg>
     </div>
   </div>
@@ -251,6 +455,7 @@
 
 <script src="js/content.js"></script>
 <script src="js/common.js"></script>
+<script src="js/globe.js"></script>
 <script src="js/tour.js"></script>
 </body>
 </html>

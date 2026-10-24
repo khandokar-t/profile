@@ -52,6 +52,7 @@
   window.renderLinks = renderLinks;
 
   /* ---------- contact dialog ---------- */
+  var WALK_SECONDS = 30;                                  // the WALK countdown, then DON'T WALK for a second and the dialog closes
   var dlg = null, timers = [];
   function buildDialog() {
     var email = (SITE.person && SITE.person.email) || "";
@@ -101,11 +102,14 @@
     if (reduce) { set("walk", "WALK", ""); return; }
     set("wait", "WAIT", "");
     timers.push(setTimeout(function () {
-      var n = 9; set("walk", "WALK", String(n));
+      var n = WALK_SECONDS; set("walk", "WALK", String(n));
       function tick() {
         n -= 1;
         if (n > 0) { set("walk", "WALK", String(n)); timers.push(setTimeout(tick, 1000)); }
-        else { set("wait", "DON'T WALK", "0"); }
+        else {
+          set("wait", "DON'T WALK", "");
+          timers.push(setTimeout(function () { if (dlg.open) dlg.close(); else dlg.removeAttribute("open"); }, 1000));
+        }
       }
       timers.push(setTimeout(tick, 1000));
     }, 1300));

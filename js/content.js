@@ -1,6 +1,6 @@
 /*
   All site content lives here. Every page reads from this one file,
-  so the intersection, the tour, the map and the CV never disagree.
+  so the intersection, the tour and the CV never disagree.
 
   To add your profile links later, paste the full URL between the quotes,
   e.g.  github: "https://github.com/your-name",
@@ -44,241 +44,218 @@ window.SITE = {
     "Traffic flow modeling and simulation"
   ],
 
-  /* Phase number -> section. Through phases (2, 4, 6, 8) are the four roads.
-     Left-turn phases (1, 3, 5, 7) are the smaller sections. */
-  phases: {
-    1: { key: "skills",     label: "Skills",     street: "Projects Ave", turn: "left" },
-    2: { key: "research",   label: "Research",   street: "Research Rd",  turn: "through" },
-    3: { key: "awards",     label: "Awards",     street: "About Blvd",   turn: "left" },
-    4: { key: "teaching",   label: "Teaching",   street: "Teaching St",  turn: "through" },
-    5: { key: "papers",     label: "Papers",     street: "Research Rd",  turn: "left" },
-    6: { key: "projects",   label: "Projects",   street: "Projects Ave", turn: "through" },
-    7: { key: "leadership", label: "Leadership", street: "Teaching St",  turn: "left" },
-    8: { key: "about",      label: "About",      street: "About Blvd",   turn: "through" }
+  /* The home page has four sections. Each one is a signal stage: two concurrent
+     phases, so opposing approaches move together, as at a real intersection.
+     Academic Ave runs east–west, Career St north–south. */
+  stages: {
+    1: { key: "education", label: "Education",         phases: [1, 5], street: "Academic Ave", move: "left",    moveText: "protected left turns" },
+    2: { key: "research",  label: "Research Projects", phases: [2, 6], street: "Academic Ave", move: "through", moveText: "through and right turns" },
+    3: { key: "work",      label: "Work Experience",   phases: [3, 7], street: "Career St",    move: "left",    moveText: "protected left turns" },
+    4: { key: "skills",    label: "Skills",            phases: [4, 8], street: "Career St",    move: "through", moveText: "through and right turns" }
   },
 
+  /* The full record, used by the plain CV page. */
   sections: {
-    about: {
-      title: "From Dhaka's rivers to Michigan's roads",
-      lead: "I am a transportation engineering graduate student at Western Michigan University. I work on traffic operations and safety, and on the data behind them: work zones, crash trends, signals and transit.",
-      items: [
-        {
-          title: "M.S. Civil Engineering (Transportation)",
-          meta: "Western Michigan University · Aug 2025 – Present · GPA 3.88 / 4.00",
-          text: "Coursework: Transportation Planning, Travel Demand Analysis, Traffic Safety Engineering, Construction Project Delivery Systems, Civil Systems Analysis, Modeling and Analysis of Civil Engineering Applications."
-        },
-        {
-          title: "B.Sc. Civil Engineering (Transportation)",
-          meta: "Bangladesh University of Engineering and Technology (BUET) · May 2023 · GPA 3.49 / 4.00",
-          text: "Thesis: A Study on Waterbus Service to Analyze User Preferences and Implement Solutions."
-        },
-        {
-          title: "Research interests",
-          tags: ["ITS", "Transportation safety", "Connected and automated vehicles", "Traffic operations", "Work zones", "Planning", "Traffic simulation"]
-        }
-      ],
-      cta: { label: "Take the guided tour", href: "tour.html" }
-    },
+    education: [
+      {
+        title: "M.S. in Civil Engineering (Transportation)",
+        where: "Western Michigan University, Kalamazoo, Michigan · GPA 3.88 / 4.00",
+        when: "Aug 2025 – Present",
+        text: "Graduate coursework: Transportation Planning; Travel Demand Analysis; Traffic Safety Engineering; Construction Project Delivery Systems; Civil Systems Analysis; Modeling and Analysis of Civil Engineering Application."
+      },
+      {
+        title: "B.Sc. in Civil Engineering (Transportation)",
+        where: "Bangladesh University of Engineering and Technology (BUET), Dhaka, Bangladesh · GPA 3.49 / 4.00",
+        when: "May 2023",
+        text: "Thesis: A Study on Waterbus Service to Analyze User Preferences and Implement Solutions."
+      }
+    ],
 
-    research: {
-      title: "Work-zone user delay and cost",
-      lead: "Graduate Research Assistant, Intelligent Transportation System Lab, Western Michigan University.",
-      items: [
-        {
-          title: "Evaluation of MDOT's methodology for estimating work-zone user delay times and costs",
-          meta: "Aug 2025 – Present · Sponsor: Michigan Department of Transportation",
-          bullets: [
-            "Analyzed multi-source work-zone traffic data from RITIS, Bluetooth, API feeds, Microwave Vehicle Detection Systems (MVDS) and camera video: speed, volume, travel time, lane closures and work-zone layouts.",
-            "Cleaned, processed, visualized and compared the sources to judge how well each suits work-zone delay and queue evaluation.",
-            "Reviewed vehicle operating cost (VOC) methods for transparency, current validity, ease of use and fit with available inputs. The findings supported treating VOC as reviewed but non-monetized when roadway-condition inputs are insufficient."
-          ],
-          tags: ["RITIS", "Bluetooth", "MVDS", "Video data", "Python"]
-        },
-        {
-          title: "Undergraduate research, BUET",
-          meta: "2022 – 2023",
-          bullets: [
-            "Waterbus service and passenger preferences: designed and ran a questionnaire survey on passenger preferences, service barriers and user-centred factors in Dhaka's waterbus system, and turned the findings into operating recommendations.",
-            "Unauthorized vehicle-related crash forecasting: analyzed police-recorded crash data (2009–2015) and used ARIMA time-series models to forecast crashes for 2016–2020, with collision and severity patterns for safety planning."
-          ]
-        }
-      ]
-    },
+    research: [
+      {
+        title: "Graduate Research Assistant",
+        where: "Intelligent Transportation System Lab, Western Michigan University",
+        when: "Aug 2025 – Present",
+        text: "Project: Evaluation of MDOT's Methodology for Estimating Work Zone User Delay Times and Costs. Sponsor: Michigan Department of Transportation.",
+        bullets: [
+          "Analyzed multi-source work-zone traffic data from RITIS, Bluetooth, API feeds, Microwave Vehicle Detection Systems (MVDS) and camera video: speed, volume, travel time, lane closures and work-zone layouts.",
+          "Cleaned, processed, visualized and compared the sources to judge how consistent and suitable each is for work-zone delay and queue evaluation.",
+          "Reviewed vehicle operating cost (VOC) methods for transparency, current validity, ease of use and fit with the available inputs. The findings supported treating VOC as reviewed but non-monetized when roadway-condition inputs are insufficient."
+        ]
+      },
+      {
+        title: "Undergraduate Research",
+        where: "BUET",
+        when: "2022 – 2023",
+        bullets: [
+          "Waterbus service and passenger preferences (undergraduate thesis): designed and ran a questionnaire survey on passenger preferences, service barriers and user-centred factors in Dhaka's waterbus system, and turned the findings into operating recommendations.",
+          "Unauthorized vehicle-related crash forecasting: analyzed police-recorded crash data (2009–2015) and used ARIMA time-series models to forecast crashes for 2016–2020, with collision and severity patterns for safety planning."
+        ]
+      }
+    ],
 
-    papers: {
-      title: "Two peer-reviewed conference papers",
-      lead: "Both papers come from undergraduate research at BUET.",
-      items: [
-        {
-          title: "A Study on Waterbus Services Using Passenger Preferences Data and the Way Forward",
-          meta: "Rahman, K. T., Shristi, N. T., Shahriar, S. M. F., & Rahman, M. M. · 7th International Conference on Civil Engineering for Sustainable Development (ICCESD 2024) · March 2024",
-          text: "Why Dhaka's first waterbus failed within 18 months, and what would make the next one work: more seats, reliable frequency, a hybrid electric water taxi and better passenger information.",
-          links: [{ label: "Read on ResearchGate", href: "https://www.researchgate.net/publication/379118004" }]
-        },
-        {
-          title: "Time Series Forecasting the Unauthorized Vehicle-Related Crashes in Bangladesh",
-          meta: "Huq, A. S., Rahman, K. T., & Shristi, N. T. · 6th International Conference on Advances in Civil Engineering (ICACE 2022), CUET · December 2022",
-          text: "Forecasting crashes that involve unregistered local vehicles such as easy-bikes and nosimons, using police crash records from 2009 to 2015 and an ARIMA(6,1,7) model.",
-          links: [{ label: "Read on ResearchGate", href: "https://www.researchgate.net/publication/368713906" }]
-        }
-      ]
-    },
+    papers: [
+      {
+        authors: "Rahman, K. T., Shristi, N. T., Shahriar, S. M. F., & Rahman, M. M.",
+        date: "2024, March",
+        title: "A Study on Waterbus Services Using Passenger Preferences Data and the Way Forward",
+        venue: "7th International Conference on Civil Engineering for Sustainable Development (ICCESD 2024)",
+        href: "https://www.researchgate.net/publication/379118004"
+      },
+      {
+        authors: "Huq, A. S., Rahman, K. T., & Shristi, N. T.",
+        date: "2022, December",
+        title: "Time Series Forecasting the Unauthorized Vehicle-Related Crashes in Bangladesh",
+        venue: "6th International Conference on Advances in Civil Engineering (ICACE 2022), CUET, Chattogram",
+        href: "https://www.researchgate.net/publication/368713906"
+      }
+    ],
 
-    projects: {
-      title: "Design, capstone and industry projects",
-      lead: "From a high-crash roundabout in Michigan to a river channel in Dhaka.",
-      items: [
-        {
-          title: "Turbo roundabout for a high-crash two-lane roundabout",
-          meta: "Winner, Design Competition · ITE Great Lakes District Student Leadership Summit, Detroit, MI · 2026",
-          bullets: [
-            "Evaluated crash history, traffic demand, pedestrian conditions and operational alternatives.",
-            "Proposed a turbo (spiral) roundabout to cut lane-changing conflicts in the circulating lanes and improve lane discipline.",
-            "Covered pedestrians, signing and marking, safety and lifecycle cost, with a 20-year benefit–cost analysis: B/C = 1.12."
-          ],
-          tags: ["Roundabouts", "Safety", "Benefit–cost"]
-        },
-        {
-          title: "Channel restoration of the Buriganga River and integrated roadway–waterway development, Kamrangirchar",
-          meta: "Undergraduate capstone · BUET · 2023",
-          bullets: [
-            "Integrated concept: channel restoration and dredging, roadway improvements, bridge and jetty facilities, pedestrian walkways and riverbank protection.",
-            "Evaluated how the improvements would raise connectivity, navigation, roadway capacity and multimodal access."
-          ],
-          tags: ["Waterways", "Planning", "AutoCAD"]
-        },
-        {
-          title: "CLIMAS: climate change citizens engagement toolbox",
-          meta: "Assistant Engineer · Indetechs Software Limited, Dhaka · Apr 2024 – Aug 2025",
-          bullets: [
-            "Helped build a Knowledge and Evidence-Based Support (KEBS) tool for setting climate-assembly agendas.",
-            "Used Python, machine learning and natural language processing to organize and analyze decision-support information.",
-            "Developed and organized ontologies that structure the knowledge and evidence in the system."
-          ],
-          tags: ["Python", "NLP", "Ontologies"]
-        }
-      ]
-    },
+    teaching: [
+      {
+        title: "Graduate Teaching Assistant",
+        where: "Western Michigan University",
+        when: "Aug 2025 – Present",
+        bullets: ["CCE 4300 – Traffic Design", "CCE 3300 – Transportation Engineering"]
+      },
+      {
+        title: "Adjunct Lecturer",
+        where: "Presidency University, Dhaka, Bangladesh",
+        when: "Spring and Summer 2025",
+        bullets: [
+          "Transportation Engineering Sessional I",
+          "Computer Programming Sessional",
+          "Environmental Engineering Sessional I",
+          "Environmental Engineering II",
+          "Hydrology and Irrigation Engineering"
+        ]
+      }
+    ],
 
-    teaching: {
-      title: "Seven courses at two universities",
-      lead: "Labs and lectures, from traffic design to hydrology.",
-      items: [
-        {
-          title: "Graduate Teaching Assistant",
-          meta: "Western Michigan University · Aug 2025 – Present",
-          bullets: ["CCE 4300 – Traffic Design", "CCE 3300 – Transportation Engineering"]
-        },
-        {
-          title: "Adjunct Lecturer",
-          meta: "Presidency University, Dhaka · Spring and Summer 2025",
-          bullets: [
-            "Transportation Engineering Sessional I",
-            "Computer Programming Sessional",
-            "Environmental Engineering Sessional I",
-            "Environmental Engineering II",
-            "Hydrology and Irrigation Engineering"
-          ]
-        }
-      ]
-    },
+    work: [
+      {
+        title: "Assistant Engineer",
+        where: "Indetechs Software Limited, Dhaka, Bangladesh",
+        when: "Apr 2024 – Aug 2025",
+        text: "Project: Climate Change Citizens Engagement Toolbox for Dealing with Societal Resilience (CLIMAS).",
+        bullets: [
+          "Contributed to a Knowledge and Evidence-Based Support (KEBS) tool for climate-assembly agenda setting.",
+          "Applied Python, machine learning and natural language processing (NLP) to organize and analyze decision-support information.",
+          "Developed and organized ontologies that structure the knowledge and evidence in the system."
+        ]
+      }
+    ],
 
-    skills: {
-      title: "Toolbox",
-      lead: "The software and data I work with.",
-      items: [
-        { title: "Modeling and simulation", tags: ["PTV Vissim", "PTV Visum", "PTV Vistro", "HCS", "HSS"] },
-        { title: "Programming and data analysis", tags: ["Python", "C++", "MATLAB", "StataSE", "Microsoft Excel"] },
-        { title: "Transportation data", tags: ["RITIS", "Bluetooth traffic data", "API-based traffic data", "MVDS data", "Video-based traffic data"] },
-        { title: "GIS and engineering software", tags: ["ArcGIS Pro", "AutoCAD", "ETABS", "SAP", "Protégé"] }
-      ]
-    },
+    projects: [
+      {
+        title: "Safety and operational improvement of a high-crash two-lane roundabout",
+        where: "Winner, Design Competition, ITE Great Lakes District Student Leadership Summit, Detroit, MI",
+        when: "2026",
+        bullets: [
+          "Evaluated crash history, traffic demand, pedestrian conditions and operational alternatives; proposed a turbo (spiral) roundabout to reduce lane-changing conflicts in the circle and improve lane discipline.",
+          "Developed pedestrian, signing and marking, safety and lifecycle-cost considerations, with a 20-year benefit–cost analysis (B/C = 1.12)."
+        ]
+      },
+      {
+        title: "Channel restoration of the Buriganga River and integrated development of roadway and waterway at Kamrangirchar",
+        where: "Undergraduate capstone project, BUET",
+        when: "2023",
+        bullets: [
+          "Developed an integrated concept: channel restoration and dredging, roadway improvements, bridge and jetty facilities, pedestrian walkways and riverbank protection.",
+          "Evaluated how the improvements would raise connectivity, navigation, roadway capacity and multimodal access."
+        ]
+      }
+    ],
 
-    awards: {
-      title: "Wins and recognition",
-      lead: "Competitions and scholarships.",
-      items: [
-        { title: "Winner, Design Competition", meta: "ITE Great Lakes District Student Leadership Summit, Detroit, MI · 2026" },
-        { title: "Finalist, Traffic Bowl", meta: "ITE Great Lakes District Student Leadership Summit · 2026" },
-        { title: "First Runner-Up, Mechanics Maestro", meta: "Eccentric Civil Engineering Festival, BUET · 2018" },
-        { title: "Board Scholarship", meta: "Higher Secondary School Certificate · 2017" }
-      ]
-    },
+    skills: [
+      { title: "Transportation modeling and simulation", tags: ["PTV Vissim", "PTV Visum", "PTV Vistro", "HCS", "HSS"] },
+      { title: "Programming and data analysis", tags: ["Python", "C++", "MATLAB", "StataSE", "Microsoft Excel"] },
+      { title: "Transportation data", tags: ["RITIS", "Bluetooth traffic data", "API-based traffic data", "MVDS data", "Video-based traffic data"] },
+      { title: "GIS and engineering software", tags: ["ArcGIS Pro", "AutoCAD", "ETABS", "SAP", "Protégé"] }
+    ],
 
-    leadership: {
-      title: "Chapters, competitions and training",
-      lead: "Professional activities in Bangladesh and Michigan.",
-      items: [
-        { title: "Vice Secretary, ITE Student Chapter", meta: "Western Michigan University · Sep 2025 – Present" },
-        { title: "Deputy Secretary, Internal Affairs, ASCE Student Chapter", meta: "BUET · 2022 – 2023" },
-        { title: "Participant, ITE Safe System Approach Student Competition", meta: "2025" },
-        { title: "Attendee, Joint ITE International and Great Lakes District Annual Meeting and Exhibition", meta: "2026" },
-        { title: "CITI Program: Graduate College Responsible Conduct of Research", meta: "2025" }
-      ]
-    }
+    leadership: [
+      { title: "Vice Secretary, ITE Student Chapter", where: "Western Michigan University", when: "Sep 2025 – Present" },
+      { title: "Deputy Secretary, Internal Affairs, ASCE Student Chapter", where: "BUET", when: "2022 – 2023" },
+      { title: "Participant, ITE Safe System Approach Student Competition", where: "", when: "2025" },
+      { title: "Attendee, Joint ITE International and Great Lakes District Annual Meeting and Exhibition", where: "", when: "2026" },
+      { title: "CITI Program: Graduate College Responsible Conduct of Research", where: "", when: "2025" }
+    ],
+
+    awards: [
+      { title: "Winner, Design Competition", where: "ITE Great Lakes District Student Leadership Summit, Detroit, MI", when: "2026" },
+      { title: "Finalist, Traffic Bowl", where: "ITE Great Lakes District Student Leadership Summit", when: "2026" },
+      { title: "First Runner-Up, Mechanics Maestro", where: "Eccentric Civil Engineering Festival, BUET", when: "2018" },
+      { title: "Board Scholarship", where: "Higher Secondary School Certificate", when: "2017" }
+    ]
   }
 };
 
 /* Short versions for the intersection card, which must fit one fixed-size box
-   without scrolling. The full text above is used by the map and the plain CV. */
+   without scrolling. The tour tells the full story; the plain CV lists everything. */
 window.SITE.cards = {
   welcome: {
     title: "Khandokar Tanvir Rahman",
     lead: "Transportation engineering graduate student working on traffic operations, safety and the data behind them.",
     items: [
+      { title: "Four sections, four signal stages", text: "Pick Education, Research Projects, Work Experience or Skills below. Opposing approaches get the green together, like a real signal." },
       { title: "M.S. Civil Engineering (Transportation)", meta: "Western Michigan University · 2025 – Present · GPA 3.88" },
-      { title: "Winner, ITE Great Lakes District design competition", meta: "Turbo roundabout redesign · 2026" },
-      { title: "2 conference papers · 7 courses taught", meta: "Waterbus services · crash forecasting" }
-    ]
+      { title: "Winner, ITE Great Lakes District design competition", meta: "Turbo roundabout redesign · 2026" }
+    ],
+    cta: { label: "Take the guided tour", href: "tour.html" }
   },
-  about: {
-    title: "From Dhaka's rivers to Michigan's roads",
-    lead: "I work on traffic operations, safety and the data behind them: work zones, crash trends, signals and transit.",
+  education: {
+    title: "Education",
+    lead: "Civil engineering with a transportation major, in Dhaka and in Michigan.",
     items: [
-      { title: "M.S. Civil Engineering (Transportation)", meta: "Western Michigan University · 2025 – Present · GPA 3.88 / 4.00" },
-      { title: "B.Sc. Civil Engineering (Transportation)", meta: "BUET, Dhaka · 2023 · GPA 3.49 / 4.00", text: "Thesis on Dhaka's waterbus service and its passengers." },
-      { title: "Interests", tags: ["ITS", "Safety", "Connected and automated vehicles", "Traffic operations", "Work zones", "Planning", "Simulation"] }
+      { title: "M.S. in Civil Engineering (Transportation)", meta: "Western Michigan University, Kalamazoo · Aug 2025 – Present · GPA 3.88 / 4.00",
+        text: "Coursework: Transportation Planning, Travel Demand Analysis, Traffic Safety Engineering, Civil Systems Analysis, Construction Project Delivery Systems." },
+      { title: "B.Sc. in Civil Engineering (Transportation)", meta: "BUET, Dhaka, Bangladesh · May 2023 · GPA 3.49 / 4.00",
+        text: "Thesis: a study of Dhaka's waterbus service, its passengers and how to bring it back." },
+      { title: "Board Scholarship", meta: "Higher Secondary Certificate · 2017" }
     ],
     cta: { label: "Take the guided tour", href: "tour.html" }
   },
   research: {
-    title: "Work-zone user delay and cost",
-    lead: "Evaluating how the Michigan DOT estimates the delay and cost that work zones impose on road users.",
+    title: "Research Projects",
     items: [
-      { title: "Graduate Research Assistant, ITS Lab, WMU", meta: "Aug 2025 – Present · Sponsor: Michigan Department of Transportation",
-        bullets: ["Five data sources: RITIS, Bluetooth, API feeds, MVDS and video", "Cleaned and compared them for delay and queue evaluation", "Reviewed vehicle operating cost methods"] },
-      { title: "Undergraduate research, BUET", meta: "2022 – 2023", text: "Waterbus passenger survey and ARIMA crash forecasting." }
-    ]
-  },
-  papers: {
-    title: "Two peer-reviewed conference papers",
-    items: [
-      { title: "Waterbus services and passenger preferences", meta: "ICCESD 2024 · Rahman, Shristi, Shahriar & Rahman",
-        text: "Why Dhaka's first waterbus failed, and what would make the next one work.",
-        links: [{ label: "Read on ResearchGate", href: "https://www.researchgate.net/publication/379118004" }] },
-      { title: "Forecasting unauthorized-vehicle crashes in Bangladesh", meta: "ICACE 2022 · Huq, Rahman & Shristi",
-        text: "ARIMA(6,1,7) on police crash records, 2009–2015, forecast to 2020.",
-        links: [{ label: "Read on ResearchGate", href: "https://www.researchgate.net/publication/368713906" }] }
-    ]
-  },
-  projects: {
-    title: "Design, capstone and industry projects",
-    items: [
+      { title: "Work-zone user delay and cost", meta: "Graduate Research Assistant, ITS Lab, WMU · 2025 – Present · Sponsor: MDOT",
+        text: "Comparing RITIS, Bluetooth, API, MVDS and video data to evaluate how MDOT estimates the delay and cost of work zones." },
+      { title: "Waterbus services and passenger preferences", meta: "Undergraduate thesis · ICCESD 2024 paper",
+        text: "Why Dhaka's 2010 waterbus failed, from a 310-person survey and operator data, and a plan for a 110 km loop.",
+        links: [{ label: "Paper", href: "https://www.researchgate.net/publication/379118004" }] },
+      { title: "Forecasting unauthorized-vehicle crashes", meta: "ICACE 2022 paper",
+        text: "ARIMA(6,1,7) on police crash records from 2009–2015, forecast to 2020.",
+        links: [{ label: "Paper", href: "https://www.researchgate.net/publication/368713906" }] },
       { title: "Turbo roundabout redesign", meta: "Winner, ITE Great Lakes District design competition · 2026",
         text: "Spiral lanes for a high-crash two-lane roundabout. 20-year B/C = 1.12." },
       { title: "Buriganga River channel restoration", meta: "BUET capstone · 2023",
-        text: "Integrated roadway and waterway plan for Kamrangirchar." },
-      { title: "CLIMAS knowledge tool", meta: "Indetechs Software, Dhaka · 2024 – 2025",
-        text: "Python, NLP and ontologies for climate-assembly agendas." }
+        text: "Integrated roadway and waterway plan for Kamrangirchar, Dhaka." }
     ]
   },
-  teaching: {
-    title: "Seven courses at two universities",
+  work: {
+    title: "Work Experience",
     items: [
-      { title: "Graduate Teaching Assistant", meta: "Western Michigan University · 2025 – Present",
-        bullets: ["CCE 4300 – Traffic Design", "CCE 3300 – Transportation Engineering"] },
+      { title: "Graduate Research Assistant", meta: "ITS Lab, Western Michigan University · Aug 2025 – Present",
+        text: "MDOT work-zone delay and cost: multi-source traffic data analysis." },
+      { title: "Graduate Teaching Assistant", meta: "Western Michigan University · Aug 2025 – Present",
+        text: "CCE 4300 Traffic Design · CCE 3300 Transportation Engineering." },
       { title: "Adjunct Lecturer", meta: "Presidency University, Dhaka · Spring and Summer 2025",
-        tags: ["Transportation Engineering Sessional I", "Computer Programming Sessional", "Environmental Engineering Sessional I", "Environmental Engineering II", "Hydrology and Irrigation Engineering"] }
+        text: "Five courses: three labs (transportation, programming, environmental) and two lecture courses (Environmental Engineering II; Hydrology and Irrigation Engineering)." },
+      { title: "Assistant Engineer", meta: "Indetechs Software Limited, Dhaka · Apr 2024 – Aug 2025",
+        text: "CLIMAS project: Python, NLP and ontologies for a climate-assembly decision-support tool." },
+      { title: "Leadership", meta: "Vice Secretary, ITE Student Chapter, WMU · 2025 – Present",
+        text: "Earlier: Deputy Secretary, Internal Affairs, ASCE Student Chapter, BUET (2022 – 2023)." }
+    ]
+  },
+  skills: {
+    title: "Skills",
+    items: [
+      { title: "Modeling and simulation", tags: ["PTV Vissim", "PTV Visum", "PTV Vistro", "HCS", "HSS"] },
+      { title: "Programming and data analysis", tags: ["Python", "C++", "MATLAB", "StataSE", "Microsoft Excel"] },
+      { title: "Transportation data", tags: ["RITIS", "Bluetooth", "API feeds", "MVDS", "Video"] },
+      { title: "GIS and engineering software", tags: ["ArcGIS Pro", "AutoCAD", "ETABS", "SAP", "Protégé"] },
+      { title: "Research interests", tags: ["ITS", "Transportation safety", "Connected and automated vehicles", "Traffic operations", "Work zones", "Planning", "Simulation"] }
     ]
   }
 };

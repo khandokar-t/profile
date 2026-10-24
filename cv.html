@@ -16,13 +16,12 @@
 
 <header class="topbar">
   <a class="brand" href="index.html" aria-label="Home: the intersection">
-    <svg viewBox="0 0 48 40" aria-hidden="true"><rect x=".5" y=".5" width="47" height="39" rx="8" fill="#1F2623"/><rect x="2.5" y="2.5" width="43" height="35" rx="6.5" fill="none" stroke="#3A423E"/><g fill="#F07F2E"><rect x="7.6" y="19.5" width="12.4" height="12.5" rx="3.2"/><rect x="7.8" y="11" width="2.7" height="11" rx="1.35"/><rect x="10.9" y="8.6" width="2.7" height="13" rx="1.35"/><rect x="14" y="9.2" width="2.7" height="12.5" rx="1.35"/><rect x="17.1" y="11.6" width="2.7" height="10" rx="1.35"/><rect x="19.2" y="19" width="3" height="8.5" rx="1.5" transform="rotate(38 20.7 23.2)"/></g><circle cx="35.6" cy="9.8" r="3.3" fill="#F3F5F0"/><path d="M34.6 14.2L32.9 23.2M34.3 15.6L30.2 20.4M34.3 15.6L38.4 19.2M32.9 23.2L29.6 31.4M32.9 23.2L36.9 30.8" fill="none" stroke="#F3F5F0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 40 40" aria-hidden="true"><rect x=".5" y=".5" width="39" height="39" rx="8.5" fill="#1F2623"/><rect x="2.5" y="2.5" width="35" height="35" rx="6.8" fill="none" stroke="#3A423E"/><g fill="#F07F2E"><rect x="5.4" y="20.6" width="12.3" height="14.4" rx="3.4"/><rect x="5.5" y="9.4" width="2.6" height="13.6" rx="1.3"/><rect x="8.65" y="6.3" width="2.6" height="16" rx="1.3"/><rect x="11.8" y="7" width="2.6" height="15.4" rx="1.3"/><rect x="14.95" y="9.9" width="2.6" height="12.8" rx="1.3"/><rect x="16.9" y="20" width="3" height="9.6" rx="1.5" transform="rotate(36 18.4 24.8)"/></g><circle cx="30.3" cy="8.3" r="3.5" fill="#F3F5F0"/><path d="M29.3 13.4L27.6 23.6M29 15L24.7 20.4M29 15L33.3 19.4M27.6 23.6L24.2 33.4M27.6 23.6L31.9 33" fill="none" stroke="#F3F5F0" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span class="brand-text"><b>Khandokar Tanvir Rahman</b><span>Graduate Assistant, Intelligent Transportation Systems Lab, Western Michigan University</span></span>
   </a>
   <nav class="nav" aria-label="Main">
     <a href="index.html">Intersection</a>
     <a href="tour.html">Tour</a>
-    <a href="map.html">Map</a>
     <a href="cv.html" aria-current="page">Plain CV</a>
     <button type="button" class="push" data-contact>Contact</button>
   </nav>
@@ -40,15 +39,12 @@
   "use strict";
   var D = window.SITE, S = D.sections, P = D.person;
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function split(meta) {                     // "Place · dates · extra" -> where / when
-    var parts = String(meta || "").split(" · ");
-    return parts;
-  }
-  function entry(title, where, when, body) {
-    return '<div class="cv-entry"><div class="top"><h3>' + esc(title) + '</h3>' + (when ? '<span class="when">' + esc(when) + '</span>' : "") + "</div>" +
-      (where ? '<p class="where">' + esc(where) + "</p>" : "") + (body || "") + "</div>";
-  }
   function list(items) { return "<ul>" + items.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + "</ul>"; }
+  function entry(it) {
+    return '<div class="cv-entry"><div class="top"><h3>' + esc(it.title) + "</h3>" + (it.when ? '<span class="when">' + esc(it.when) + "</span>" : "") + "</div>" +
+      (it.where ? '<p class="where">' + esc(it.where) + "</p>" : "") +
+      (it.text ? "<p>" + esc(it.text) + "</p>" : "") + (it.bullets ? list(it.bullets) : "") + "</div>";
+  }
   function sec(title, html) { return '<section class="cv-sec"><h2>' + esc(title) + "</h2><div>" + html + "</div></section>"; }
 
   var h = '<div class="cv-head"><h1>' + esc(P.name) + '</h1><p class="role">M.S. student in Civil Engineering (Transportation), Western Michigan University</p>' +
@@ -57,48 +53,20 @@
     '<div class="cv-tools noprint"><button type="button" class="btn small sign" id="print">Save as PDF / print</button><a class="btn small" href="index.html">Back to the intersection</a></div></div>';
 
   h += sec("Research interests", "<p>" + esc(D.interests.join("; ")) + ".</p>");
-
-  var ms = S.about.items[0], bs = S.about.items[1];
-  h += sec("Education",
-    entry(ms.title, "Western Michigan University, Kalamazoo, Michigan · GPA 3.88 / 4.00", "Aug 2025 – Present", "<p>" + esc(ms.text) + "</p>") +
-    entry(bs.title, "Bangladesh University of Engineering and Technology (BUET), Dhaka · GPA 3.49 / 4.00", "May 2023", "<p>" + esc(bs.text) + "</p>"));
-
-  var r0 = S.research.items[0], r1 = S.research.items[1];
-  h += sec("Research experience",
-    entry("Graduate Research Assistant", "Intelligent Transportation System Lab, Western Michigan University", "Aug 2025 – Present",
-      "<p><b>Project:</b> " + esc(r0.title) + ". Sponsor: Michigan Department of Transportation.</p>" + list(r0.bullets)) +
-    entry("Undergraduate research", "BUET", "2022 – 2023", list(r1.bullets)));
-
-  h += sec("Publications", S.papers.items.map(function (p) {
-    var m = split(p.meta);
-    var link = p.links && p.links[0] ? ' <a href="' + esc(p.links[0].href) + '" target="_blank" rel="noopener">ResearchGate ↗</a>' : "";
-    return '<div class="cv-entry"><p>' + esc(m[0]) + " (" + esc(m[2] || "") + "). " + esc(p.title) + ". <i>" + esc(m[1]) + "</i>." + link + "</p></div>";
+  h += sec("Education", S.education.map(entry).join(""));
+  h += sec("Research experience", S.research.map(entry).join(""));
+  h += sec("Publications", S.papers.map(function (p) {
+    return '<div class="cv-entry"><p>' + esc(p.authors) + " (" + esc(p.date) + "). " + esc(p.title) + ". <i>" + esc(p.venue) + "</i>." +
+      (p.href ? ' <a href="' + esc(p.href) + '" target="_blank" rel="noopener">ResearchGate ↗</a>' : "") + "</p></div>";
   }).join(""));
-
-  var t0 = S.teaching.items[0], t1 = S.teaching.items[1];
-  h += sec("Teaching",
-    entry("Graduate Teaching Assistant", "Western Michigan University", "Aug 2025 – Present", list(t0.bullets)) +
-    entry("Adjunct Lecturer", "Presidency University, Dhaka", "Spring and Summer 2025", list(t1.bullets)));
-
-  var c = S.projects.items[2];
-  h += sec("Professional experience",
-    entry("Assistant Engineer", "Indetechs Software Limited, Dhaka", "Apr 2024 – Aug 2025", "<p><b>Project:</b> " + esc(c.title) + ".</p>" + list(c.bullets)));
-
-  var pr0 = S.projects.items[0], pr1 = S.projects.items[1];
-  h += sec("Selected projects",
-    entry(pr0.title, "Winner, Design Competition, ITE Great Lakes District Student Leadership Summit, Detroit, MI", "2026", list(pr0.bullets)) +
-    entry(pr1.title, "Undergraduate capstone, BUET", "2023", list(pr1.bullets)));
-
-  h += sec("Technical skills", S.skills.items.map(function (s) {
+  h += sec("Teaching", S.teaching.map(entry).join(""));
+  h += sec("Professional experience", S.work.map(entry).join(""));
+  h += sec("Selected projects", S.projects.map(entry).join(""));
+  h += sec("Technical skills", S.skills.map(function (s) {
     return '<div class="cv-skill"><b>' + esc(s.title) + "</b><span>" + esc(s.tags.join(", ")) + "</span></div>";
   }).join(""));
-
-  var lead = S.leadership.items.concat(S.awards.items);
-  h += sec("Leadership and awards", lead.map(function (it) {
-    var m = split(it.meta);
-    var when = m[m.length - 1], where = m.slice(0, -1).join(" · ");
-    return entry(it.title, where, when, "");
-  }).join(""));
+  h += sec("Leadership and activities", S.leadership.map(entry).join(""));
+  h += sec("Awards", S.awards.map(entry).join(""));
 
   h += '<p class="cv-foot noprint">This page is printable. Use "Save as PDF" for a copy.</p>';
   document.getElementById("cv").innerHTML = h;

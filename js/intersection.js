@@ -41,64 +41,66 @@
   var world = World.build(scene);
   var G = world.groups;
   var sim = new Traffic.Sim(scene, World, window.Signal);
-  var peds = new Traffic.Peds(scene);
+  var peds = new Traffic.Peds(scene, World.SPOTS);
 
   /* ---------- actions ---------- */
   function act(action) {
     if (!action) return;
-    if (action.type === "phase") window.Signal.request(action.ph);
+    if (action.type === "stage") window.Signal.request(action.stage);
     else if (action.type === "link") window.location.href = action.href;
     else if (action.type === "contact") window.openContact && window.openContact();
-    else if (action.type === "auto") window.Signal.toggleAuto && window.Signal.toggleAuto();
   }
 
-  /* ---------- labels anchored to 3D points ---------- */
+  /* ---------- labels anchored to 3D points (street-name signs are not buttons) ---------- */
   world.anchors.forEach(function (an) {
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "tag3d " + an.kind;
-    if (an.kind === "street") b.innerHTML = "<b>Φ" + an.ph + "</b>" + an.text;
-    else {
+    var b;
+    if (an.kind === "street") {
+      b = document.createElement("span");
+      b.className = "tag3d street";
+      b.textContent = an.text;
+    } else {
+      b = document.createElement("button");
+      b.type = "button";
+      b.className = "tag3d " + an.kind;
       b.innerHTML = '<span class="long">' + an.text + '</span><span class="short">' + (an.short || an.text) + "</span>" +
         (an.arrow ? '<span class="arrow">' + an.arrow + "</span>" : "");
       b.title = an.text;
+      b.addEventListener("click", function () { act(an.action); });
     }
-    b.addEventListener("click", function () { act(an.action); });
     labelsBox.appendChild(b);
     an.el = b;
     an.v = new THREE.Vector3(an.x, an.y, an.z);
   });
-  var limits = { top: 30, right: 0, bottom: 0 };
+  var limits = { top: 30, right: 0, bottom: 0 }, ctrlBox = document.getElementById("ctrl");
   function placeLabels() {
     var w = stage.clientWidth, h = stage.clientHeight, p = new THREE.Vector3();
+    var sr = stage.getBoundingClientRect(), cr = ctrlBox.getBoundingClientRect();
+    var cRight = cr.right - sr.left + 6, cBottom = cr.bottom - sr.top + 4;
     world.anchors.forEach(function (an) {
       p.copy(an.v).project(camera);
       var x = (p.x + 1) / 2 * w, y = (1 - p.y) / 2 * h;
-      if (an.kind === "street") {
-        var hw = (an.el.offsetWidth || 120) / 2 + 6;
-        x = Math.max(hw, Math.min(w - limits.right - hw, x)); y = Math.max(limits.top, Math.min(h - limits.bottom, y));
-      }
+      var hw = (an.el.offsetWidth || 120) / 2 + 6, lh = an.el.offsetHeight || 26;
+      x = Math.max(hw, Math.min(w - limits.right - hw, x));     // keep every label clear of the card
+      if (an.kind === "street") y = Math.max(limits.top, Math.min(h - limits.bottom, y));
+      if (cr.width && x - hw < cRight && y - lh < cBottom) y = cBottom + lh;   // and out from under the control box
       an.el.style.setProperty("--x", x.toFixed(1) + "px");
       an.el.style.setProperty("--y", y.toFixed(1) + "px");
       an.el.hidden = p.z > 1 || x < -40 || x > w + 40 || y < 10 || y > h + 30;
     });
   }
 
-  /* ---------- signal lamps follow the controller ---------- */
+  /* ---------- signal heads follow the controller: a stage turns two opposing approaches green ---------- */
   window.Signal.on(function (s) {
+    function state(stage) { return s.status === "allred" || s.stage !== stage ? "r" : s.status === "green" ? "g" : "y"; }
     Object.keys(World.APP).forEach(function (a) {
-      var A = World.APP[a], st = "r";
-      if (s.status !== "allred") {
-        if (s.phase === A.thru) st = s.status === "green" ? "g" : "y";
-        else if (s.phase === A.left) st = s.status === "green" ? "ga" : "ya";
-      }
-      World.setSignal(world.signals[a], st);
+      World.setSignal(world.signals[a], state(World.stageOf(a, "left")), state(World.stageOf(a, "thru")));
     });
+    var ew = s.stage === 1 || s.stage === 2;
     world.anchors.forEach(function (an) {
       if (an.kind !== "street") return;
-      var A = World.APP[an.a];
-      an.el.classList.toggle("on", s.status === "green" && (s.phase === A.thru || s.phase === A.left));
+      an.el.classList.toggle("on", s.status === "green" && (an.street === "ew") === ew);
     });
+    if (F && camK >= 1) placeLabels();                     // the control box can change height with the status text
   });
 
   /* ---------- resolution: sharp on high-DPI screens and when zoomed ---------- */
@@ -126,7 +128,7 @@
       botPad = document.querySelector(".dock-inner").offsetHeight + 18;
     }
     var visW = Math.max(200, w - cardW), visH = Math.max(160, h - topPad - botPad);
-    var xHalf = w < 640 ? 16 : 22, zHalf = w < 640 ? 17 : 19;
+    var xHalf = w < 640 ? 19 : 27, zHalf = w < 640 ? 20 : 23;
     var Rf = Math.max(xHalf * h / (visW * tanH), (zHalf * Math.sin(ELEV_FULL) + 2) * h / (visH * tanH));
     var px = Math.min(0.46 * h, (w < 700 ? 0.62 : 0.34) * w, 430), ppu = px / (World.EDGE * 2);
     var wide = w >= 700;
@@ -192,7 +194,7 @@
     { name: "signals", dur: 0.8, apply: function (p) {
         G.signals.forEach(function (g, i) { var f = back(clamp01(p * 1.4 - i * 0.12)); g.visible = f > 0.001; g.scale.set(1, Math.max(0.001, f), 1); });
       } },
-    { name: "people", dur: 0.9, apply: function (p) { peds.reveal(p); } },
+    { name: "people", dur: 1.3, apply: function (p) { peds.reveal(p); } },
     { name: "cars", dur: 1.8, apply: function (p) { if (p > 0) sim.enable(false); else sim.disable(); } },
     { name: "ui", dur: 0.6, apply: function (p) { if (p > 0) uiOn(); else bodyEl.classList.remove("ui-on"); if (p >= 1) placeLabels(); } }
   ];
@@ -259,7 +261,7 @@
   if (window.Intro.skip) {
     steps.forEach(function (st) { st.apply(1); });
     sim.disable(); sim.enable(true);
-    peds.stop(); peds.start(true);
+    peds.reveal(1);
     camK = 1; Ctl.cur = LAST; Ctl.prog = 1; finish(); uiOn();
   } else {
     camK = 0; steps[0].apply(0);
@@ -283,9 +285,7 @@
   }
   function onSquare(ev) { rayAt(ev); return ray.intersectObjects(world.boxPick, false).length > 0; }
   function labelsFor(action) {
-    return world.anchors.filter(function (an) {
-      return an.action === action || (action.type === "phase" && an.kind === "street" && an.ph === action.ph);
-    }).map(function (an) { return an.el; });
+    return world.anchors.filter(function (an) { return an.action === action; }).map(function (an) { return an.el; });
   }
   var canvas = renderer.domElement, down = null;
   canvas.addEventListener("pointermove", function (ev) {

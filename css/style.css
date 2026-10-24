@@ -8,7 +8,6 @@
   --sign:#0B6A4C; --sign-hover:#0E7D5A; --sign-fg:#FFFFFF;
   --red:#D63A2F; --amber:#F2A900; --green:#16A35B; --lamp-off:#3A423E; --housing:#1F2623;
   --warn:#F4B400; --water:#CFE4EE;
-  --line-o:#2a78d6; --line-s:#eb6834; --line-p:#1baf7a; --line-t:#17201C;
   --f-display:"Overpass","Arial Narrow",system-ui,sans-serif;
   --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
   --f-mono:"Overpass Mono",ui-monospace,Consolas,monospace;
@@ -34,7 +33,7 @@ svg{shape-rendering:geometricPrecision;text-rendering:geometricPrecision}
   padding:10px clamp(12px,2.5vw,26px);padding-top:calc(10px + env(safe-area-inset-top,0px));
   background:rgba(251,252,250,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);min-width:0}
-.brand svg{flex:none;width:48px;height:40px}
+.brand svg{flex:none;width:40px;height:40px}
 .brand-text{display:flex;flex-direction:column;min-width:0;line-height:1.15}
 .brand-text b{font-family:var(--f-display);font-weight:900;font-size:1.12rem;letter-spacing:.005em;white-space:nowrap}
 .brand-text span{font-size:.78rem;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -72,10 +71,11 @@ svg{shape-rendering:geometricPrecision;text-rendering:geometricPrecision}
 .links a .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-3)}
 .links a[data-empty="true"] .dot{background:var(--rule)}
 
-/* ---------- fixed-size card (home + map); text scales with --fs to fit ---------- */
+/* ---------- fixed-size card (home); text scales with --fs to fit ---------- */
 .card{background:var(--panel);border:1px solid var(--rule);border-radius:var(--radius);box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:0;overflow:hidden}
 .card-head{flex:none;display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--sign);color:var(--sign-fg)}
 .card-head.red{background:#B3362C}
+.card-head.left{background:#11885F}
 .card-head .ph{font-family:var(--f-mono);font-weight:600;font-size:.8rem;padding:2px 8px;border:1.5px solid rgba(255,255,255,.75);border-radius:6px;white-space:nowrap}
 .card-head .street{font-family:var(--f-display);font-weight:800;font-size:1rem;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-head .turn{margin-left:auto;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;opacity:.9;white-space:nowrap}
@@ -93,17 +93,27 @@ svg{shape-rendering:geometricPrecision;text-rendering:geometricPrecision}
 .card-fade{transition:opacity .25s}
 .card-fade.out{opacity:.25}
 
-/* ---------- ring-barrier menu ---------- */
-.rb{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.6fr) 6px minmax(0,1fr) minmax(0,1.6fr);gap:6px;align-items:stretch}
-.rb .ring{font-family:var(--f-mono);font-size:.68rem;color:var(--ink-3);align-self:center;padding-right:4px;white-space:nowrap}
-.rb .bar{background:var(--ink);border-radius:2px;grid-row:span 2}
-.rb button{font-family:var(--f-display);font-weight:800;font-size:.8rem;letter-spacing:.03em;text-align:left;padding:9px 10px;border-radius:8px;
-  border:1.5px solid var(--ink);background:var(--panel);color:var(--ink);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1}
-.rb button b{font-family:var(--f-mono);font-weight:600;margin-right:6px}
+/* ---------- ring-barrier menu: four stages, each a pair of concurrent phases (ring 1 above ring 2) ---------- */
+.rb{display:grid;grid-template-columns:auto repeat(2,minmax(0,1fr)) 6px repeat(2,minmax(0,1fr));grid-template-rows:auto auto;gap:4px 6px;align-items:stretch}
+.rb .ring{grid-column:1;font-family:var(--f-mono);font-size:.66rem;color:var(--ink-3);align-self:center;padding-right:4px;white-space:nowrap}
+.rb .ring.r1{grid-row:1}
+.rb .ring.r2{grid-row:2}
+.rb .bar{grid-column:4;grid-row:1 / span 2;background:var(--ink);border-radius:2px}
+.rb button{grid-row:1 / span 2;display:flex;align-items:center;gap:10px;min-width:0;text-align:left;padding:6px 10px;border-radius:8px;
+  border:1.5px solid var(--ink);background:var(--panel);color:var(--ink);cursor:pointer;line-height:1.1}
+.rb button[data-st="1"]{grid-column:2}
+.rb button[data-st="2"]{grid-column:3}
+.rb button[data-st="3"]{grid-column:5}
+.rb button[data-st="4"]{grid-column:6}
+.rb button .ph{flex:none;display:grid;gap:7px;font-family:var(--f-mono);font-size:.74rem}
+.rb button .ph b{font-weight:600}
+.rb button .nm{display:grid;gap:3px;min-width:0;font-family:var(--f-display);font-weight:800;font-size:.86rem;letter-spacing:.02em}
+.rb button .nm small{font-family:var(--f-mono);font-weight:400;font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
 .rb button:hover{background:var(--panel-2)}
 .rb button.call{border-style:dashed;border-color:#2459C6;color:#2459C6}
 .rb button.on{background:var(--sign);border-color:var(--sign);color:var(--sign-fg)}
-.rb button.on.left{background:#11885F}
+.rb button.on.left{background:#11885F;border-color:#11885F}
+.rb button.on .nm small{color:rgba(255,255,255,.82)}
 
 /* ---------- contact dialog (pedestrian signal) ---------- */
 dialog.contact{border:0;padding:0;border-radius:18px;max-width:min(560px,calc(100vw - 32px));width:100%;box-shadow:0 30px 80px rgba(0,0,0,.3);background:var(--panel);color:var(--ink)}
@@ -137,8 +147,7 @@ body.home{overflow:hidden}
   font-family:var(--f-display);font-weight:800;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;line-height:1.1;
   padding:6px 10px;border-radius:7px;border:0;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform .15s}
 .tag3d:hover,.tag3d.hot{transform:translate(var(--x,0),var(--y,0)) translate(-50%,-100%) translateY(-3px) scale(1.06)}
-.tag3d.street{background:var(--sign);color:var(--sign-fg);border:2px solid #fff}
-.tag3d.street b{font-family:var(--f-mono);font-weight:600;margin-right:6px}
+.tag3d.street{background:var(--sign);color:var(--sign-fg);border:2px solid #fff;border-radius:4px;padding:4px 9px;font-size:.7rem;cursor:default;pointer-events:none}
 .tag3d.street.on{box-shadow:0 0 0 3px var(--green),0 2px 6px rgba(0,0,0,.2)}
 .tag3d.obj{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
 .tag3d.obj.push{background:var(--warn);border-color:#17201C}
@@ -158,7 +167,7 @@ body.home{overflow:hidden}
 
 .home .card{position:fixed;z-index:20;top:calc(var(--top) + 14px + env(safe-area-inset-top,0px));right:18px;bottom:18px;width:min(420px,33vw)}
 .dock{position:fixed;z-index:20;left:18px;right:calc(min(420px,33vw) + 36px);bottom:18px;display:flex;justify-content:center;pointer-events:none}
-.dock-inner{pointer-events:auto;width:min(720px,100%);background:rgba(251,252,250,.95);border:1px solid var(--rule);border-radius:var(--radius);box-shadow:var(--shadow);padding:10px 12px}
+.dock-inner{pointer-events:auto;width:min(860px,100%);background:rgba(251,252,250,.95);border:1px solid var(--rule);border-radius:var(--radius);box-shadow:var(--shadow);padding:10px 12px}
 
 /* the menus wait until the intro has built the intersection */
 .home .ctrl,.home .card,.home .dock,.home .labels{transition:opacity .5s,transform .5s}
@@ -207,15 +216,21 @@ body.name-on .topbar{opacity:0;transform:translateY(-10px)}
   .home .card{position:relative;top:auto;right:auto;bottom:auto;width:auto;margin:12px}
   .home:not(.ui-on) .card{display:none}
   .home .card .card-body{overflow:visible}
-  .rb{grid-template-columns:auto minmax(0,1fr) minmax(0,1.3fr) 5px minmax(0,1fr) minmax(0,1.3fr)}
-  .rb button{font-size:.72rem;padding:8px 6px}
-  .rb button b{margin-right:3px}
+  .rb button{gap:6px;padding:6px 7px}
+  .rb button .nm{font-size:.76rem}
 }
 @media (max-width:520px){
   .rb .ring{display:none}
-  .rb{grid-template-columns:repeat(2,minmax(0,1fr)) 4px repeat(2,minmax(0,1fr));gap:5px}
-  .rb button{white-space:normal;text-align:center;padding:7px 3px;font-size:.72rem;letter-spacing:0}
-  .rb button b{display:block;margin:0 0 2px}
+  .rb{grid-template-columns:repeat(2,minmax(0,1fr)) 4px repeat(2,minmax(0,1fr));grid-template-rows:auto;gap:5px}
+  .rb .bar{grid-column:3;grid-row:1}
+  .rb button{grid-row:1;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;padding:6px 3px}
+  .rb button[data-st="1"]{grid-column:1}
+  .rb button[data-st="2"]{grid-column:2}
+  .rb button[data-st="3"]{grid-column:4}
+  .rb button[data-st="4"]{grid-column:5}
+  .rb button .ph{display:flex;gap:4px;font-size:.62rem}
+  .rb button .nm{font-size:.72rem;letter-spacing:0;justify-items:center}
+  .rb button .nm small{display:none}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition:none!important;animation:none!important}

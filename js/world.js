@@ -1,21 +1,43 @@
 /* The static 3D world, built in parts so the intro can assemble it step by step:
    the square (box + crosswalks), four legs, the grass, the decorations and the signals.
-   Coordinates: x = east, z = south (toward the camera), y = up. 1 unit ≈ 1 m. */
+   Coordinates: x = east, z = south (toward the camera), y = up. 1 unit ≈ 1 m.
+   Every approach has five lanes: a left-turn lane, a through lane and a right-turn lane
+   coming in, and two lanes going out. */
 window.World = (function () {
   "use strict";
   var T = THREE;
-  var HALF = 6, EDGE = 8.4, LEG = 140;
+  var LANE = 3.0, HALF = 7.5, WALK = 2.4, EDGE = HALF + WALK, LEG = 140;
+  var SW = HALF + WALK / 2;                     // centre line of the sidewalks and crosswalks (8.7)
 
   // Approaches, named by the leg the traffic comes FROM.
-  // d = direction of travel, r = the driver's right-hand side.
+  // d = direction of travel, r = the driver's right-hand side. thru/left = NEMA phase numbers.
   var APP = {
-    W: { d: [1, 0],  r: [0, 1],  thru: 2, left: 5, street: "Research Rd" },
-    E: { d: [-1, 0], r: [0, -1], thru: 6, left: 1, street: "Projects Ave" },
-    N: { d: [0, 1],  r: [-1, 0], thru: 4, left: 7, street: "Teaching St" },
-    S: { d: [0, -1], r: [1, 0],  thru: 8, left: 3, street: "About Blvd" }
+    W: { d: [1, 0],  r: [0, 1],  thru: 2, left: 5, street: "ew" },
+    E: { d: [-1, 0], r: [0, -1], thru: 6, left: 1, street: "ew" },
+    N: { d: [0, 1],  r: [-1, 0], thru: 4, left: 7, street: "ns" },
+    S: { d: [0, -1], r: [1, 0],  thru: 8, left: 3, street: "ns" }
   };
+  // Signal stages: opposing approaches move together.
+  // 1 = Academic Ave (E–W) protected lefts, Φ1 + Φ5;  2 = E–W through and right, Φ2 + Φ6;
+  // 3 = Career St (N–S) protected lefts, Φ3 + Φ7;      4 = N–S through and right, Φ4 + Φ8.
+  function stageOf(a, move) { var ew = APP[a].street === "ew"; return move === "left" ? (ew ? 1 : 3) : (ew ? 2 : 4); }
   function L2W(a, s, t) { var A = APP[a]; return { x: s * A.d[0] + t * A.r[0], z: s * A.d[1] + t * A.r[1] }; }
   function yawTo(dx, dz) { return Math.atan2(dx, dz); }          // rotation.y that points local +z along (dx, dz)
+
+  // Where people stand. They pop up during the intro and then only move in place.
+  var SPOTS = [
+    { x: 16.4, z: 12.7, rot: Math.PI, pose: "stand" },          // waiting at the bus shelter
+    { x: 18.3, z: 12.9, rot: Math.PI, pose: "talk" },
+    { x: 20.4, z: 12.2, rot: Math.PI * 0.9, pose: "wave" },
+    { x: -16.6, z: 12.9, rot: 0.4, pose: "talk" },               // by the metro entrance
+    { x: -15.6, z: 13.6, rot: -2.4, pose: "stand" },
+    { x: -14.2, z: -11.2, rot: Math.PI, pose: "stand" },          // reading the notice board
+    { x: 15.6, z: -14.5, rot: 0.3, pose: "talk" },               // outside the ITS Lab
+    { x: 16.8, z: -14.2, rot: -2.8, pose: "stand" },
+    { x: 29.6, z: -10.3, rot: 2.6, pose: "stand" },               // by the pond
+    { x: 12.6, z: 12.5, rot: -2.4, pose: "stand" },              // at the push button corner
+    { x: -21.2, z: -14.6, rot: 0.2, pose: "wave" }               // outside a hut
+  ];
 
   var COL = {
     page: 0xEEF2EC, grass: 0xBFDCA6, grass2: 0xB0D396, road: 0xCFCCC4, walk: 0xE9E5DC, yellow: 0xEFC24A, white: 0xFFFFFF,
@@ -55,16 +77,29 @@ window.World = (function () {
     g.position.set(cx, 0, cz);
     return g;
   }
+  // Painted lane-use arrows, drawn pointing toward the intersection (shape +y = toward the box).
+  function arrowGeo(kind) {
+    var s = new T.Shape(), P;
+    if (kind === "thru") P = [[-0.12, 0], [0.12, 0], [0.12, 1.25], [0.42, 1.25], [0, 2.0], [-0.42, 1.25], [-0.12, 1.25]];
+    else {
+      var k = kind === "left" ? 1 : -1;
+      P = [[-0.12, 0], [0.12, 0], [0.12, 1.4], [-0.6, 1.4], [-0.6, 1.64], [-1.12, 1.28], [-0.6, 0.92], [-0.6, 1.16], [-0.12, 1.16]]
+        .map(function (p) { return [p[0] * k, p[1]]; });
+    }
+    P.forEach(function (p, i) { if (i) s.lineTo(p[0], p[1]); else s.moveTo(p[0], p[1]); });
+    s.closePath();
+    return new T.ShapeGeometry(s);
+  }
 
   /* ---------------- build ---------------- */
-  function build(scene, maxAniso) {
+  function build(scene) {
     var picks = [], anchors = [], occupied = [], decor = [];
     var G = { ground: new T.Group(), box: new T.Group(), legs: {}, signals: [], decor: new T.Group() };
     scene.add(G.ground); scene.add(G.box); scene.add(G.decor);
 
     function free(x, z, r) {
       if (Math.abs(x) < HALF + 4 + r || Math.abs(z) < HALF + 4 + r) return false;
-      if (x > 12 && x < 27 && z > 5 && z < 16) return false;
+      if (x > 10.5 && x < 25.5 && z > 6.5 && z < 17.5) return false;
       for (var i = 0; i < occupied.length; i++) {
         var o = occupied[i]; if (Math.hypot(o[0] - x, o[1] - z) < o[2] + r) return false;
       }
@@ -77,10 +112,9 @@ window.World = (function () {
     }
     function pickable(obj, action) {
       obj.traverse(function (o) { if (o.isMesh || o.isSprite) { o.userData.pick = action; picks.push(o); } });
-      action.root = obj;
-      obj.userData.action = action;
       return action;
     }
+    SPOTS.forEach(function (p) { claim(p.x, p.z, 0.7); });
 
     /* ground: a big disc of grass that can grow outward, plus darker patches */
     var ground = new T.Mesh(new T.CircleGeometry(240, 72), mat(COL.grass));
@@ -88,7 +122,7 @@ window.World = (function () {
     var patchGeo = new T.CircleGeometry(1, 18);
     for (var i = 0; i < 80; i++) {
       var px = (Math.random() * 2 - 1) * 75, pz = (Math.random() * 2 - 1) * 62;
-      if (Math.abs(px) < 11 || Math.abs(pz) < 11) continue;
+      if (Math.abs(px) < 12.5 || Math.abs(pz) < 12.5) continue;
       var p = new T.Mesh(patchGeo, mat(COL.grass2)); p.rotation.x = -Math.PI / 2; p.position.set(px, 0.006, pz);
       var s = 1.5 + Math.random() * 3.5; p.scale.set(s, s * (0.6 + Math.random() * 0.5), 1); p.receiveShadow = true; G.ground.add(p);
     }
@@ -100,7 +134,7 @@ window.World = (function () {
     /* the square: box, crosswalk zones, corner sidewalks and zebra stripes */
     G.box.add(flat(EDGE * 2, EDGE * 2, roadMat, 0, 0.02, 0));
     [-1, 1].forEach(function (sx) { [-1, 1].forEach(function (sz) {
-      var c = box(2.4, 0.16, 2.4, walkMat, sx * 7.2, 0.08, sz * 7.2); c.castShadow = false; G.box.add(c);
+      var c = box(WALK, 0.16, WALK, walkMat, sx * SW, 0.08, sz * SW); c.castShadow = false; G.box.add(c);
     }); });
     var stripeGeo = new T.PlaneGeometry(0.55, 2.0), stripes = [];
     var M4 = new T.Matrix4(), Q = new T.Quaternion(), V = new T.Vector3(), SC = new T.Vector3(1, 1, 1);
@@ -111,83 +145,99 @@ window.World = (function () {
     }
     Object.keys(APP).forEach(function (a) {
       var A = APP[a], yaw = yawTo(A.d[0], A.d[1]);
-      for (var t2 = -5.3; t2 <= 5.31; t2 += 1.18) { var c = L2W(a, -7.2, t2); stripes.push(flatMatrix(c.x, c.z, yaw)); }
+      for (var t2 = -6.75; t2 <= 6.76; t2 += 1.227) { var c = L2W(a, -SW, t2); stripes.push(flatMatrix(c.x, c.z, yaw)); }
     });
     var stripeMesh = new T.InstancedMesh(stripeGeo, lineMat, stripes.length);
     stripes.forEach(function (m, k) { stripeMesh.setMatrixAt(k, m); });
     G.box.add(stripeMesh);
 
-    /* four legs, each built in its own frame: x = the driver's right, z = distance out from the square */
-    var LEN = LEG - EDGE;
+    /* four legs, each built in its own frame: x = the inbound driver's right, z = distance out from the square.
+       Inbound lanes: left turn x = 0, through x = 3, right turn x = 6. Outbound lanes: x = -3 and -6. */
+    var LEN = LEG - EDGE, SOLID = 34;
     var dashGeo = new T.PlaneGeometry(0.16, 2.2);
-    var arrowShape = new T.Shape();
-    arrowShape.moveTo(-0.12, 0); arrowShape.lineTo(0.12, 0); arrowShape.lineTo(0.12, 1.4); arrowShape.lineTo(-0.6, 1.4); arrowShape.lineTo(-0.6, 1.64);
-    arrowShape.lineTo(-1.12, 1.28); arrowShape.lineTo(-0.6, 0.92); arrowShape.lineTo(-0.6, 1.16); arrowShape.lineTo(-0.12, 1.16); arrowShape.lineTo(-0.12, 0);
-    var arrowGeo = new T.ShapeGeometry(arrowShape);
+    var arrows = { left: arrowGeo("left"), thru: arrowGeo("thru"), right: arrowGeo("right") };
     Object.keys(APP).forEach(function (a) {
       var A = APP[a], g = new T.Group(), o = L2W(a, -EDGE, 0);
       g.position.set(o.x, 0, o.z); g.rotation.y = Math.atan2(-A.d[0], -A.d[1]);
-      g.add(flat(12, LEN, roadMat, 0, 0.021, LEN / 2));
-      function walkStrip(x, u0, u1, w) { var b = box(w || 2.4, 0.16, u1 - u0, walkMat, x, 0.08, (u0 + u1) / 2); b.castShadow = false; g.add(b); }
-      walkStrip(7.2, 0, LEN);
+      g.add(flat(HALF * 2, LEN, roadMat, 0, 0.021, LEN / 2));
+      function walkStrip(x, u0, u1, w) { var b = box(w || WALK, 0.16, u1 - u0, walkMat, x, 0.08, (u0 + u1) / 2); b.castShadow = false; g.add(b); }
+      walkStrip(SW, 0, LEN);
       if (a === "E") {                                  // bus bay on the south side of the east leg
-        walkStrip(-7.2, 0, 5.6); walkStrip(-7.2, 15.6, LEN);
-        g.add(flat(2.4, 10, roadMat, -7.2, 0.03, 10.6));
-        walkStrip(-9.6, 4.6, 16.6);
-      } else walkStrip(-7.2, 0, LEN);
-      [-0.18, 0.18].forEach(function (x) { g.add(flat(0.13, LEN - 0.6, yelMat, x, 0.04, (LEN + 0.6) / 2)); });
-      g.add(flat(5.8, 0.45, lineMat, 3.1, 0.04, 0.6));
-      var dashes = [];
-      [3, -3].forEach(function (x) { for (var u = 2.1; u < LEN; u += 4.8) dashes.push(flatMatrix(x, u, 0)); });
+        walkStrip(-SW, 0, 2.6); walkStrip(-SW, 12.6, LEN);
+        g.add(flat(WALK, 10, roadMat, -SW, 0.03, 7.6));
+        walkStrip(-SW - WALK, 1.6, 13.6);
+      } else walkStrip(-SW, 0, LEN);
+      // double yellow centre line between the three lanes in and the two lanes out
+      [-1.68, -1.32].forEach(function (x) { g.add(flat(0.13, LEN - 0.6, yelMat, x, 0.04, (LEN + 0.6) / 2)); });
+      // stop bar across the three inbound lanes
+      g.add(flat(8.8, 0.45, lineMat, 3.05, 0.04, 0.6));
+      // lane lines: solid between the turn lanes near the stop bar, then dashed; dashed between the outbound lanes
+      [1.5, 4.5].forEach(function (x) { g.add(flat(0.15, SOLID - 0.6, lineMat, x, 0.04, 0.6 + (SOLID - 0.6) / 2)); });
+      var dashes = [], u;
+      [1.5, 4.5].forEach(function (x) { for (u = SOLID + 2.1; u < LEN; u += 4.8) dashes.push(flatMatrix(x, u, 0)); });
+      for (u = 2.1; u < LEN; u += 4.8) dashes.push(flatMatrix(-4.5, u, 0));
       var dm = new T.InstancedMesh(dashGeo, lineMat, dashes.length);
       dashes.forEach(function (m, k) { dm.setMatrixAt(k, m); }); g.add(dm);
-      var arrow = new T.Mesh(arrowGeo, lineMat); arrow.rotation.x = -Math.PI / 2; arrow.scale.setScalar(1.25); arrow.position.set(1.75, 0.04, 7.6);
-      g.add(arrow);
+      // lane-use arrows: left only, through only, right only
+      [[arrows.left, 0.35], [arrows.thru, 3], [arrows.right, 5.65]].forEach(function (q) {
+        [7.4, 24].forEach(function (z) {
+          var ar = new T.Mesh(q[0], lineMat); ar.rotation.x = -Math.PI / 2; ar.scale.setScalar(1.25); ar.position.set(q[1], 0.04, z); g.add(ar);
+        });
+      });
       scene.add(g);
       G.legs[a] = g;
     });
 
-    /* ---------- signals (each grows from its own base) ---------- */
+    /* ---------- signals: a mast arm per approach with three heads (each grows from its own base) ---------- */
     var glowTex = canvasTex(128, 128, function (c, w) {
       var grd = c.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
       grd.addColorStop(0, "rgba(255,255,255,1)"); grd.addColorStop(0.35, "rgba(255,255,255,.95)");
       grd.addColorStop(0.6, "rgba(255,255,255,.35)"); grd.addColorStop(1, "rgba(255,255,255,0)");
       c.fillStyle = grd; c.fillRect(0, 0, w, w);
     });
-    var arrowTex = canvasTex(128, 128, function (c, w) {
+    var arrowTex = canvasTex(128, 128, function (c, w) {           // a left arrow; each sprite is turned to its movement
       var grd = c.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
       grd.addColorStop(0, "rgba(255,255,255,.55)"); grd.addColorStop(1, "rgba(255,255,255,0)");
       c.fillStyle = grd; c.fillRect(0, 0, w, w);
       c.fillStyle = "#fff"; c.beginPath();
-      c.moveTo(24, 64); c.lineTo(60, 32); c.lineTo(60, 52); c.lineTo(104, 52); c.lineTo(104, 76); c.lineTo(60, 76); c.lineTo(60, 96); c.closePath(); c.fill();
+      c.moveTo(22, 64); c.lineTo(60, 30); c.lineTo(60, 51); c.lineTo(106, 51); c.lineTo(106, 77); c.lineTo(60, 77); c.lineTo(60, 98); c.closePath(); c.fill();
     });
+    var ARROW_ROT = { W: -Math.PI / 2, E: Math.PI / 2, N: Math.PI, S: 0 };   // point each arrow where its left turn goes
     var signals = {};
     var poleMat = mat(COL.pole, { roughness: 0.6 }), houseMat = mat(COL.housing, { roughness: 0.5 });
-    var lampGeo = new T.CylinderGeometry(0.17, 0.17, 0.08, 18); lampGeo.rotateX(Math.PI / 2);
+    var lampGeo = new T.CylinderGeometry(0.16, 0.16, 0.08, 18); lampGeo.rotateX(Math.PI / 2);
+    var headGeo = new T.BoxGeometry(0.6, 1.5, 0.48);
     Object.keys(APP).forEach(function (a) {
-      var A = APP[a], b = L2W(a, -9.6, 9.0), g = new T.Group();
+      var A = APP[a], S0 = -(EDGE + 1.2), b = L2W(a, S0, HALF + 3), g = new T.Group();
       g.position.set(b.x, 0, b.z);
-      function rel(p) { return { x: p.x - b.x, z: p.z - b.z }; }
-      var pole = mesh(new T.CylinderGeometry(0.13, 0.17, 5.0, 12), poleMat); pole.position.set(0, 2.5, 0); g.add(pole);
-      var am = rel(L2W(a, -9.6, 6.2));
-      var arm = mesh(new T.BoxGeometry(0.15, 0.15, 5.7), poleMat); arm.position.set(am.x, 4.8, am.z); arm.rotation.y = yawTo(A.r[0], A.r[1]); g.add(arm);
-      var hp = rel(L2W(a, -9.6, 3.5));
-      var head = new T.Group(); head.position.set(hp.x, 3.85, hp.z); head.rotation.y = yawTo(-A.d[0], -A.d[1]);
-      head.add(mesh(new T.BoxGeometry(0.62, 1.95, 0.5), houseMat));
-      var lamps = [];
-      [0.66, 0.22, -0.22, -0.66].forEach(function (y) {
-        var lm = new T.MeshStandardMaterial({ color: COL.lampOff, emissive: 0x000000, roughness: 0.4 });
-        var l = new T.Mesh(lampGeo, lm); l.position.set(0, y, 0.27); head.add(l); lamps.push(lm);
-      });
-      g.add(head);
+      function rel(t) { var q = L2W(a, S0, t); return { x: q.x - b.x, z: q.z - b.z }; }
+      var leftAct = { type: "stage", stage: stageOf(a, "left") }, thruAct = { type: "stage", stage: stageOf(a, "thru") };
+      var pole = mesh(new T.CylinderGeometry(0.14, 0.19, 5.7, 12), poleMat); pole.position.set(0, 2.85, 0); g.add(pole);
+      var am = rel(4.8);
+      var arm = mesh(new T.BoxGeometry(0.16, 0.16, 11.4), poleMat); arm.position.set(am.x, 5.5, am.z); arm.rotation.y = yawTo(A.r[0], A.r[1]); g.add(arm);
+      pickable(pole, thruAct); pickable(arm, thruAct);
+      function head(t, act) {
+        var hp = rel(t), h = new T.Group(), lamps = [];
+        h.position.set(hp.x, 4.62, hp.z); h.rotation.y = yawTo(-A.d[0], -A.d[1]);
+        h.add(mesh(headGeo, houseMat));
+        var hanger = mesh(new T.CylinderGeometry(0.04, 0.04, 0.2, 6), poleMat); hanger.position.y = 0.84; h.add(hanger);
+        [0.45, 0, -0.45].forEach(function (y) {
+          var lm = new T.MeshStandardMaterial({ color: COL.lampOff, emissive: 0x000000, roughness: 0.4 });
+          var l = new T.Mesh(lampGeo, lm); l.position.set(0, y, 0.26); h.add(l); lamps.push(lm);
+        });
+        g.add(h); pickable(h, act);
+        return lamps;
+      }
+      var leftLamps = head(0, leftAct), thruLamps = head(3, thruAct).concat(head(6, thruAct));
+      // big markers above the arm so the state reads from far away: an arrow for the left turns, a ball for the rest
+      var ap = rel(0), bp = rel(4.5);
+      var arr = new T.Sprite(new T.SpriteMaterial({ map: arrowTex, color: 0xff3b30, transparent: true, depthWrite: false, rotation: ARROW_ROT[a] }));
+      arr.position.set(ap.x, 6.75, ap.z); arr.scale.set(1.75, 1.75, 1); g.add(arr); pickable(arr, leftAct);
       var ball = new T.Sprite(new T.SpriteMaterial({ map: glowTex, color: 0xff3b30, transparent: true, depthWrite: false }));
-      ball.position.set(hp.x - 0.6, 6.0, hp.z); ball.scale.set(1.9, 1.9, 1); g.add(ball);
-      var arr = new T.Sprite(new T.SpriteMaterial({ map: arrowTex, color: 0x30d07a, transparent: true, depthWrite: false }));
-      arr.position.set(hp.x + 1.05, 6.0, hp.z); arr.scale.set(1.6, 1.6, 1); arr.visible = false; g.add(arr);
+      ball.position.set(bp.x, 6.75, bp.z); ball.scale.set(1.9, 1.9, 1); g.add(ball); pickable(ball, thruAct);
       scene.add(g);
       G.signals.push(g);
-      pickable(g, { type: "phase", ph: A.thru });
-      signals[a] = { lamps: lamps, ball: ball, arrow: arr };
+      signals[a] = { left: leftLamps, thru: thruLamps, arrow: arr, ball: ball };
     });
 
     /* ---------- decoration builders (every item pivots on its own base) ---------- */
@@ -195,6 +245,7 @@ window.World = (function () {
     var trunkGeo = new T.CylinderGeometry(0.16, 0.22, 1, 7);
     var blobGeo = new T.IcosahedronGeometry(1, 0);
     var coneGeo = new T.ConeGeometry(1, 1, 7);
+    function out(v) { return v + (v > 0 ? 1.5 : v < 0 ? -1.5 : 0); }   // layout from version 2, moved out for the wider roads
     function tree(x, z, s, pine) {
       if (!free(x, z, 1.4 * s)) return; claim(x, z, 1.4 * s);
       var g = new T.Group(); g.position.set(x, 0, z); g.rotation.y = Math.random() * Math.PI;
@@ -254,37 +305,37 @@ window.World = (function () {
       addDecor(g, cx, cz);
     }
 
-    /* SE: bus stop + parked bus (starts the tour) */
+    /* SE: bus stop + parked bus in the bay (opens the tour) */
     (function () {
-      var g = new T.Group();
+      var g = new T.Group(), X = 17.5, Z = 1.5;
       var glass = new T.MeshStandardMaterial({ color: 0xBFE3F0, transparent: true, opacity: 0.55, roughness: 0.15 });
-      var back = mesh(unitBox, glass); back.scale.set(4, 2.2, 0.1); back.position.set(19, 1.1, 12.6); g.add(back);
-      [-1, 1].forEach(function (k) { var sd = mesh(unitBox, glass); sd.scale.set(0.1, 2.2, 1.6); sd.position.set(19 + k * 2, 1.1, 11.85); g.add(sd); });
-      var roof = mesh(unitBox, mat(0x0B6A4C)); roof.scale.set(4.5, 0.16, 2.0); roof.position.set(19, 2.3, 11.85); g.add(roof);
-      var seat = mesh(unitBox, mat(0x9C6B45)); seat.scale.set(2.6, 0.12, 0.5); seat.position.set(19, 0.5, 12.25); g.add(seat);
-      var sp = mesh(new T.CylinderGeometry(0.06, 0.06, 2.8, 8), poleMat); sp.position.set(24.4, 1.4, 10.0); g.add(sp);
+      var back = mesh(unitBox, glass); back.scale.set(4, 2.2, 0.1); back.position.set(X, 1.1, 12.6 + Z); g.add(back);
+      [-1, 1].forEach(function (k) { var sd = mesh(unitBox, glass); sd.scale.set(0.1, 2.2, 1.6); sd.position.set(X + k * 2, 1.1, 11.85 + Z); g.add(sd); });
+      var roof = mesh(unitBox, mat(0x0B6A4C)); roof.scale.set(4.5, 0.16, 2.0); roof.position.set(X, 2.3, 11.85 + Z); g.add(roof);
+      var seat = mesh(unitBox, mat(0x9C6B45)); seat.scale.set(2.6, 0.12, 0.5); seat.position.set(X, 0.5, 12.25 + Z); g.add(seat);
+      var sp = mesh(new T.CylinderGeometry(0.06, 0.06, 2.8, 8), poleMat); sp.position.set(X + 5.4, 1.4, 10.0 + Z); g.add(sp);
       var signTex = canvasTex(256, 256, function (c, w) {
         c.fillStyle = "#0B6A4C"; c.fillRect(0, 0, w, w); c.fillStyle = "#fff"; c.font = "bold 92px Arial, sans-serif";
         c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("BUS", w / 2, w / 2 + 4);
       });
       var sMat = new T.MeshStandardMaterial({ map: signTex }), gMat = mat(0x0B6A4C);
       var sign = new T.Mesh(new T.BoxGeometry(0.9, 0.9, 0.08), [gMat, gMat, gMat, gMat, sMat, sMat]);
-      sign.position.set(24.4, 2.85, 10.0); sign.castShadow = true; g.add(sign);
-      var bus = new T.Group(); bus.position.set(19, 0, 7.2); bus.rotation.y = Math.PI / 2;
+      sign.position.set(X + 5.4, 2.85, 10.0 + Z); sign.castShadow = true; g.add(sign);
+      var bus = new T.Group(); bus.position.set(X, 0, SW); bus.rotation.y = Math.PI / 2;
       var body = mesh(window.Traffic.roundedBlock(2.1, 6.6, 1.55, 0.45), mat(0xF2B134, { roughness: 0.55 })); body.position.y = 0.32; bus.add(body);
       var band = mesh(window.Traffic.roundedBlock(2.16, 6.2, 0.55, 0.42), mat(0x2E3B42, { roughness: 0.3 })); band.position.y = 1.18; bus.add(band);
       var top = mesh(window.Traffic.roundedBlock(1.9, 6.1, 0.12, 0.4), mat(0xFFF6DE)); top.position.y = 2.08; bus.add(top);
       g.add(bus);
-      recenter(g, 19, 10);
-      claim(19, 12, 3);
+      recenter(g, X, 11.5);
+      claim(X, 13.5, 3);
       var act = pickable(g, { type: "link", href: "tour.html" });
-      addDecor(g, 19, 10);
-      anchors.push({ kind: "obj", text: "Bus stop · Tour", short: "Tour", arrow: "▸", x: 21.5, y: 3.6, z: 10.5, action: act });
+      addDecor(g, X, 11.5);
+      anchors.push({ kind: "obj", text: "Bus stop · Tour", short: "Tour", arrow: "▸", x: X + 6, y: 4.4, z: 10.6, action: act });
     })();
 
-    /* SW: metro entrance (opens the map) */
+    /* SW: a metro entrance (scenery) */
     (function () {
-      var g = new T.Group(), cx = -17, cz = 14;
+      var g = new T.Group(), cx = -18.5, cz = 15.5;
       var holeMat = mat(0x2A3330), stepMat = mat(0x56625C), wallM = mat(0xC9CEC8);
       g.add(flat(2.8, 4.2, holeMat, cx, 0.03, cz));
       for (var k = 0; k < 6; k++) g.add(flat(2.6, 0.18, stepMat, cx, 0.035, cz - 1.7 + k * 0.62));
@@ -301,14 +352,12 @@ window.World = (function () {
       cube.position.set(cx - 2.4, 3.4, cz - 2.2); cube.castShadow = true; g.add(cube);
       recenter(g, cx, cz);
       claim(cx, cz, 3.2); claim(cx - 2.4, cz - 2.2, 1);
-      var act = pickable(g, { type: "link", href: "map.html" });
       addDecor(g, cx, cz);
-      anchors.push({ kind: "obj", text: "Metro · Map", short: "Map", arrow: "▸", x: cx - 2.4, y: 4.4, z: cz - 2.2, action: act });
     })();
 
     /* SE corner: pedestrian push button (contact) */
     (function () {
-      var g = new T.Group(), x = 10.9, z = 9.3;
+      var g = new T.Group(), x = 12.4, z = 10.8;
       var pl = mesh(new T.CylinderGeometry(0.07, 0.08, 1.7, 8), poleMat); pl.position.set(x, 0.85, z); g.add(pl);
       var bx = mesh(unitBox, mat(0xF4B400, { roughness: 0.5 })); bx.scale.set(0.5, 0.7, 0.3); bx.position.set(x, 1.35, z - 0.12); g.add(bx);
       var btn = mesh(new T.CylinderGeometry(0.13, 0.13, 0.08, 16), mat(0x17201C)); btn.rotation.x = Math.PI / 2; btn.position.set(x, 1.3, z - 0.3); g.add(btn);
@@ -318,39 +367,35 @@ window.World = (function () {
       anchors.push({ kind: "obj push", text: "Push for contact", short: "Contact", x: x, y: 2.3, z: z, action: act });
     })();
 
-    /* NW corner: a city map board (opens the map) */
+    /* NW corner: a notice board with the CV pinned on it (opens the plain CV) */
     (function () {
-      var g = new T.Group(), x = -12.8, z = -11.2;
+      var g = new T.Group(), x = -14.3, z = -12.7;
       [-1.15, 1.15].forEach(function (k) { var pl = mesh(new T.CylinderGeometry(0.07, 0.07, 2.7, 8), poleMat); pl.position.set(x + k, 1.35, z); g.add(pl); });
-      var mapTex = canvasTex(512, 320, function (c, w, h) {
-        c.fillStyle = "#F3F5F1"; c.fillRect(0, 0, w, h);
-        c.fillStyle = "#CFE4EE"; c.fillRect(236, 0, 60, h);
-        c.lineCap = "round"; c.lineJoin = "round"; c.lineWidth = 15;
-        [["#1baf7a", [[52, 176], [104, 124], [420, 124], [462, 166]]], ["#eb6834", [[52, 176], [470, 176]]],
-         ["#17201C", [[52, 176], [104, 228], [470, 228]]], ["#2a78d6", [[330, 72], [420, 72], [470, 122], [470, 176]]]
-        ].forEach(function (ln) {
-          c.strokeStyle = ln[0]; c.beginPath();
-          ln[1].forEach(function (q, i) { if (i) c.lineTo(q[0], q[1]); else c.moveTo(q[0], q[1]); }); c.stroke();
-        });
-        c.fillStyle = "#fff"; c.strokeStyle = "#17201C"; c.lineWidth = 5;
-        [[52, 176], [150, 124], [200, 228], [170, 176], [330, 72], [400, 124], [380, 176], [380, 228], [470, 176], [420, 72]].forEach(function (q) {
-          c.beginPath(); c.arc(q[0], q[1], 11, 0, Math.PI * 2); c.fill(); c.stroke();
-        });
-        c.fillStyle = "#17201C"; c.font = "bold 40px Arial, sans-serif"; c.fillText("MAP", 22, 52);
-        c.strokeStyle = "#17201C"; c.lineWidth = 8; c.strokeRect(4, 4, w - 8, h - 8);
+      var cvTex = canvasTex(512, 320, function (c, w, h) {
+        c.fillStyle = "#C99B63"; c.fillRect(0, 0, w, h);
+        c.save(); c.translate(w / 2, h / 2 + 6); c.rotate(-0.025);
+        c.fillStyle = "rgba(0,0,0,.18)"; c.fillRect(-122, -126, 252, 262);
+        c.fillStyle = "#FFFFFF"; c.fillRect(-128, -132, 252, 262);
+        c.fillStyle = "#17201C"; c.font = "bold 58px Arial, sans-serif"; c.fillText("CV", -100, -70);
+        c.fillStyle = "#0B6A4C"; c.fillRect(-100, -56, 92, 7);
+        c.fillStyle = "#B7C1BA";
+        [-30, -10, 10, 30, 50, 70, 90].forEach(function (y, i) { c.fillRect(-100, y, i % 3 === 2 ? 120 : 200, 9); });
+        c.restore();
+        c.fillStyle = "#D63A2F"; c.beginPath(); c.arc(w / 2, 34, 11, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = "#6B4A2B"; c.lineWidth = 16; c.strokeRect(8, 8, w - 16, h - 16);
       });
-      var edge = mat(0x2E3B42), face = new T.MeshStandardMaterial({ map: mapTex, roughness: 0.6 });
+      var edge = mat(0x6B4A2B), face = new T.MeshStandardMaterial({ map: cvTex, roughness: 0.7 });
       var board = new T.Mesh(new T.BoxGeometry(2.9, 1.8, 0.12), [edge, edge, edge, edge, face, edge]);
       board.position.set(x, 2.2, z); board.castShadow = true; g.add(board);
       recenter(g, x, z); claim(x, z, 1.8);
-      var act = pickable(g, { type: "link", href: "map.html" });
+      var act = pickable(g, { type: "link", href: "cv.html" });
       addDecor(g, x, z);
-      anchors.push({ kind: "obj", text: "City map · Map", short: "Map", arrow: "▸", x: x, y: 3.8, z: z, action: act });
+      anchors.push({ kind: "obj", text: "Notice board · CV", short: "CV", arrow: "▸", x: x, y: 3.8, z: z, action: act });
     })();
 
     /* NE: the ITS Lab (opens research) + a pond */
     (function () {
-      var g = new T.Group(), x = 20, z = -17;
+      var g = new T.Group(), x = 18.5, z = -18.5;
       var walls = mesh(unitBox, mat(0xF6F4EE)); walls.scale.set(8.5, 3.2, 6); walls.position.set(x, 1.6, z); g.add(walls);
       var roof = mesh(unitBox, mat(0x4F7FBF)); roof.scale.set(9.0, 0.3, 6.5); roof.position.set(x, 3.35, z); g.add(roof);
       var band = mesh(unitBox, mat(0x9CCBE0, { roughness: 0.25 })); band.scale.set(7.6, 0.8, 0.06); band.position.set(x, 2.0, z + 3.02); g.add(band);
@@ -359,46 +404,46 @@ window.World = (function () {
       var dish = mesh(new T.CylinderGeometry(0.95, 0.15, 0.45, 20), mat(0xEDEFF0)); dish.position.set(x + 2.6, 4.85, z - 1); dish.rotation.z = 0.55; g.add(dish);
       var ant = mesh(new T.CylinderGeometry(0.04, 0.04, 2.2, 6), poleMat); ant.position.set(x - 3, 4.5, z - 2); g.add(ant);
       recenter(g, x, z); claim(x, z, 5.6);
-      var act = pickable(g, { type: "phase", ph: 2 });
+      var act = pickable(g, { type: "stage", stage: 2 });
       addDecor(g, x, z);
       anchors.push({ kind: "obj", text: "ITS Lab · Research", short: "ITS Lab", x: x, y: 5.6, z: z, action: act });
-      var pg = new T.Group(); pg.position.set(31, 0, -11.5);
+      var pg = new T.Group(); pg.position.set(32.5, 0, -13);
       var pond = new T.Mesh(new T.CircleGeometry(1, 40), mat(0x9FCFE2, { roughness: 0.2 })); pond.rotation.x = -Math.PI / 2; pond.scale.set(4.2, 2.8, 1); pond.position.y = 0.02; pond.receiveShadow = true; pg.add(pond);
       var rim = new T.Mesh(new T.RingGeometry(1, 1.12, 40), mat(0xE6F1E2)); rim.rotation.x = -Math.PI / 2; rim.scale.set(4.2, 2.8, 1); rim.position.y = 0.025; pg.add(rim);
-      claim(31, -11.5, 4.6); addDecor(pg, 31, -11.5);
+      claim(32.5, -13, 4.6); addDecor(pg, 32.5, -13);
     })();
 
     /* huts, benches, lamps, trees, bushes, flowers */
-    hut(-19, -16, { wall: 0xF6E7B8, roof: 0xD9843E, rot: 0.1 });
-    hut(-27, -21, { wall: 0xF4F1EA, roof: 0x5E8FCB, w: 3.6, d: 3.0, rot: -0.2 });
-    hut(-15, -25, { wall: 0xF1C9B5, roof: 0xB8574A, w: 2.6, d: 2.6, h: 1.9, rot: 0.3 });
-    hut(-26, 13, { wall: 0xE9F0F6, roof: 0x3E8A6A, rot: -0.15 });
-    hut(-22, 22, { wall: 0xF6E7B8, roof: 0xB8574A, w: 2.8, d: 2.8, rot: 0.25 });
-    hut(30, 15, { wall: 0xF1C9B5, roof: 0x5E8FCB, w: 3.4, d: 3.0, rot: 0.15 });
-    hut(25, 23, { wall: 0xF4F1EA, roof: 0xD9843E, w: 2.8, d: 2.8, h: 2.0, rot: -0.3 });
-    hut(34, -22, { wall: 0xF6E7B8, roof: 0x3E8A6A, w: 3.0, d: 3.0, rot: 0.2 });
-    hut(-36, 20.5, { wall: 0xE9F0F6, roof: 0xD9843E, w: 3.0, d: 3.0, rot: 0.4 });
-    hut(40, 12, { wall: 0xF6E7B8, roof: 0xB8574A, w: 2.6, d: 2.6, rot: 0.1 });
-    bench(-13.2, 10.6, 0); bench(14.5, -10.7, Math.PI);
-    [[-14, 9.6], [-30, 9.6], [30, 9.6], [-14, -9.6], [28, -9.6], [9.6, 30], [-9.6, 26], [9.6, -28], [-9.6, -30]].forEach(function (q) { lampPost(q[0], q[1]); });
-    flowers(-20, 18, 26, 2.6); flowers(-22, -12.5, 22, 2.2); flowers(26, 19, 22, 2.4); flowers(15, -24, 18, 2);
+    hut(-20.5, -17.5, { wall: 0xF6E7B8, roof: 0xD9843E, rot: 0.1 });
+    hut(-28.5, -22.5, { wall: 0xF4F1EA, roof: 0x5E8FCB, w: 3.6, d: 3.0, rot: -0.2 });
+    hut(-16.5, -26.5, { wall: 0xF1C9B5, roof: 0xB8574A, w: 2.6, d: 2.6, h: 1.9, rot: 0.3 });
+    hut(-27.5, 14.5, { wall: 0xE9F0F6, roof: 0x3E8A6A, rot: -0.15 });
+    hut(-23.5, 23.5, { wall: 0xF6E7B8, roof: 0xB8574A, w: 2.8, d: 2.8, rot: 0.25 });
+    hut(31.5, 16.5, { wall: 0xF1C9B5, roof: 0x5E8FCB, w: 3.4, d: 3.0, rot: 0.15 });
+    hut(26.5, 24.5, { wall: 0xF4F1EA, roof: 0xD9843E, w: 2.8, d: 2.8, h: 2.0, rot: -0.3 });
+    hut(35.5, -23.5, { wall: 0xF6E7B8, roof: 0x3E8A6A, w: 3.0, d: 3.0, rot: 0.2 });
+    hut(-37.5, 22, { wall: 0xE9F0F6, roof: 0xD9843E, w: 3.0, d: 3.0, rot: 0.4 });
+    hut(41.5, 13.5, { wall: 0xF6E7B8, roof: 0xB8574A, w: 2.6, d: 2.6, rot: 0.1 });
+    bench(-14.7, 12.1, 0); bench(16, -12.2, Math.PI);
+    [[-15.5, 11.1], [-31.5, 11.1], [31.5, 11.1], [-15.5, -11.1], [29.5, -11.1], [11.1, 31.5], [-11.1, 27.5], [11.1, -29.5], [-11.1, -31.5]].forEach(function (q) { lampPost(q[0], q[1]); });
+    flowers(-21.5, 19.5, 26, 2.6); flowers(-23.5, -14, 22, 2.2); flowers(27.5, 20.5, 22, 2.4); flowers(16.5, -25.5, 18, 2);
     [[-12, 18, 1.0], [-14.5, 22, 1.2, 1], [-30, 18, 1.1], [-33, 12, 1.0, 1], [-11.5, 28, 1.1], [-18, 28, 1.0],
      [13, 18, 1.1], [16.5, 22, 1.0, 1], [21, 18.5, 0.9], [33, 20, 1.2], [36, 27, 1.0, 1], [14, 28, 1.1], [29, 30, 1.0],
      [-12.5, -14.5, 1.0], [-11.8, -20, 1.1, 1], [-23, -12, 1.0], [-32, -14, 1.2, 1], [-21.5, -27, 1.0], [-30, -28, 1.1],
      [12.5, -13, 1.0, 1], [12, -22, 1.1], [27, -24, 1.0], [38, -15, 1.1, 1], [13.5, -28, 1.0], [24, -29, 1.2, 1], [40, -28, 1.0],
      [-40, -10, 1.2, 1], [-44, 14, 1.1], [44, 22, 1.2], [45, -9, 1.0, 1], [-38, 30, 1.2], [38, 36, 1.1, 1], [-24, 36, 1.0], [22, 38, 1.1]
-    ].forEach(function (q) { tree(q[0], q[1], q[2], !!q[3]); });
+    ].forEach(function (q) { tree(out(q[0]), out(q[1]), q[2], !!q[3]); });
     for (var k = 0; k < 90; k++) {
       var tx = (Math.random() * 2 - 1) * 75, tz = (Math.random() * 2 - 1) * 60;
-      if (Math.abs(tx) < 30 && Math.abs(tz) < 26) continue;
+      if (Math.abs(tx) < 31.5 && Math.abs(tz) < 27.5) continue;
       tree(tx, tz, 0.9 + Math.random() * 0.5, Math.random() < 0.35);
     }
-    [[-16.5, 18.5], [-24, 9.8], [17, 15.5], [27, 12], [-17, -12], [-24, -25], [26, -14.5], [16, -13]].forEach(function (q) { bush(q[0], q[1], 1 + Math.random() * 0.5); });
+    [[-16.5, 18.5], [-24, 9.8], [17, 15.5], [27, 12], [-17, -12], [-24, -25], [26, -14.5], [16, -13]].forEach(function (q) { bush(out(q[0]), out(q[1]), 1 + Math.random() * 0.5); });
 
-    /* street-name labels sit over each road */
-    Object.keys(APP).forEach(function (a) {
-      var A = APP[a], dist = a === "S" ? 18 : a === "N" ? 21 : 23, q = L2W(a, -dist, 0);
-      anchors.push({ kind: "street", a: a, ph: A.thru, text: A.street, x: q.x, y: 0.6, z: q.z, action: { type: "phase", ph: A.thru } });
+    /* street-name signs: Academic Ave runs east–west, Career St north–south */
+    [["W", "Academic Ave", 24.5], ["E", "Academic Ave", 24.5], ["N", "Career St", 22.5], ["S", "Career St", 19.5]].forEach(function (q) {
+      var p = L2W(q[0], -q[2], -1.5);
+      anchors.push({ kind: "street", street: APP[q[0]].street, text: q[1], x: p.x, y: 0.6, z: p.z });
     });
 
     // nearer things pop up first
@@ -408,21 +453,21 @@ window.World = (function () {
     return { picks: picks, anchors: anchors, signals: signals, groups: G, decor: decor, boxPick: boxPick };
   }
 
-  /* lamp states: 'r' | 'y' | 'g' | 'ga' (red ball + green arrow) | 'ya' */
+  /* each head and marker is 'r' | 'y' | 'g'; the left-turn head shows arrows */
   var LAMP = { r: 0xff3b30, y: 0xffb020, g: 0x2fd27a };
-  function setSignal(sig, st) {
-    var on = [null, null, null, null];
-    if (st === "r") on[0] = "r"; if (st === "y") on[1] = "y"; if (st === "g") on[2] = "g";
-    if (st === "ga") { on[0] = "r"; on[3] = "g"; } if (st === "ya") { on[0] = "r"; on[3] = "y"; }
-    sig.lamps.forEach(function (m, i) {
-      if (on[i]) { m.color.setHex(LAMP[on[i]]); m.emissive.setHex(LAMP[on[i]]); m.emissiveIntensity = 0.9; }
+  function lamps(list, st) {
+    var on = st === "r" ? 0 : st === "y" ? 1 : 2;
+    list.forEach(function (m, i) {
+      var k = i % 3;
+      if (k === on) { m.color.setHex(LAMP[st]); m.emissive.setHex(LAMP[st]); m.emissiveIntensity = 0.9; }
       else { m.color.setHex(COL.lampOff); m.emissive.setHex(0x000000); }
     });
-    var ballSt = st === "g" ? "g" : st === "y" ? "y" : "r";
-    sig.ball.material.color.setHex(LAMP[ballSt]);
-    sig.arrow.visible = st === "ga" || st === "ya";
-    if (sig.arrow.visible) sig.arrow.material.color.setHex(LAMP[st === "ga" ? "g" : "y"]);
+  }
+  function setSignal(sig, left, thru) {
+    lamps(sig.left, left); lamps(sig.thru, thru);
+    sig.arrow.material.color.setHex(LAMP[left]);
+    sig.ball.material.color.setHex(LAMP[thru]);
   }
 
-  return { APP: APP, L2W: L2W, yawTo: yawTo, LEG: LEG, HALF: HALF, EDGE: EDGE, COL: COL, build: build, setSignal: setSignal };
+  return { APP: APP, SPOTS: SPOTS, stageOf: stageOf, L2W: L2W, yawTo: yawTo, LEG: LEG, HALF: HALF, EDGE: EDGE, LANE: LANE, COL: COL, build: build, setSignal: setSignal };
 })();

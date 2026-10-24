@@ -6,7 +6,7 @@ window.Intro = (function () {
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var seen = false;
   try { seen = sessionStorage.getItem("ktr-intro") === "1"; } catch (e) {}
-  var skip = seen || reduce || /^#p[1-8]$/.test(location.hash);
+  var skip = seen || reduce || /^#p[1-4]$/.test(location.hash);
 
   var intro = document.getElementById("intro"), gate = document.getElementById("gate");
   var waiting = [], nameDone = false;
